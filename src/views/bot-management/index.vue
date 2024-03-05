@@ -14,12 +14,84 @@
               item-key="name"
               class="custom-table"
           >
-            <template v-slot:header="{ props }">
-              <tr>
-                <th v-for="header in props.headers" :key="header.key" class="custom-header">
-                  {{ header.title }}
-                </th>
-              </tr>
+            <template v-slot:item.action="{item}">
+              <v-tooltip text="Xem thông tin">
+                <template v-slot:activator="{ props }">
+                  <span
+                      v-bind="props"
+                      class="material-icons cursor-pointer"
+                      @click="viewBot(item)"
+                  >
+                    visibility
+                  </span>
+                </template>
+              </v-tooltip>
+              <v-tooltip text="Cập nhật">
+                <template v-slot:activator="{ props }">
+                  <span
+                      v-bind="props"
+                      class="material-icons cursor-pointer"
+                      @click="editBot(item)"
+                  >
+                    edit
+                  </span>
+                </template>
+              </v-tooltip>
+              <v-tooltip v-if="!item.workStatus" text="Bật bot">
+                <template v-slot:activator="{ props }">
+                  <span
+                      v-bind="props"
+                      class="material-icons cursor-pointer"
+                      @click="startBot(item)"
+                  >
+                    play_arrow
+                  </span>
+                </template>
+              </v-tooltip>
+              <v-tooltip v-else text="Tắt bot">
+                <template v-slot:activator="{ props }">
+                  <span
+                      v-bind="props"
+                      class="material-icons cursor-pointer"
+                      @click="stopBot(item)"
+                  >
+                    stop
+                  </span>
+                </template>
+              </v-tooltip>
+              <v-tooltip text="Triển khai kịch bản">
+                <template v-slot:activator="{ props }">
+                  <span
+                      v-bind="props"
+                      class="material-icons cursor-pointer"
+                      @click="deployBot(item)"
+                  >
+                    cached
+                  </span>
+                </template>
+              </v-tooltip>
+              <v-tooltip text="Xoá">
+                <template v-slot:activator="{ props }">
+                  <span
+                      v-bind="props"
+                      class="material-icons cursor-pointer"
+                      @click="deleteBot(item)"
+                  >
+                    delete
+                  </span>
+                </template>
+              </v-tooltip>
+              <v-tooltip text="Kết quả">
+                <template v-slot:activator="{ props }">
+                  <span
+                      v-bind="props"
+                      class="material-icons cursor-pointer"
+                      @click="resultBot(item)"
+                  >
+                    error_outline
+                  </span>
+                </template>
+              </v-tooltip>
             </template>
             <template v-slot:item.workStatus="{ item }">
               <div>
@@ -45,25 +117,43 @@
             </template>
           </v-data-table>
         </v-card>
+        <ModalDelete
+          :visible="visibleModal"
+          @cancel="cancelModal"
+          @ok="confirmModal"
+          :button-ok-text="isDelete ? 'Xoá' : isStart ? 'Start' : 'Stop'"
+        >
+          <template #description>
+            {{ isDelete ? 'abc' : isStart ? 'start' : 'stop'}}
+          </template>
+        </ModalDelete>
       </div>
     </div>
     <div class="app">
-      <div class="app_chill mx-5 mt-5">
-        <span>
+      <div class="app_chill">
+        <div class="custom-text">
           Các phiên đang chat
-        </span>
-        <v-btn color="#28c76f">
-          Zalo
-        </v-btn>
-        <v-btn color="#2666de">
-          Messenge
-        </v-btn>
-        <v-btn color="#2666de">
-          App
-        </v-btn>
-        <v-btn color="#2666de">
-          Web
-        </v-btn>
+        </div>
+        <div class="container">
+          <v-btn width="47%" color="#28c76f">
+            Zalo({{zalo_count}})
+          </v-btn>
+          <v-btn width="47%" color="#2666de">
+            Messenge({{mess_count}})
+          </v-btn>
+        </div>
+        <div class="container">
+          <v-btn width="47%" color="#2666de">
+            App({{app_count}})
+          </v-btn>
+          <v-btn width="47%" color="#2666de">
+            Web({{web_count}})
+          </v-btn>
+        </div>
+        <div class="custom-text mt-10">
+          Phiên chat thuộc zalo
+        </div>
+        <div> Không có phiên chat nào</div>
       </div>
       <Pagination/>
     </div>
@@ -72,16 +162,17 @@
 
 <script>
 
-import Pagination from "../../components/Pagination.vue";
+
+import ModalDelete from "../../components/bot/ModalDelete.vue";
 
 export default {
   name: 'BotManagement',
-  components: {Pagination},
+  components: {ModalDelete},
   data() {
     return {
       headers: [
-        { title: 'STT', align: 'start', sortable: false, key: 'stt', class: 'title-row'},
-        { title: 'Thao tác', align: 'start', key: 'action', class: 'title-row' },
+        { title: 'STT', align: 'start', sortable: false, key: 'stt'},
+        { title: 'Thao tác', align: 'center', key: 'action', sortable: false,width: '200px'},
         { title: 'Mã bot', align: 'start', key: 'key' },
         { title: 'Tên Bot', align: 'start', key: 'name' },
         { title: 'Loại bot', align: 'start', key: 'type' },
@@ -148,6 +239,14 @@ export default {
           hot_server: 20,
         },
       ],
+      zalo_count: 0,
+      mess_count: 0,
+      app_count: 0,
+      web_count: 0,
+      visibleModal: false,
+      isDelete: false,
+      isStart: false,
+      isStop: false,
     }
   },
   methods: {
@@ -166,6 +265,41 @@ export default {
     },
     getTextTrain(item) {
       return item.trainStatus
+    },
+    viewBot(item){
+      console.log("=>(index.vue:243) item", item);
+    },
+    editBot(item){
+
+    },
+    startBot(item){
+      this.isStart = true
+      this.visibleModal = true
+    },
+    stopBot(item){
+      this.isStop = true
+      this.visibleModal = true
+    },
+    deployBot(item) {
+
+    },
+    deleteBot(item){
+      this.isDelete = true
+      this.visibleModal = true
+    },
+    resultBot(item){
+
+    },
+    cancelModal() {
+      this.visibleModal = false
+      setTimeout(() => {
+        this.isDelete = false
+        this.isStart = false
+        this.isStop = false
+      },200)
+    },
+    confirmModal() {
+
     }
   },
 }
@@ -183,13 +317,24 @@ export default {
   margin-top: 20px;
   background-size: cover;
   .app_chill {
-    display: inline-grid;
-    height: 300px;
+    height: auto;
     background-color: white;
+    height: 500px;
+    width: 30%;
+    padding: 1rem;
   }
 }
-
 .card-layout {
   padding: 1rem;
+}
+.container {
+  display: flex;
+  column-gap: 1rem;
+  margin-top: 10px;
+}
+.custom-text {
+  color: #2666de;
+  font-size: 1.286rem;
+  font-weight: 500;
 }
 </style>
