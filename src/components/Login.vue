@@ -1,31 +1,95 @@
 <template>
+  <v-container fluid class="container">
+    <v-img
+      :width="400"
+      aspect-ratio="16/9"
+      cover
+      src="https://neo.vn/uploads/plugin/custom_img/2021-07-29/1627529494-1931300689-custom.jpg"
+    ></v-img>
     <v-sheet class="mx-auto" width="300">
-      <v-form fast-fail @submit.prevent>
-        <v-text-field v-model="username" label="User Name"></v-text-field>
-  
-        <v-text-field v-model="password" label="Password"></v-text-field>
-  
-        <v-btn class="mt-2" type="submit" block>Submit</v-btn>
+      <a href="/" target="_blank" class="logo">
+        <img
+          src="http://10.252.11.112:8080/assets/images/logo/logo-small.svg"
+          class="logo vue"
+          alt="Vue logo"
+        />
+      </a>
+      <h3 class="text-center mt-3 dangnhap">Login</h3>
+      <v-form fast-fail @submit.prevent class="form">
+        <v-text-field
+          v-model="userName"
+          :rules="userNameRules"
+          type="email"
+          label="User Name"
+        ></v-text-field>
+
+        <v-text-field
+          v-model="password"
+          label="Password"
+          :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+          :type="showPassword ? 'password' : 'text'"
+          :rules="passWordRules"
+          @click:append="showPassword = !showPassword"
+        ></v-text-field>
+        <v-checkbox
+          class="custom-checkbox"
+          v-model="isChecked"
+          label="Forgot password"
+        ></v-checkbox>
+        <v-btn class="mt-2" color="success" type="submit" block>Submit</v-btn>
       </v-form>
     </v-sheet>
-  </template>
+  </v-container>
+</template>
     
     <script>
-  export default {
-    data() {
-      return {
-        username: "",
-        password: "",
-      };
-    },
-    methods: {
-      login() {
-        // Add your login logic here
-        console.log("Login clicked");
-      },
-    },
-  };
-  </script>
+export default {
+  data() {
+    return {
+      userName: "",
+      password: "",
+      showPassword: true,
+      isChecked: true,
+      userNameRules: [
+        (value) => {
+          if (value?.length > 3) return true;
+          return "User name must be at least 3 characters";
+        },
+      ],
+      passWordRules: [
+        (value) => {
+          if (/[^0-9]/.test(value)) return true;
+          return "Password can not contain digits.";
+        },
+      ],
+    };
+  },
+  methods: {
+    // async handleSubmit() {
+    //   const response = await axios.post("login", {
+    //     userName: this.userName,
+    //     password: this.password,
+    //   });
+    //   console.log(response);
+
+    //   this.$router.push("/");
+    // },
+  },
+};
+</script>
     
     <style scoped>
-  </style>
+.logo {
+  padding: 30px 0px 30px 0px;
+}
+.form {
+  padding: 0px 10px 0px 10px;
+}
+.container {
+  display: flex;
+}
+.dangnhap {
+  color: #5e5873;
+  margin: 20px 0px 20px 0px;
+}
+</style>
