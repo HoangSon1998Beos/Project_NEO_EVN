@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../components/Login.vue';
+import BotManagement from "../views/bot-management/index.vue";
 
 const routes = [
   {
@@ -8,6 +9,12 @@ const routes = [
     component: Login,
   },
   // Thêm các route khác tại đây
+  //   BotManagement,
+  {
+    path: '/bot',
+    name: 'bot-management',
+    component: BotManagement,
+  }
 ];
 
 const router = createRouter({
