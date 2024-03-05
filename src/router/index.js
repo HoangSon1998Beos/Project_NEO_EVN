@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../components/Login.vue';
 import HelloWorld from '../components/HelloWorld.vue'
+import BotManagement from "../views/bot-management/index.vue";
 
 const routes = [
     {
@@ -15,6 +16,11 @@ const routes = [
         meta: {
             name: "Login"
         }
+    },
+    {
+        path: '/bot',
+        name: 'bot-management',
+        component: BotManagement,
     }
 
     // Thêm các route khác tại đây
