@@ -1,6 +1,6 @@
 <template>
    <div>
-    <v-breadcrumbs :items="dataBreadC">
+    <v-breadcrumbs :items="dataBreadC" style="font-size:smaller;">
       <template v-slot:divider>
         <v-icon icon="mdi-chevron-right"></v-icon>
       </template>
@@ -77,11 +77,9 @@
             </v-col>
             <v-col cols=" 12">
               <div class="pa-4 ">
-              <v-btn prepend-icon="$vuetify" style="background-color: #164397 ; color: aliceblue;">
+              <v-btn class="mr-2"  style="background-color: #164397 ; color: aliceblue;">
                   Tìm kiếm
                 </v-btn>
-              </div>
-              <div class="pa-4 ">
                 <v-btn prepend-icon="$vuetify" style="background-color: #28c76f; color: aliceblue;">
                   Tải xuống
                 </v-btn>
@@ -111,13 +109,11 @@
           },
           {
             title: 'Đào tạo chatbot',
-            disabled: false,
-            href: 'breadcrumbs_link_1',
+            disabled: true,
           },
           {
             title: 'Ngân hàng câu hỏi- ý định',
             disabled: true,
-            href: 'breadcrumbs_link_2',
           },
         ],
         showPicker: false,

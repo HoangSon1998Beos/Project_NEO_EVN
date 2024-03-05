@@ -23,6 +23,7 @@
               class="mb-2"
               style="background-color: #164397 ; color: aliceblue;"
               v-bind="props"
+              prepend-icon="$plus"
             >
               Thêm mới
             </v-btn>
@@ -130,6 +131,7 @@
             style="background-color: #ed1c24 ; color: aliceblue;"
             v-bind="props"
             >
+            <v-icon class="mr-2" size="small" > mdi-delete </v-icon>
             Xóa
         </v-btn>
         <v-dialog v-model="dialogDelete" max-width="500px">
@@ -150,12 +152,21 @@
         class="me-2"
         size="small"
         @click="editItem(item)"
+        style="color: #ff9f43;"
       >
         mdi-pencil
       </v-icon>
       <v-icon
+        class="me-2"
+        size="small"
+        style="color: #00cfe8 ;"
+      >
+        mdi-alert-circle
+      </v-icon>
+      <v-icon
         size="small"
         @click="deleteItem(item)"
+        style="color: #ea5455;"
       >
         mdi-delete
       </v-icon>
