@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../components/Login.vue';
-import HelloWorld from '../components/HelloWorld.vue'
 import BotManagement from "../views/bot-management/index.vue";
+import Home from '../components/Home.vue'
 
 const routes = [
     {
-        path: '',
+        path: '/home',
         name: 'Home',
-        component: HelloWorld,
+        component: Home,
     },
     {
         path: '/login',

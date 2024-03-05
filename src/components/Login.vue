@@ -7,7 +7,7 @@
       src="https://neo.vn/uploads/plugin/custom_img/2021-07-29/1627529494-1931300689-custom.jpg"
     ></v-img>
     <v-sheet class="mx-auto" width="300">
-      <a href="/" target="_blank" class="logo">
+      <a href="/home" target="_blank" class="logo">
         <img
           src="http://10.252.11.112:8080/assets/images/logo/logo-small.svg"
           class="logo vue"
@@ -17,6 +17,7 @@
       <h3 class="text-center mt-3 dangnhap">Login</h3>
       <v-form fast-fail @submit.prevent class="form">
         <v-text-field
+          autofocus
           v-model="userName"
           :rules="userNameRules"
           type="email"
@@ -71,7 +72,6 @@ export default {
     //     password: this.password,
     //   });
     //   console.log(response);
-
     //   this.$router.push("/");
     // },
   },
@@ -86,10 +86,14 @@ export default {
   padding: 0px 10px 0px 10px;
 }
 .container {
+  font-family: sans-serif;
   display: flex;
 }
 .dangnhap {
   color: #5e5873;
   margin: 20px 0px 20px 0px;
+}
+.form >>> .v-input__control {
+  width: 280px;
 }
 </style>
