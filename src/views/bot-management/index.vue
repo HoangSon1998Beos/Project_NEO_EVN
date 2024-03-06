@@ -7,7 +7,7 @@
         <v-card class="mt-5">
           <v-data-table
               :headers="headers"
-              :items="data"
+              :items="data.items"
               density="compact"
               :sort-asc-icon="'mdi-arrow-down'"
               :sort-desc-icon="'mdi-arrow-up'"
@@ -37,7 +37,7 @@
                   </span>
                 </template>
               </v-tooltip>
-              <v-tooltip v-if="!item.workStatus" text="Bật bot">
+              <v-tooltip v-if="!item.status" text="Bật bot">
                 <template v-slot:activator="{ props }">
                   <span
                       v-bind="props"
@@ -93,7 +93,7 @@
                 </template>
               </v-tooltip>
             </template>
-            <template v-slot:item.workStatus="{ item }">
+            <template v-slot:item.status="{ item }">
               <div>
                 <v-chip
                     :color="getColorWork(item)"
@@ -102,6 +102,11 @@
                     size="small"
                     label
                 ></v-chip>
+              </div>
+            </template>
+            <template v-slot:item.botType="{ item }">
+              <div>
+                {{ item.botType ? 'Bot khách hàng' : 'Bot đào tạo' }}
               </div>
             </template>
             <template v-slot:item.trainStatus="{ item }">
@@ -131,6 +136,10 @@
         </ModalDelete>
         <ModalCreate
           :visible="visibleModalCreate"
+          :action="actionCode"
+          @cancel="cancelModalCreate"
+          @create="saveForm"
+          @edit="editForm"
         >
 
         </ModalCreate>
@@ -142,18 +151,18 @@
           Các phiên đang chat
         </div>
         <div class="container">
-          <v-btn width="47%" color="#28c76f">
+          <v-btn width="47%" color="#28c76f" style="color: white">
             Zalo({{zalo_count}})
           </v-btn>
-          <v-btn width="47%" color="#2666de">
+          <v-btn width="47%" color="#2666de" style="color: white">
             Messenge({{mess_count}})
           </v-btn>
         </div>
         <div class="container">
-          <v-btn width="47%" color="#2666de">
+          <v-btn width="47%" color="#2666de" style="color: white">
             App({{app_count}})
           </v-btn>
-          <v-btn width="47%" color="#2666de">
+          <v-btn width="47%" color="#2666de" style="color: white">
             Web({{web_count}})
           </v-btn>
         </div>
@@ -172,6 +181,8 @@
 
 import ModalDelete from "../../components/bot/ModalDelete.vue";
 import ModalCreate from "../../components/bot/ModalCreate.vue";
+import axios from "axios";
+import { COLOR_STATUS_BOT, STATUS_BOT, STATUS_BOT_TRAIN,COLOR_STATUS_BOT_TRAIN } from "../../utils/constants.js";
 
 export default {
   name: 'BotManagement',
@@ -181,72 +192,16 @@ export default {
       headers: [
         { title: 'STT', align: 'start', sortable: false, key: 'stt'},
         { title: 'Thao tác', align: 'center', key: 'action', sortable: false,width: '200px'},
-        { title: 'Mã bot', align: 'start', key: 'key' },
-        { title: 'Tên Bot', align: 'start', key: 'name' },
-        { title: 'Loại bot', align: 'start', key: 'type' },
-        { title: 'Trạng thái hoạt động', align: 'start', key: 'workStatus' },
+        { title: 'Mã bot', align: 'start', key: 'botCode' },
+        { title: 'Tên Bot', align: 'start', key: 'botName' },
+        { title: 'Loại bot', align: 'start', key: 'botType' },
+        { title: 'Trạng thái hoạt động', align: 'start', key: 'status' },
         { title: 'Trạng thái đào tạo', align: 'start', key: 'trainStatus' },
-        { title: 'Ngày đào tạo', align: 'start', key: 'date' },
-        { title: 'Phiên bản', align: 'start', key: 'version' },
-        { title: 'Máy chủ lưu trữ', align: 'start', key: 'hot_server' },
+        { title: 'Ngày đào tạo', align: 'start', key: 'trainingDate' },
+        { title: 'Phiên bản', align: 'start', key: 'nameModel' },
+        { title: 'Máy chủ lưu trữ', align: 'start', key: 'hostName' },
       ],
-      data: [
-        {
-          stt: '1',
-          key: 'DC_BOT_PRO',
-          name: 'bot pro 1',
-          type: 'Bot khách hàng',
-          workStatus: true,
-          trainStatus: 'Có kịch bản vừa phê duyệt',
-          date: '07/11/2023 18:34:44',
-          version: 20,
-          hot_server: 20,
-        },
-        {
-          stt: '2',
-          key: 'DC_BOT_PRO',
-          name: 'bot pro 2',
-          type: 'Bot Đào tạo',
-          workStatus: false,
-          trainStatus: 'Đang tạo file và validate data',
-          date: '07/11/2023 18:34:44',
-          version: 20,
-          hot_server: 20,
-        },
-        {
-          stt: '3',
-          key: 'DC_BOT_PRO',
-          name: 'bot pro 3',
-          type: 'Bot khách hàng',
-          workStatus: false,
-          trainStatus: "Đào tạo hoàn thành",
-          date: '07/11/2023 18:34:44',
-          version: 20,
-          hot_server: 20,
-        },
-        {
-          stt: '4',
-          key: 'DC_BOT_PRO',
-          name: 'bot pro',
-          type: 'Bot khách hàng',
-          workStatus: true,
-          trainStatus: "Đào tạo hoàn thành",
-          date: '07/11/2023 18:34:44',
-          version: 20,
-          hot_server: 20,
-        },
-        {
-          stt: '5',
-          key: 'DC_BOT_PRO',
-          name: 'bot pro',
-          type: 'Bot khách hàng',
-          workStatus: false,
-          trainStatus: "Đào tạo hoàn thành",
-          date: '07/11/2023 18:34:44',
-          version: 20,
-          hot_server: 20,
-        },
-      ],
+      data: [],
       zalo_count: 0,
       mess_count: 0,
       app_count: 0,
@@ -257,34 +212,60 @@ export default {
       isStart: false,
       isStop: false,
       botName: '',
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTcwODg5MywiZXhwIjoxNzA5Nzk1MjkzfQ.6Ykyx_gOwIHYsGvw_jEH3-8k8iATY9EUio0hmLUGaYHmP3rgut4RXvEpMlo4GrTBUW1FuExIcqdy7G8bFMuh9g',
+      config: {}
     }
   },
+  created() {
+    this.getAllBot()
+  },
+  watch: {
+    data() {
+      this.updateSTT(); // Cập nhật chỉ số STT khi có thay đổi trong mảng items
+    },
+  },
   methods: {
+    updateSTT() {
+      this.data.items.forEach((item, index) => {
+        item.stt = index + 1; // Tính chỉ số STT cho mỗi item dựa trên số lượng các mục trong mảng items
+      });
+    },
+    async getAllBot(){
+      try {
+        this.config = {
+          headers: {
+            'Authorization': `Bearer ${this.token}`,
+          },
+        }
+        const dataResponse = await axios.get('http://10.252.10.112:3232/chatbot/bot/get-all', this.config)
+        this.data = dataResponse.data.content
+      } catch (e) {
+        console.log("=>(index.vue:221) e", e);
+      }
+    },
     getColorWork(item) {
-      if(item.workStatus) return '#28c76f'
-      else return '#82868b'
+      return COLOR_STATUS_BOT.find((x) => x.key === item.status).value
     },
     getColorTrain(item) {
-      if(item.trainStatus === 'Đào tạo hoàn thành') return '#28c76f'
-          else if (item.trainStatus === 'Có kịch bản vừa phê duyệt') return '#ea5455'
-      else return '#82868b'
+      return COLOR_STATUS_BOT_TRAIN.find((x) => x.key === item.status).value
     },
     getTextWork(item) {
-      if(!item.workStatus) return 'Ngưng hoạt động'
-      else return 'Đang hoạt động'
+      return STATUS_BOT.find((x) => x.value === item.status).label
     },
     getTextTrain(item) {
-      return item.trainStatus
+      return STATUS_BOT_TRAIN.find((x) => x.value === item.status).label
     },
     addBot() {
-      console.log("vao day")
+      this.actionCode = 'isCreate'
       this.visibleModalCreate = true
     },
     viewBot(item){
-      console.log("=>(index.vue:243) item", item);
+      this.actionCode = 'isView'
+      this.visibleModalCreate = true
     },
     editBot(item){
-
+      this.actionCode = 'isEdit'
+      this.visibleModalCreate = true
     },
     startBot(item){
       this.botName = item.name
@@ -314,6 +295,12 @@ export default {
         this.isStart = false
         this.isStop = false
       },200)
+    },
+    cancelModalCreate() {
+      this.visibleModalCreate =false
+    },
+    saveForm(formData) {
+      console.log("=>(index.vue:329) formdata", formData);
     },
     confirmModal() {
 
