@@ -43,6 +43,10 @@
 </template>
     
     <script>
+import axios from "axios";
+import Helper from "@/helpers/index";
+import api from "@/api";
+
 export default {
   data() {
     return {
@@ -65,15 +69,18 @@ export default {
     };
   },
   methods: {
-    // async handleSubmit() {
-    //   const response = await axios.post("login", {
-    //     userName: this.userName,
-    //     password: this.password,
-    //   });
-    //   console.log(response);
-
-    //   this.$router.push("/");
-    // },
+    async handleSubmit() {
+      console.log("zo di");
+      const data = {
+        username: this.userName,
+        password: this.password,
+      };
+      try {
+        const response = await api.post("/chatbot/login", data);
+        console.log("API Response:", response.data);
+      } catch (error) {
+        console.error("API Error:", error);
+      }
   },
 };
 </script>
