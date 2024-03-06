@@ -1,25 +1,10 @@
 <template>
   <v-dialog
-      transition="dialog-bottom-transition"
       style="width: 900px"
-      v-model="visible"
+      v-model="isVisible"
       activator="parent"
   >
-<!--    <template v-slot:default="{ isActive }">-->
-<!--      <v-card rounded="lg">-->
-<!--        <v-card-title class="d-flex justify-space-between align-center">-->
-<!--          <div class="text-h5 text-medium-emphasis ps-2">-->
-<!--            Invite John to connect-->
-<!--          </div>-->
 
-<!--          <v-btn-->
-<!--              icon="mdi-close"-->
-<!--              variant="text"-->
-<!--              @click="isActive.value = false"-->
-<!--          ></v-btn>-->
-<!--        </v-card-title>-->
-<!--      </v-card>-->
-<!--    </template>-->
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn
           style="width: 200px;background: #2666de;color: white;border-color: #2666de"
@@ -27,28 +12,11 @@
           text="Thêm mới"
       ></v-btn>
     </template>
-
-<!--    <template v-slot:default="{ isActive }">-->
-<!--      <v-card>-->
-<!--        <v-toolbar title="Opening from the Bottom"></v-toolbar>-->
-
-<!--        <v-card-text class="text-h2 pa-12">-->
-<!--          Hello world!-->
-<!--        </v-card-text>-->
-
-<!--        <v-card-actions class="justify-end">-->
-<!--          <v-btn-->
-<!--              text="Close"-->
-<!--              @click="isActive.value = false"-->
-<!--          ></v-btn>-->
-<!--        </v-card-actions>-->
-<!--      </v-card>-->
-
-<!--    </template>-->
     <v-card
         title="Thêm mới người dùng"
 
     >
+
       <v-card-text>
         <v-row>
           <v-col
@@ -56,6 +24,7 @@
           >
             <div>Tài khoản</div>
             <v-text-field
+                v-model="formUser.username"
                 required
                 variant="outlined"
                 clearable
@@ -69,6 +38,7 @@
           >
             <div>Mật khẩu</div>
             <v-text-field
+                v-model="formUser.password"
                 :append-inner-icon="visiblePassword ? 'mdi-eye-off' : 'mdi-eye'"
                 :type="visiblePassword ? 'text' : 'password'"
                 @click:append-inner="visiblePassword = !visiblePassword"
@@ -87,6 +57,7 @@
           >
             <div>Họ tên</div>
             <v-text-field
+                v-model="formUser.fullname"
                 required
                 variant="outlined"
                 clearable
@@ -99,6 +70,7 @@
           >
             <div>Email</div>
             <v-text-field
+                v-model="formUser.email"
                 required
                 variant="outlined"
                 clearable
@@ -113,6 +85,7 @@
           >
             <div>Số điện thoại</div>
             <v-text-field
+                v-model="formUser.phoneNumber"
                 required
                 variant="outlined"
                 clearable
@@ -125,10 +98,14 @@
           >
             <div>Vai trò</div>
             <v-select
+                v-model="formUser.roleId"
                 required
                 variant="outlined"
                 clearable
                 class="small-text-field"
+                item-title="roleName"
+                item-value="id"
+                :items="getListRole"
 
             ></v-select>
           </v-col>
@@ -164,28 +141,19 @@
             color="primary"
             text="Thêm mới"
             variant="tonal"
-            @click="dialog = false"
+            @click="addUser"
         ></v-btn>
 
         <v-btn
             text="Làm mới"
             variant="tonal"
-            @click="dialog = false"
+            @click="clearForm"
 
         ></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
-<!--  <v-dialog-->
-<!--  >-->
-<!--    <template v-slot:activator="{ props: activatorProps }">-->
-<!--      <v-btn-->
-<!--          v-bind="activatorProps"-->
-<!--          text="Transition from Bottom"-->
-<!--          block-->
-<!--      ></v-btn>-->
-<!--    </template>-->
-<!--  </v-dialog>-->
+
 </template>
 
 <script>
@@ -195,23 +163,67 @@ import axios from "axios";
 export default {
   name: "add",
   props: {
+    listRole : [],
     visible: {
       type: Boolean,
       default: true,
     },
+
   },
   computed: {
+    getListRole: appUtils.mapComputed('listRole'),
     isVisible: appUtils.mapComputed('visible'),
   },
   data(){
     return{
-      dialog: true,
-      visible: true,
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTcxNzA2OSwiZXhwIjoxNzA5ODAzNDY5fQ.tmS02wJrYvhmXKgss96NUj4rm_ue5Ez2UxsXCymoRRlcp6kV0w_yxa94h7uQUNR7r0VG6JRcyi7cNnOmlFTnLg',
+      formUser:{},
       visiblePassword: false,
+      formMock: {
+        action: "insert",
+        traceCall: "add-user.component.ts -> addUser() -> UserInfoController.doCreate()",
+        tableName: "USER_INFO",
+        currentMenuURL: "admin/user/list-user",
+        role: {
+          createdBy: "admin",
+          createdDate: "2022-02-08T15:48:42",
+          id: 5,
+          roleCode: "LEADER",
+          roleName: "Lãnh đạo",
+          status: 1
+        }
 
+      }
 
     }
-  }
+  },
+  methods: {
+    addUser() {
+      console.log('formUser', this.formUser)
+      const formAddUser = {...this.formUser,...this.formMock};
+      const now = new Date().getTime();
+      formAddUser.createDate = now;
+      // Thực hiện POST request sử dụng Axios
+      axios.post('http://10.252.10.112:3232/chatbot/user-info', formAddUser, {
+        headers: {
+          'Authorization': `Bearer ${this.token}`,
+        },
+      })
+          .then(response => {
+            console.log('Response:', response.data);
+            // Xử lý dữ liệu trả về nếu cần
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            // Xử lý lỗi nếu cần
+          });
+      this.clearForm();
+      this.isVisible = false;
+    },
+    clearForm() {
+      this.formUser = {};
+    }
+}
 }
 </script>
 
