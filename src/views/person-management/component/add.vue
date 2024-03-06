@@ -3,7 +3,23 @@
       transition="dialog-bottom-transition"
       style="width: 900px"
       v-model="visible"
+      activator="parent"
   >
+<!--    <template v-slot:default="{ isActive }">-->
+<!--      <v-card rounded="lg">-->
+<!--        <v-card-title class="d-flex justify-space-between align-center">-->
+<!--          <div class="text-h5 text-medium-emphasis ps-2">-->
+<!--            Invite John to connect-->
+<!--          </div>-->
+
+<!--          <v-btn-->
+<!--              icon="mdi-close"-->
+<!--              variant="text"-->
+<!--              @click="isActive.value = false"-->
+<!--          ></v-btn>-->
+<!--        </v-card-title>-->
+<!--      </v-card>-->
+<!--    </template>-->
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn
           style="width: 200px;background: #2666de;color: white;border-color: #2666de"

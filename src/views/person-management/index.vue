@@ -50,7 +50,7 @@
 
 
         <v-tooltip
-            location="top"
+            location="end"
         >
           <template v-slot:activator="{ props }">
 
@@ -69,7 +69,7 @@
 
 
         <v-tooltip
-            location="top"
+            location="end"
         >
           <template v-slot:activator="{ props }">
             <v-btn icon @click="" size="x-small" v-bind="props">
@@ -83,7 +83,7 @@
         </v-tooltip>
 
         <v-tooltip
-            location="top"
+            location="end"
         >
           <template v-slot:activator="{ props }">
             <v-btn icon @click="" size="x-small" v-bind="props">
@@ -121,28 +121,49 @@
       <template v-slot:item.dateLogin="{ item }">
         <span>{{ new Date(item.dateLogin).toLocaleString() }}</span>
       </template>
-    </v-data-table>
-    <v-pagination
-        v-if="totalPages>1"
-        v-model="currentPage"
-        :length="totalPages"
-        @update:model-value="search(false)"
-    ></v-pagination>
 
+<!--      <template v-slot:footer="{ itemsPerPage, page, itemsPerPageOptions, disablePagination }">-->
+<!--        <v-row>-->
+<!--          <v-col class="text-center" cols="12">-->
+<!--            <v-pagination-->
+<!--                v-if="true"-->
+<!--                v-model="currentPage"-->
+<!--                :length="Math.ceil(listUser.total / this.perPage)"-->
+<!--            ></v-pagination>-->
+<!--          </v-col>-->
+<!--        </v-row>-->
+<!--      </template>-->
+    </v-data-table>
+
+<!--    <v-pagination-->
+<!--        v-if="totalPages>1"-->
+<!--        v-model="currentPage"-->
+<!--        :length="totalPages"-->
+<!--        @update:model-value="search(false)"-->
+<!--    ></v-pagination>-->
+    <Pagina
+        v-model:current-page="currentPage"
+        v-model:total-pages="totalPages"
+        @pagi="search(false)"
+    ></Pagina>
   </v-container>
+
 
 <!--  <EditModal  v-model:user-info="userInfo"/>-->
 </template>
 
 <script>
 import axios from "axios";
+import Pagina from "../component-chung/pagination.vue";
+
 import AddModal from "./component/add.vue";
 import EditModal from "./component/edit.vue";
 
 export default {
   components: {
     EditModal,
-    AddModal
+    AddModal,
+    Pagina
   },
   name: "index",
   data() {

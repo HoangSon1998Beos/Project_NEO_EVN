@@ -168,6 +168,7 @@ export default {
     // formUser:appUtils.mapComputed(this.userInfo),
     isVisible: appUtils.mapComputed('visible'),
   },
+
   data(){
     return{
       userInfo:{},
