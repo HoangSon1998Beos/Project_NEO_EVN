@@ -25,11 +25,9 @@
       </v-card-text>
     </v-card >
     <v-card
-
         style="background: white;color: yellow;margin-top: 15px;padding: 5px" class="text-right">
       <v-spacer></v-spacer>
-      <AddModal/>
-<!--      <v-btn @click="" style="color: yellow;">Thêm mới</v-btn>-->
+      <AddModal v-model:visible="visibleAdd" v-model:list-role="listRole"/>
     </v-card>
     <v-data-table
         style="margin-top: 15px;border: black"
@@ -47,14 +45,12 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-
-
         <v-tooltip
-            location="top"
+            location="end"
         >
           <template v-slot:activator="{ props }">
 
-          <v-btn icon @click="" size="x-small" v-bind="props">
+          <v-btn icon @click="getUserInfoFormEdit(item.id)" size="x-small" v-bind="props">
         <v-icon
             style="color: #2666de"
         >
@@ -69,10 +65,10 @@
 
 
         <v-tooltip
-            location="top"
+            location="end"
         >
           <template v-slot:activator="{ props }">
-            <v-btn icon @click="" size="x-small" v-bind="props">
+            <v-btn icon @click="deleteUser((item.id))" size="x-small" v-bind="props">
             <v-icon
             style="color: #ea5455">
           mdi-delete
@@ -83,10 +79,10 @@
         </v-tooltip>
 
         <v-tooltip
-            location="top"
+            location="end"
         >
           <template v-slot:activator="{ props }">
-            <v-btn icon @click="" size="x-small" v-bind="props">
+            <v-btn icon @click="lockUser(item.id)" size="x-small" v-bind="props">
 
         <v-icon
             style="color: #ff9f43"
@@ -121,17 +117,35 @@
       <template v-slot:item.dateLogin="{ item }">
         <span>{{ new Date(item.dateLogin).toLocaleString() }}</span>
       </template>
+
+<!--      <template v-slot:footer="{ itemsPerPage, page, itemsPerPageOptions, disablePagination }">-->
+<!--        <v-row>-->
+<!--          <v-col class="text-center" cols="12">-->
+<!--            <v-pagination-->
+<!--                v-if="true"-->
+<!--                v-model="currentPage"-->
+<!--                :length="Math.ceil(listUser.total / this.perPage)"-->
+<!--            ></v-pagination>-->
+<!--          </v-col>-->
+<!--        </v-row>-->
+<!--      </template>-->
     </v-data-table>
+
     <v-pagination
         v-if="totalPages>1"
         v-model="currentPage"
         :length="totalPages"
         @update:model-value="search(false)"
     ></v-pagination>
-
+<!--    <Pagina-->
+<!--        v-model:current-page="currentPage"-->
+<!--        v-model:total-pages="totalPages"-->
+<!--        @pagi="search(false)"-->
+<!--    ></Pagina>-->
   </v-container>
 
-<!--  <EditModal  v-model:user-info="userInfo"/>-->
+
+  <EditModal  v-model:user-info="userInfo" v-model:visible="visibleEdit" v-model:list-role="listRole"/>
 </template>
 
 <script>
@@ -142,7 +156,7 @@ import EditModal from "./component/edit.vue";
 export default {
   components: {
     EditModal,
-    AddModal
+    AddModal,
   },
   name: "index",
   data() {
@@ -161,6 +175,8 @@ export default {
       }
     ]
     return {
+      visibleAdd: false,
+      visibleEdit: false,
       userInfo: {},
       addVisible: true,
       listStatus,
@@ -179,7 +195,7 @@ export default {
       searchValue: 'Test',
       listUser: [],
       dialog: false,
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTY5MjQ2OCwiZXhwIjoxNzA5Nzc4ODY4fQ.76ZtKDYLfz8JEx2hHSLhiK3U7bAy-chJcwsuZIYtoSWTf7xPn092--Lrj6ddBGZfpoKUKjgh7CG3f6kBApP67A',
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTcxNzA2OSwiZXhwIjoxNzA5ODAzNDY5fQ.tmS02wJrYvhmXKgss96NUj4rm_ue5Ez2UxsXCymoRRlcp6kV0w_yxa94h7uQUNR7r0VG6JRcyi7cNnOmlFTnLg',
       loaded: false,
       loading: false,
       editedItem: {
@@ -198,8 +214,23 @@ export default {
     this.init();
   },
   methods: {
-    getUserInfo(id){
-      this.lis
+    // editUser(){
+    //   this.userInfo = this.getUserInfo
+    // },
+    getUserInfoFormEdit(id){
+      console.log('id',id)
+      const userInfor = this.listUser.filter(item => item.id === id);
+      console.log('userInfor',userInfor)
+
+      console.log('this.listUser',this.listUser)
+
+      if(userInfor.length === 1){
+        this.userInfo = userInfor[0];
+        // return userInfor[0];
+      }else{
+        this.userInfo = {};
+      }
+      this.visibleEdit = true;
     },
     init(){
       axios.get('http://10.252.10.112:3232/chatbot/roles/get-role', {
@@ -211,6 +242,36 @@ export default {
             // Xử lý dữ liệu khi thành công
             this.listRole = response.data.content;
 
+          })
+          .catch(error => {
+            // Xử lý lỗi
+          });
+    },
+    lockUser(id) {
+      axios.put('http://10.252.10.112:3232/chatbot/user-info/lock/' + id, {
+        headers: {
+          'Authorization': `Bearer ${this.token}`,
+        },
+      })
+          .then(response => {
+            console.log('response',response);
+            // Xử lý dữ liệu khi thành công
+            this.search(true);
+          })
+          .catch(error => {
+            // Xử lý lỗi
+          });
+    },
+    deleteUser(id) {
+      axios.put('http://10.252.10.112:3232/chatbot/user-info/delete/' + id, {
+        headers: {
+          'Authorization': `Bearer ${this.token}`,
+        },
+      })
+          .then(response => {
+            console.log('response',response);
+            // Xử lý dữ liệu khi thành công
+            this.search(true);
           })
           .catch(error => {
             // Xử lý lỗi
