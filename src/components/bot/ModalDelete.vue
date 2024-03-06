@@ -1,6 +1,6 @@
 <template>
-  <v-dialog v-model="visibleDialog" max-width="500px" persistent>
-    <v-card class="text-center">
+  <v-dialog v-model="visibleDialog" max-width="400px" persistent>
+    <v-card class="text-center body-modal">
       <span class="material-icons">error_outline</span>
       <v-card-text>
         <div>
@@ -58,5 +58,8 @@ export default {
   display: flex;
   column-gap: 1rem;
   justify-content: center;
+}
+.body-modal {
+  padding: 1rem;
 }
 </style>
