@@ -3,7 +3,7 @@
     <v-breadcrumbs :items="['Trang chủ', 'Đào tạo Bot', 'Quản lý Bot']"></v-breadcrumbs>
     <div class="layout">
       <div class="card-layout">
-        <v-btn prepend-icon="mdi-plus" color="#2666de">Thêm mới</v-btn>
+        <v-btn prepend-icon="mdi-plus" color="#2666de" @click="addBot">Thêm mới</v-btn>
         <v-card class="mt-5">
           <v-data-table
               :headers="headers"
@@ -124,9 +124,16 @@
           :button-ok-text="isDelete ? 'Xoá' : isStart ? 'Start' : 'Stop'"
         >
           <template #description>
-            {{ isDelete ? 'abc' : isStart ? 'start' : 'stop'}}
+            {{ isDelete ? 'Bạn có chắc chắn yêu cầu xóa ' + botName+' này không?'
+              : isStart ? 'Bạn có chắc chắn khởi động ' + botName + ' không ?'
+                  : 'Bạn có chắc chắn tắt '+ botName + 'không ?'}}
           </template>
         </ModalDelete>
+        <ModalCreate
+          :visible="visibleModalCreate"
+        >
+
+        </ModalCreate>
       </div>
     </div>
     <div class="app">
@@ -164,10 +171,11 @@
 
 
 import ModalDelete from "../../components/bot/ModalDelete.vue";
+import ModalCreate from "../../components/bot/ModalCreate.vue";
 
 export default {
   name: 'BotManagement',
-  components: {ModalDelete},
+  components: {ModalCreate, ModalDelete},
   data() {
     return {
       headers: [
@@ -186,7 +194,7 @@ export default {
         {
           stt: '1',
           key: 'DC_BOT_PRO',
-          name: 'bot pro',
+          name: 'bot pro 1',
           type: 'Bot khách hàng',
           workStatus: true,
           trainStatus: 'Có kịch bản vừa phê duyệt',
@@ -197,7 +205,7 @@ export default {
         {
           stt: '2',
           key: 'DC_BOT_PRO',
-          name: 'bot pro',
+          name: 'bot pro 2',
           type: 'Bot Đào tạo',
           workStatus: false,
           trainStatus: 'Đang tạo file và validate data',
@@ -208,7 +216,7 @@ export default {
         {
           stt: '3',
           key: 'DC_BOT_PRO',
-          name: 'bot pro',
+          name: 'bot pro 3',
           type: 'Bot khách hàng',
           workStatus: false,
           trainStatus: "Đào tạo hoàn thành",
@@ -244,9 +252,11 @@ export default {
       app_count: 0,
       web_count: 0,
       visibleModal: false,
+      visibleModalCreate: false,
       isDelete: false,
       isStart: false,
       isStop: false,
+      botName: '',
     }
   },
   methods: {
@@ -266,6 +276,10 @@ export default {
     getTextTrain(item) {
       return item.trainStatus
     },
+    addBot() {
+      console.log("vao day")
+      this.visibleModalCreate = true
+    },
     viewBot(item){
       console.log("=>(index.vue:243) item", item);
     },
@@ -273,10 +287,12 @@ export default {
 
     },
     startBot(item){
+      this.botName = item.name
       this.isStart = true
       this.visibleModal = true
     },
     stopBot(item){
+      this.botName = item.name
       this.isStop = true
       this.visibleModal = true
     },
@@ -284,6 +300,7 @@ export default {
 
     },
     deleteBot(item){
+      this.botName = item.name
       this.isDelete = true
       this.visibleModal = true
     },
