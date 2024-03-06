@@ -11,29 +11,12 @@
           text="Thêm mới"
       ></v-btn>
     </template>
-
-<!--    <template v-slot:default="{ isActive }">-->
-<!--      <v-card>-->
-<!--        <v-toolbar title="Opening from the Bottom"></v-toolbar>-->
-
-<!--        <v-card-text class="text-h2 pa-12">-->
-<!--          Hello world!-->
-<!--        </v-card-text>-->
-
-<!--        <v-card-actions class="justify-end">-->
-<!--          <v-btn-->
-<!--              text="Close"-->
-<!--              @click="isActive.value = false"-->
-<!--          ></v-btn>-->
-<!--        </v-card-actions>-->
-<!--      </v-card>-->
-
-<!--    </template>-->
     <v-card
         title="Thêm mới người dùng"
 
     >
       <v-card-text>
+        <v-form v-model="formUser">
         <v-row>
           <v-col
               cols="6"
@@ -137,6 +120,7 @@
             ></v-file-input>
           </v-col>
         </v-row>
+        </v-form>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -160,16 +144,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-<!--  <v-dialog-->
-<!--  >-->
-<!--    <template v-slot:activator="{ props: activatorProps }">-->
-<!--      <v-btn-->
-<!--          v-bind="activatorProps"-->
-<!--          text="Transition from Bottom"-->
-<!--          block-->
-<!--      ></v-btn>-->
-<!--    </template>-->
-<!--  </v-dialog>-->
+
 </template>
 
 <script>
@@ -177,24 +152,36 @@ import appUtils from '../utils.js';
 import axios from "axios";
 
 export default {
-  name: "add",
+  name: "edit",
   props: {
+    userInfo: {
+      type: Object,
+      default: {},
+    },
     visible: {
       type: Boolean,
       default: true,
     },
+
   },
   computed: {
+    // formUser:appUtils.mapComputed(this.userInfo),
     isVisible: appUtils.mapComputed('visible'),
   },
   data(){
     return{
+      userInfo:{},
       dialog: true,
       visible: true,
       visiblePassword: false,
-
+      // computed: {
+      //   isVisible: appUtils.mapComputed('visible'),
+      // },
 
     }
+  },
+  methods: {
+
   }
 }
 </script>

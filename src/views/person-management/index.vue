@@ -1,9 +1,10 @@
 
 <template>
-  <v-container>
+  <v-container style="max-width: 100% !important;">
     <v-card
         elevation="8"
         rounded="lg"
+        style="margin-top: 25vh"
     >
 
       <v-card-text style="width: 400px;text-align: left !important;">
@@ -28,13 +29,12 @@
         style="background: white;color: yellow;margin-top: 15px;padding: 5px" class="text-right">
       <v-spacer></v-spacer>
       <AddModal/>
-
 <!--      <v-btn @click="" style="color: yellow;">Thêm mới</v-btn>-->
     </v-card>
     <v-data-table
-        style="margin-top: 15px"
+        style="margin-top: 15px;border: black"
         :headers="headers"
-        :items="items"
+        :items="listUser"
         item-key="id"
         v-model:items-per-page="perPage"
     >
@@ -47,20 +47,58 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
+
+
+        <v-tooltip
+            location="top"
+        >
+          <template v-slot:activator="{ props }">
+
+          <v-btn icon @click="" size="x-small" v-bind="props">
         <v-icon
-            style="color: blue"
+            style="color: #2666de"
         >
           mdi-pencil
         </v-icon>
-        <v-icon
-            style="color: red">
+
+
+        </v-btn>
+          </template>
+          <span>Cập nhật</span>
+        </v-tooltip>
+
+
+        <v-tooltip
+            location="top"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn icon @click="" size="x-small" v-bind="props">
+            <v-icon
+            style="color: #ea5455">
           mdi-delete
         </v-icon>
+            </v-btn>
+          </template>
+          <span>Xóa</span>
+        </v-tooltip>
+
+        <v-tooltip
+            location="top"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn icon @click="" size="x-small" v-bind="props">
+
         <v-icon
-            style="color: yellow"
+            style="color: #ff9f43"
         >
           mdi-lock-open
         </v-icon>
+        </v-btn>
+      </template>
+      <span>Khóa</span>
+      </v-tooltip>
+
+
       </template>
       <template v-slot:item.roleId="{ item }">
         <div>
@@ -92,14 +130,18 @@
     ></v-pagination>
 
   </v-container>
+
+<!--  <EditModal  v-model:user-info="userInfo"/>-->
 </template>
 
 <script>
 import axios from "axios";
 import AddModal from "./component/add.vue";
+import EditModal from "./component/edit.vue";
 
 export default {
   components: {
+    EditModal,
     AddModal
   },
   name: "index",
@@ -119,24 +161,25 @@ export default {
       }
     ]
     return {
+      userInfo: {},
       addVisible: true,
       listStatus,
       headers: [
-        { title: 'Số thứ tự', key: 'index' },
-        { title: 'THAO TÁC', key: 'actions', sortable: false },
-        { title: 'Tài khoản', key: 'username' },
-        { title: 'Vai Trò', key: 'roleId' },
-        { title: 'Email', key: 'email' },
-        { title: 'Số điện thoại', key: 'phoneNumber' },
-        { title: 'Trạng thái', key: 'status' },
-        { title: 'Ngày tạo', key: 'createdDate' },
-        { title: 'Ngày cập nhật', key: 'updatedDate' },
-        { title: 'Ngày đăng nhập', key: 'dateLogin' },
+        { title: 'Số thứ tự', key: 'index' ,width: 120,align: 'center'},
+        { title: 'Thao tác', key: 'actions', sortable: false ,width: 500 ,align: 'center'},
+        { title: 'Tài khoản', key: 'username',align: 'center',width: 140 },
+        { title: 'Vai Trò', key: 'roleId',align: 'center',width: 140 },
+        { title: 'Email', key: 'email',align: 'center',width: 140},
+        { title: 'Số điện thoại', key: 'phoneNumber',align: 'center',width: 200 },
+        { title: 'Trạng thái', key: 'status',align: 'center',width: 200},
+        { title: 'Ngày tạo', key: 'createdDate',align: 'center',width: 200},
+        { title: 'Ngày cập nhật', key: 'updatedDate',align: 'center',width: 200},
+        { title: 'Ngày đăng nhập', key: 'dateLogin',align: 'center',width: 200},
       ],
       searchValue: 'Test',
-      items: [],
+      listUser: [],
       dialog: false,
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudnF1YW4iLCJuYW1lIjoiTmd1eeG7hW4gVsSDbiBRdcOibiIsInR5cGUiOiJBRE1JTiIsImlkIjoyNSwiaWF0IjoxNzA5NjA1MTk0LCJleHAiOjE3MDk2OTE1OTR9.EmRtJACONc8rOq6j_yUxOQENahtX3B23Xj3Uygab3tjBViLrxoBvwHoCwTJW1gnGSuh8bFamhqeErpKNN1Xl5g',
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTY5MjQ2OCwiZXhwIjoxNzA5Nzc4ODY4fQ.76ZtKDYLfz8JEx2hHSLhiK3U7bAy-chJcwsuZIYtoSWTf7xPn092--Lrj6ddBGZfpoKUKjgh7CG3f6kBApP67A',
       loaded: false,
       loading: false,
       editedItem: {
@@ -155,6 +198,9 @@ export default {
     this.init();
   },
   methods: {
+    getUserInfo(id){
+      this.lis
+    },
     init(){
       axios.get('http://10.252.10.112:3232/chatbot/roles/get-role', {
         headers: {
@@ -212,10 +258,9 @@ export default {
               this.loaded = true
             }, 2000)
             // Xử lý dữ liệu khi thành công
-            this.items = response.data.content.items;
+            this.listUser = response.data.content.items;
             this.totalPages = Math.ceil(response.data.content.total / this.perPage)
 
-            console.log(" this.responseData", this.items.content.items);
           })
           .catch(error => {
             // Xử lý lỗi
@@ -234,24 +279,24 @@ export default {
     closeDialog() {
       this.dialog = false;
     },
-    saveItem() {
-      if (this.editedItem.id !== null) {
-        // Update existing item
-        const index = this.items.findIndex(item => item.id === this.editedItem.id);
-        this.$set(this.items, index, { ...this.editedItem });
-      } else {
-        // Add new item
-        this.items.push({
-          ...this.editedItem,
-          id: this.items.length + 1,
-        });
-      }
-      this.closeDialog();
-    },
-    deleteItem(item) {
-      const index = this.items.findIndex(i => i.id === item.id);
-      this.items.splice(index, 1);
-    },
+    // saveItem() {
+    //   if (this.editedItem.id !== null) {
+    //     // Update existing item
+    //     const index = this.items.findIndex(item => item.id === this.editedItem.id);
+    //     this.$set(this.items, index, { ...this.editedItem });
+    //   } else {
+    //     // Add new item
+    //     this.listUser.push({
+    //       ...this.editedItem,
+    //       id: this.listUser.length + 1,
+    //     });
+    //   }
+    //   this.closeDialog();
+    // },
+    // deleteItem(item) {
+    //   const index = this.items.findIndex(i => i.id === item.id);
+    //   this.listUser.splice(index, 1);
+    // },
   },
 };
 </script>
