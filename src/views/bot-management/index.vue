@@ -11,6 +11,7 @@
               density="compact"
               :sort-asc-icon="'mdi-arrow-down'"
               :sort-desc-icon="'mdi-arrow-up'"
+              :items-per-page="pagination.pageSize"
               item-key="name"
               class="custom-table"
           >
@@ -120,7 +121,17 @@
                 ></v-chip>
               </div>
             </template>
+            <template #bottom>
+              <Pagination
+                :value="pagination.page"
+                :total-record="totalItems"
+                @input="updatePage"
+                @update="updatePerPage"
+                :total-pages="totalPage"
+              />
+            </template>
           </v-data-table>
+
         </v-card>
         <ModalDelete
           :visible="visibleModal"
@@ -182,10 +193,11 @@ import ModalDelete from "../../components/bot/ModalDelete.vue";
 import ModalCreate from "../../components/bot/ModalCreate.vue";
 import axios from "axios";
 import { COLOR_STATUS_BOT, STATUS_BOT, STATUS_BOT_TRAIN,COLOR_STATUS_BOT_TRAIN } from "../../utils/constants.js";
+import Pagination from "../../components/Pagination.vue";
 
 export default {
   name: 'BotManagement',
-  components: {ModalCreate, ModalDelete},
+  components: {Pagination, ModalCreate, ModalDelete},
   data() {
     return {
       headers: [
@@ -215,6 +227,11 @@ export default {
       config: {},
       appName:'',
       actionCode: '',
+      pagination: {
+        page: 1, // Trang hiện tại
+        pageSize: 10, // Số mục trên mỗi trang
+      },
+      totalItems: 0, // Tổng số mục
     }
   },
   created() {
@@ -223,6 +240,12 @@ export default {
   watch: {
     data() {
       this.updateSTT(); // Cập nhật chỉ số STT khi có thay đổi trong mảng items
+    },
+  },
+  computed: {
+    totalPage() {
+      // return Math.ceil(this.totalItems / this.pagination.perPage);
+      return 5;
     },
   },
   methods: {
@@ -238,10 +261,11 @@ export default {
             'Authorization': `Bearer ${this.token}`,
           },
         }
-        const dataResponse = await axios.get('http://10.252.10.112:3232/chatbot/bot/get-all', this.config)
+        const dataResponse = await axios.get(`http://10.252.10.112:3232/chatbot/bot/get-all?currentPage=${this.pagination.page}&perPage=${this.pagination.pageSize}`, this.config)
         this.data = dataResponse.data.content
+        this.totalItems = this.data.total
       } catch (e) {
-        console.log("=>(index.vue:221) e", e);
+        console.log("=>(index.vue:268) e", e);
       }
     },
     getColorWork(item) {
@@ -301,7 +325,6 @@ export default {
       this.visibleModalCreate =false
     },
     saveForm(formData) {
-      console.log("=>(index.vue:329) formdata", formData);
     },
     confirmModal() {
 
@@ -318,6 +341,17 @@ export default {
     webClick() {
       this.appName = 'Web'
     },
+    updatePage(page){
+      this.pagination.page = page
+      this.getAllBot()
+    },
+    updatePerPage(item) {
+      this.pagination.pageSize = item
+      this.pagination.page = 1
+      this.$nextTick(() => {
+        this.getAllBot()
+      })
+    }
   },
 }
 </script>
@@ -334,7 +368,6 @@ export default {
   margin-top: 20px;
   background-size: cover;
   .app_chill {
-    height: auto;
     background-color: white;
     height: 500px;
     width: 30%;
