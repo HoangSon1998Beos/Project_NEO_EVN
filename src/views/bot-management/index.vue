@@ -151,27 +151,26 @@
           Các phiên đang chat
         </div>
         <div class="container">
-          <v-btn width="47%" color="#28c76f" style="color: white">
+          <v-btn width="47%" color="#2666de" style="color: white" @click="zaloClick">
             Zalo({{zalo_count}})
           </v-btn>
-          <v-btn width="47%" color="#2666de" style="color: white">
+          <v-btn width="47%" color="#2666de" style="color: white"@click="messClick">
             Messenge({{mess_count}})
           </v-btn>
         </div>
         <div class="container">
-          <v-btn width="47%" color="#2666de" style="color: white">
+          <v-btn width="47%" color="#2666de" style="color: white"@click="appClick">
             App({{app_count}})
           </v-btn>
-          <v-btn width="47%" color="#2666de" style="color: white">
+          <v-btn width="47%" color="#2666de" style="color: white"@click="webClick">
             Web({{web_count}})
           </v-btn>
         </div>
         <div class="custom-text mt-10">
-          Phiên chat thuộc zalo
+          Phiên chat thuộc {{ appName }}
         </div>
         <div> Không có phiên chat nào</div>
       </div>
-      <Pagination/>
     </div>
   </div>
 </template>
@@ -213,7 +212,9 @@ export default {
       isStop: false,
       botName: '',
       token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTcwODg5MywiZXhwIjoxNzA5Nzk1MjkzfQ.6Ykyx_gOwIHYsGvw_jEH3-8k8iATY9EUio0hmLUGaYHmP3rgut4RXvEpMlo4GrTBUW1FuExIcqdy7G8bFMuh9g',
-      config: {}
+      config: {},
+      appName:'',
+      actionCode: '',
     }
   },
   created() {
@@ -247,13 +248,13 @@ export default {
       return COLOR_STATUS_BOT.find((x) => x.key === item.status).value
     },
     getColorTrain(item) {
-      return COLOR_STATUS_BOT_TRAIN.find((x) => x.key === item.status).value
+      return COLOR_STATUS_BOT_TRAIN.find((x) => x.key === item.trainStatus).value
     },
     getTextWork(item) {
       return STATUS_BOT.find((x) => x.value === item.status).label
     },
     getTextTrain(item) {
-      return STATUS_BOT_TRAIN.find((x) => x.value === item.status).label
+      return STATUS_BOT_TRAIN.find((x) => x.value === item.trainStatus).label
     },
     addBot() {
       this.actionCode = 'isCreate'
@@ -304,7 +305,19 @@ export default {
     },
     confirmModal() {
 
-    }
+    },
+    zaloClick() {
+      this.appName = 'Zalo'
+    },
+    messClick() {
+      this.appName = 'Messenger'
+    },
+    appClick() {
+      this.appName = 'App'
+    },
+    webClick() {
+      this.appName = 'Web'
+    },
   },
 }
 </script>
