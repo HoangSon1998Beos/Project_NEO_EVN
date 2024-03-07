@@ -19,8 +19,7 @@
         @input="changePage"
         class="ml-16"
         rounded="circle"
-        last-icon="mdi-arrow-down"
-        first-icon="mdi-arrow-down"
+        show-first-last-page
     >
     </v-pagination>
   </div>
