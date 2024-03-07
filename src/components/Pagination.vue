@@ -21,8 +21,6 @@
         rounded="circle"
         last-icon="mdi-arrow-down"
         first-icon="mdi-arrow-down"
-        @prev="prevClick"
-        @next="nextClick"
     >
     </v-pagination>
   </div>

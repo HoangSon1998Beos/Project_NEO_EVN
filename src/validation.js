@@ -13,3 +13,7 @@ export const loginSchema = {
   email: { required, email },
   password: { required, min: min(6) },
 };
+
+export const validate = (value) => {
+
+}
