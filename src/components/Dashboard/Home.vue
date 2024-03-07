@@ -91,60 +91,84 @@
       </v-menu>
     </div>
   </v-container>
-  <v-row align="start" style="height: 400" no-gutters class="row1">
-    <v-col cols="4" class="col1">
-      <v-card height="400px">
-        <a href="">10 kịch bản dùng nhiều nhất trong tháng</a>
-      </v-card>
-    </v-col>
-    <v-col>
-      <v-card height="400px">
-        <a href=""> 20 câu hỏi chưa được xử lý trong tháng </a>
-        <v-card class="dataQuestion">
-          <v-data-table-virtual
-            :headers="headers"
-            :items="virtualBoats"
-            height="350"
-            item-value="name"
-          ></v-data-table-virtual>
+  <div class="mx-10">
+    <v-row align="start" style="height: 400" no-gutters class="row1">
+      <v-col cols="4" class="col1">
+        <v-card height="400px">
+          <a href="">10 kịch bản dùng nhiều nhất trong tháng</a>
+          <div class="dataQuestion" style="margin-top: 20px">
+            <HorizontalBar />
+          </div>
         </v-card>
-      </v-card>
-    </v-col>
-  </v-row>
-  <v-row align="start" style="height: 400" no-gutters class="row1">
-    <v-col cols="4" class="col1">
-      <v-card height="400px">
-        <a href="">10 kịch bản dùng nhiều nhất trong tháng</a>
-      </v-card>
-    </v-col>
-    <v-col class="col1">
-      <v-card height="400px">
-        <a href=""> 20 câu hỏi chưa được xử lý trong tháng </a>
-      </v-card>
-    </v-col>
-    <v-col>
-      <v-card height="400px">
-        <a href=""> 20 câu hỏi chưa được xử lý trong tháng </a>
-      </v-card>
-    </v-col>
-  </v-row>
-  <v-row align="start" style="height: 400" no-gutters>
-    <v-col cols="8" class="col1">
-      <v-card height="300px">
-        <a href="">10 kịch bản dùng nhiều nhất trong tháng</a>
-      </v-card>
-    </v-col>
-    <v-col>
-      <v-card height="300px">
-        <a href=""> 20 câu hỏi chưa được xử lý trong tháng </a>
-        <v-card class="dataQuestion"> </v-card>
-      </v-card>
-    </v-col>
-  </v-row>
+      </v-col>
+      <v-col>
+        <v-card height="400px">
+          <a href=""> 20 câu hỏi chưa được xử lý trong tháng </a>
+          <v-card class="dataQuestion">
+            <v-data-table-virtual
+              v-model="selected"
+              :headers="headers"
+              :items="desserts"
+              height="350"
+            >
+              <template v-slot:item="{ item, index }">
+                <tr :style="{ backgroundColor: getRowColor(index) }">
+                  <td>{{ item.questions }}</td>
+                  <td v-if="item.chanelCode === 'messenger'">logo fb</td>
+                  <td>{{ item.dateChat }}</td>
+                  <td>{{ item.cusName }}</td>
+                  <td>{{ item.cusName }}</td>
+                </tr>
+              </template>
+            </v-data-table-virtual>
+          </v-card>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row align="start" style="height: 400" no-gutters class="row1">
+      <v-col cols="4" class="col1">
+        <v-card height="400px">
+          <a href="">10 kịch bản dùng nhiều nhất trong tháng</a>
+        </v-card>
+      </v-col>
+      <v-col class="col1">
+        <v-card height="400px">
+          <a href=""> 20 câu hỏi chưa được xử lý trong tháng </a>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card height="400px">
+          <a href=""> 20 câu hỏi chưa được xử lý trong tháng </a>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row align="start" style="height: 400" no-gutters>
+      <v-col cols="8" class="col1">
+        <v-card height="300px">
+          <a href="">10 kịch bản dùng nhiều nhất trong tháng</a>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card height="300px">
+          <a href=""> Biểu đồ kênh tương tác trong tháng</a>
+          <div class="dataQuestion" style="margin-top: 30px">
+            <BarChart />
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 <script>
+import BarChart from "../chart/BarChart.vue";
+import HorizontalBar from "../chart/HorizontalBar.vue";
+import axios from "axios";
 export default {
+  components: { BarChart, HorizontalBar },
   data: () => ({
+    token:
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTc3ODEzMSwiZXhwIjoxNzA5ODY0NTMxfQ.VBFK3NxmcdBZ8ugTBZZn3BIUTRjydhkXQ4QEj-sgILc65VFC11D28gYGneahCKZFAVibhF5WLpqIQTWfN1Apxg",
+
     qtht: [
       { title: "Quản lý người dùng" },
       { title: "Quản lý Menu" },
@@ -176,96 +200,52 @@ export default {
       { title: "Quản lý khách hàng" },
       { title: "Quản lý các phiên bản sao lưu" },
     ],
+    selected: [],
     headers: [
-      { title: "CÂU HỎI", align: "start", key: "name" },
-      { title: "KÊNH CHAT", align: "end", key: "speed" },
-      { title: "THỜI GIAN", align: "end", key: "length" },
-      { title: "KHÁCH HÀNG", align: "end", key: "price" },
-      { title: "CHUYỂN XỬ LÝ", align: "end", key: "year" },
+      { title: "CÂU HỎI", align: "start", key: "questions" },
+      { title: "KÊNH CHAT", align: "center", key: "chanelCode" },
+      { title: "THỜI GIAN", align: "center", key: "dateChat" },
+      { title: "KHÁCH HÀNG", align: "center", key: "cusName" },
+      { title: "CHUYỂN XỬ LÝ", align: "center", key: "cusName" },
     ],
-    boats: [
-      {
-        name: "Speedster",
-        speed: 35,
-        length: 22,
-        price: 300000,
-        year: 2021,
-      },
-      {
-        name: "OceanMaster",
-        speed: 25,
-        length: 35,
-        price: 500000,
-        year: 2020,
-      },
-      {
-        name: "Voyager",
-        speed: 20,
-        length: 45,
-        price: 700000,
-        year: 2019,
-      },
-      {
-        name: "WaveRunner",
-        speed: 40,
-        length: 19,
-        price: 250000,
-        year: 2022,
-      },
-      {
-        name: "SeaBreeze",
-        speed: 28,
-        length: 31,
-        price: 450000,
-        year: 2018,
-      },
-      {
-        name: "HarborGuard",
-        speed: 18,
-        length: 50,
-        price: 800000,
-        year: 2017,
-      },
-      {
-        name: "SlickFin",
-        speed: 33,
-        length: 24,
-        price: 350000,
-        year: 2021,
-      },
-      {
-        name: "StormBreaker",
-        speed: 22,
-        length: 38,
-        price: 600000,
-        year: 2020,
-      },
-      {
-        name: "WindSail",
-        speed: 15,
-        length: 55,
-        price: 900000,
-        year: 2019,
-      },
-      {
-        name: "FastTide",
-        speed: 37,
-        length: 20,
-        price: 280000,
-        year: 2022,
-      },
-    ],
+    desserts: [],
   }),
-  methods: {},
-  computed: {
-    virtualBoats() {
-      return [...Array(20).keys()].map((i) => {
-        const boat = { ...this.boats[i % this.boats.length] };
-        boat.name = `${boat.name} #${i}`;
-        return boat;
-      });
+  methods: {
+    GetListQuestion() {
+      axios
+        .get(
+          "http://10.252.10.112:3232/chatbot/dashboard/getQuestionsUnsolved",
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          this.desserts = response.data.content;
+          console.log(this.desserts);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
+    },
+
+    getRowColor(index) {
+      if (index < 5) {
+        // Mỗi hàng trong 5 hàng đầu sẽ có một màu khác nhau
+        const colors = ["#c2d4f6", "#c3efd7", "#ffe4ca", "#f9cfcf", "#b8f2f9"];
+        return colors[index];
+      } else {
+        // Các hàng tiếp theo lặp lại màu của 5 hàng đầu
+        const colors = ["#c2d4f6", "#c3efd7", "#ffe4ca", "#f9cfcf", "#b8f2f9"];
+        return colors[index % 5];
+      }
     },
   },
+  created() {
+    this.GetListQuestion();
+  },
+  computed: {},
 };
 </script>
 <style scoped>
