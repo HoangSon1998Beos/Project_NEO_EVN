@@ -92,4 +92,7 @@ export default {
   color: #5e5873;
   margin: 20px 0px 20px 0px;
 }
+.form >>> .v-input__control {
+  width: 280px;
+}
 </style>
