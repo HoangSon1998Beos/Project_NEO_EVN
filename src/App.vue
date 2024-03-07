@@ -1,5 +1,5 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from "./components/HelloWorld.vue";
 </script>
 
 <template>
@@ -7,6 +7,9 @@ import HelloWorld from './components/HelloWorld.vue'
 </template>
 
 <style scoped>
+.id {
+  background-color: rgb(186, 186, 233);
+}
 .logo {
   height: 6em;
   padding: 1.5em;

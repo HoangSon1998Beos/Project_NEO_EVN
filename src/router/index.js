@@ -3,12 +3,13 @@ import Login from '../components/Login.vue';
 import HelloWorld from '../components/HelloWorld.vue'
 import BotManagement from "../views/bot-management/index.vue";
 import QuestionBank from '../components/QuestionBank.vue';
+import Home from '../components/Dashboard/Home.vue';
 
 const routes = [
     {
-        path: '',
+        path: '/home',
         name: 'Home',
-        component: HelloWorld,
+        component: Home,
     },
     {
         path: '/login',
@@ -24,9 +25,9 @@ const routes = [
         component: BotManagement,
     },
     {
-      path: '/question-bank',
-      name: 'QuestionBank',
-      component: QuestionBank,
+        path: '/question-bank',
+        name: 'QuestionBank',
+        component: QuestionBank,
     },
 
     // Thêm các route khác tại đây
