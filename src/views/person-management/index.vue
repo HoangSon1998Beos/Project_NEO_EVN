@@ -27,7 +27,7 @@
     <v-card
         style="background: white;color: yellow;margin-top: 15px;padding: 5px" class="text-right">
       <v-spacer></v-spacer>
-      <AddModal v-model:visible="visibleAdd" v-model:list-role="listRole"/>
+      <AddModal v-model:visible="visibleAdd" v-model:list-role="listRole" @success="searchAfter(textAddSuccess)"/>
     </v-card>
     <v-data-table
         style="margin-top: 15px;border: black"
@@ -102,33 +102,32 @@
         </div>
       </template>
       <template v-slot:item.status="{ item }">
-        <div>
-          {{ filterStatus(item.status) }}
+
+        <div class="text-center">
+          <v-chip
+              :color="checkColorStatus(item.status)"
+              :text="filterStatus(item.status)"
+              class="text-uppercase"
+              size="small"
+              label
+          ></v-chip>
         </div>
+
+<!--        <div>-->
+<!--          {{ filterStatus(item.status) }}-->
+<!--        </div>-->
       </template>
 
 
       <template v-slot:item.createdDate="{ item }">
-        <span>{{ new Date(item.createdDate).toLocaleString() }}</span>
+        <span>{{ validateDate(item.createdDate)  }}</span>
       </template>
       <template v-slot:item.updatedDate="{ item }">
-        <span>{{ new Date(item.updatedDate).toLocaleString() }}</span>
+        <span>{{ validateDate(item.updatedDate) }}</span>
       </template>
       <template v-slot:item.dateLogin="{ item }">
-        <span>{{ new Date(item.dateLogin).toLocaleString() }}</span>
+        <span>{{ validateDate(item.dateLogin) }}</span>
       </template>
-
-<!--      <template v-slot:footer="{ itemsPerPage, page, itemsPerPageOptions, disablePagination }">-->
-<!--        <v-row>-->
-<!--          <v-col class="text-center" cols="12">-->
-<!--            <v-pagination-->
-<!--                v-if="true"-->
-<!--                v-model="currentPage"-->
-<!--                :length="Math.ceil(listUser.total / this.perPage)"-->
-<!--            ></v-pagination>-->
-<!--          </v-col>-->
-<!--        </v-row>-->
-<!--      </template>-->
     </v-data-table>
 
     <v-pagination
@@ -137,26 +136,31 @@
         :length="totalPages"
         @update:model-value="search(false)"
     ></v-pagination>
-<!--    <Pagina-->
-<!--        v-model:current-page="currentPage"-->
-<!--        v-model:total-pages="totalPages"-->
-<!--        @pagi="search(false)"-->
-<!--    ></Pagina>-->
+    <EditModal  v-model:user-info="userInfo" v-model:visible="visibleEdit" v-model:list-role="listRole"/>
+    <DeleteModal v-model:visible="visibleDelete" @success="searchAfter(textDeleteSuccess)"/>
+    <LockModal v-model:visible="visibleLock" @success="searchAfter(textLockSuccess)"/>
+    <Successful  v-model:visible="visibleSuccessful" v-model:text="textSuccessful"/>
   </v-container>
 
 
-  <EditModal  v-model:user-info="userInfo" v-model:visible="visibleEdit" v-model:list-role="listRole"/>
+
 </template>
 
 <script>
 import axios from "axios";
 import AddModal from "./component/add.vue";
 import EditModal from "./component/edit.vue";
+import DeleteModal from "./component/delete-modal.vue";
+import Successful from "./component/successful-modal.vue";
+import LockModal from "./component/lock-modal.vue";
 
 export default {
   components: {
     EditModal,
     AddModal,
+    DeleteModal,
+    Successful,
+    LockModal
   },
   name: "index",
   data() {
@@ -175,10 +179,17 @@ export default {
       }
     ]
     return {
+      textLockSuccess: 'Khóa người dùng thành công',
+      textDeleteSuccess: 'Xóa người dùng thành công',
+      textAddSuccess: 'Thêm người dùng thành công',
+
+      textSuccessful: '',
+      visibleLock: false,
+      visibleSuccessful: false,
+      visibleDelete: false,
       visibleAdd: false,
       visibleEdit: false,
       userInfo: {},
-      addVisible: true,
       listStatus,
       headers: [
         { title: 'Số thứ tự', key: 'index' ,width: 120,align: 'center'},
@@ -192,7 +203,7 @@ export default {
         { title: 'Ngày cập nhật', key: 'updatedDate',align: 'center',width: 200},
         { title: 'Ngày đăng nhập', key: 'dateLogin',align: 'center',width: 200},
       ],
-      searchValue: 'Test',
+      searchValue: '',
       listUser: [],
       dialog: false,
       token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTcxNzA2OSwiZXhwIjoxNzA5ODAzNDY5fQ.tmS02wJrYvhmXKgss96NUj4rm_ue5Ez2UxsXCymoRRlcp6kV0w_yxa94h7uQUNR7r0VG6JRcyi7cNnOmlFTnLg',
@@ -214,9 +225,24 @@ export default {
     this.init();
   },
   methods: {
-    // editUser(){
-    //   this.userInfo = this.getUserInfo
-    // },
+    checkColorStatus(status) {
+      if (status === 1) return 'green';
+      else return 'grey';
+    },
+    validateDate(date) {
+
+      if(!date || date === null || date === ''){
+        return '';
+      }else{
+        return new Date(date).toLocaleString();
+      }
+    },
+    async searchAfter(text) {
+      this.textSuccessful = text;
+      this.visibleSuccessful = true;
+      this.searchValue = ''
+      await this.search(true);
+    },
     getUserInfoFormEdit(id){
       console.log('id',id)
       const userInfor = this.listUser.filter(item => item.id === id);
@@ -248,34 +274,23 @@ export default {
           });
     },
     lockUser(id) {
-      axios.put('http://10.252.10.112:3232/chatbot/user-info/lock/' + id, {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-        },
-      })
-          .then(response => {
-            console.log('response',response);
-            // Xử lý dữ liệu khi thành công
-            this.search(true);
-          })
-          .catch(error => {
-            // Xử lý lỗi
-          });
+      // axios.put('http://10.252.10.112:3232/chatbot/user-info/lock/' + id, {
+      //   headers: {
+      //     'Authorization': `Bearer ${this.token}`,
+      //   },
+      // })
+      //     .then(async response => {
+      //       console.log('response', response);
+      //       // Xử lý dữ liệu khi thành công
+      //       await this.search(true);
+      //     })
+      //     .catch(error => {
+      //       // Xử lý lỗi
+      //     });
+      this.visibleLock = true;
     },
     deleteUser(id) {
-      axios.put('http://10.252.10.112:3232/chatbot/user-info/delete/' + id, {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-        },
-      })
-          .then(response => {
-            console.log('response',response);
-            // Xử lý dữ liệu khi thành công
-            this.search(true);
-          })
-          .catch(error => {
-            // Xử lý lỗi
-          });
+      this.visibleDelete = true;
     },
     formatDate(){
 
@@ -300,13 +315,13 @@ export default {
       }
     },
 
-    search(checkSearch) {
+    async search(checkSearch) {
       let currentPage = 0;
       if(!checkSearch){
         currentPage = this.currentPage - 1;
       }
       this.loading = true
-      axios.get('http://10.252.10.112:3232/chatbot/user-info?keyword='+ `${this.searchValue}`
+      await axios.get('http://10.252.10.112:3232/chatbot/user-info?keyword='+ `${this.searchValue}`
           +'&currentPage='+ currentPage + '&perPage='+ `${this.perPage} `, {
         headers: {
           'Authorization': `Bearer ${this.token}`,
@@ -336,28 +351,6 @@ export default {
         this.editedItem = { id: null, name: '', position: '', salary: '' };
       }
     },
-
-    closeDialog() {
-      this.dialog = false;
-    },
-    // saveItem() {
-    //   if (this.editedItem.id !== null) {
-    //     // Update existing item
-    //     const index = this.items.findIndex(item => item.id === this.editedItem.id);
-    //     this.$set(this.items, index, { ...this.editedItem });
-    //   } else {
-    //     // Add new item
-    //     this.listUser.push({
-    //       ...this.editedItem,
-    //       id: this.listUser.length + 1,
-    //     });
-    //   }
-    //   this.closeDialog();
-    // },
-    // deleteItem(item) {
-    //   const index = this.items.findIndex(i => i.id === item.id);
-    //   this.listUser.splice(index, 1);
-    // },
   },
 };
 </script>

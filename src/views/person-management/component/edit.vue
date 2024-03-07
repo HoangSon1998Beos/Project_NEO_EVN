@@ -3,12 +3,22 @@
       transition="dialog-bottom-transition"
       style="width: 900px"
       v-model="isVisible"
-
+      persistent
   >
     <v-card
-        title="Cập nhật người dùng"
 
     >
+      <v-card-title class="d-flex justify-space-between align-center">
+        <div class="text-h5 text-medium-emphasis ps-2">
+          Cập nhật người dùng
+        </div>
+
+        <v-btn
+            icon="mdi-close"
+            variant="text"
+            @click="closeForm"
+        ></v-btn>
+      </v-card-title>
       <v-card-text>
         <v-form  ref="form">
         <v-row>
@@ -22,7 +32,7 @@
                 variant="outlined"
                 clearable
                 class="small-text-field"
-
+                disabled
             ></v-text-field>
           </v-col>
           <v-col
@@ -189,10 +199,11 @@ export default {
   methods: {
     setForm() {
       this.formUser = this.getUserInfo;
+      this.formUser.password = '';
     },
-    clearForm(){
-      this.formUser = {};
-    }
+    closeForm(){
+      this.isVisible = false;
+    },
 
   }
 }
@@ -202,9 +213,4 @@ export default {
 .v-card-text {
   text-align: left !important;
 }
-/*.small-text-field {*/
-/*  height: 20px !important;*/
-/*  width: 300px; !* Điều chỉnh chiều rộng theo nhu cầu của bạn *!*/
-/*  font-size: 14px; !* Điều chỉnh kích thước chữ *!*/
-/*}*/
 </style>
