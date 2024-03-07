@@ -3,6 +3,7 @@
       style="width: 900px"
       v-model="isVisible"
       activator="parent"
+      persistent
   >
 
     <template v-slot:activator="{ props: activatorProps }">
@@ -13,11 +14,20 @@
       ></v-btn>
     </template>
     <v-card
-        title="Thêm mới người dùng"
-
     >
+      <v-card-title class="d-flex justify-space-between align-center">
+        <div class="text-h5 text-medium-emphasis ps-2">
+          Thêm mới người dùng
+        </div>
 
+        <v-btn
+            icon="mdi-close"
+            variant="text"
+            @click="closeForm"
+        ></v-btn>
+      </v-card-title>
       <v-card-text>
+        <v-form  ref="form">
         <v-row>
           <v-col
               cols="6"
@@ -29,12 +39,11 @@
                 variant="outlined"
                 clearable
                 class="small-text-field"
-
+                :rules="userNameRules"
             ></v-text-field>
           </v-col>
           <v-col
               cols="6"
-
           >
             <div>Mật khẩu</div>
             <v-text-field
@@ -46,7 +55,8 @@
                 variant="outlined"
                 clearable
                 class="small-text-field"
-
+                :rules="passwordRules"
+                autocomplete="null"
             ></v-text-field>
           </v-col>
 
@@ -62,7 +72,7 @@
                 variant="outlined"
                 clearable
                 class="small-text-field"
-
+                :rules="fullNameRules"
             ></v-text-field>
           </v-col>
           <v-col
@@ -75,7 +85,8 @@
                 variant="outlined"
                 clearable
                 class="small-text-field"
-
+                :rules="emailRules"
+                autocomplete="null"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -90,7 +101,7 @@
                 variant="outlined"
                 clearable
                 class="small-text-field"
-
+                :rules="phoneNumberRules"
             ></v-text-field>
           </v-col>
           <v-col
@@ -106,7 +117,7 @@
                 item-title="roleName"
                 item-value="id"
                 :items="getListRole"
-
+                :rules="roleRules"
             ></v-select>
           </v-col>
         </v-row>
@@ -130,6 +141,7 @@
             ></v-file-input>
           </v-col>
         </v-row>
+        </v-form>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -173,6 +185,47 @@ export default {
   computed: {
     getListRole: appUtils.mapComputed('listRole'),
     isVisible: appUtils.mapComputed('visible'),
+
+    userNameRules() {
+      return [
+        v => !!v || 'Chưa nhập tên tài khoản',
+      ];
+    },
+
+    fullNameRules() {
+      return [
+        v => !!v || 'Chưa nhập họ tên',
+      ];
+    },
+
+    roleRules() {
+      return [
+        v => !!v || 'Chưa chọn vai trò',
+      ];
+    },
+
+    phoneNumberRules() {
+      return [
+        v => !!v || 'Chưa nhập số điện thoại',
+        v => /^\d+$/.test(v) || 'thông tin nhập vào không hợp lệ',
+        v => v.length <= 10 || 'Số điện thoại nhập không được quá 10 kí tự',
+        v => /^[1-9]/.test(v) || 'Số điện thoại không đúng định dạng',
+      ];
+    },
+
+    emailRules() {
+      return [
+        v => !!v || 'Chưa nhập email',
+        v => /.+@.+\..+/.test(v) || 'Email không đúng định dạng',
+      ];
+    },
+
+    passwordRules() {
+      return [
+        v => !!v || 'Chưa nhập mật khẩu',
+        v => /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(v) || 'Mật khẩu chưa đúng định dạng',
+      ];
+    },
   },
   data(){
     return{
@@ -198,8 +251,23 @@ export default {
     }
   },
   methods: {
+    validateForm() {
+      this.$refs.form.validate((valid) => {
+        console.log('valid',valid);
+        if (valid) {
+          // Xử lý gửi form khi nó được xác thực thành công
+          return true;
+        } else {
+          // Hiển thị thông báo hoặc thực hiện hành động khi form không hợp lệ
+          console.log('Form không hợp lệ');
+          return false;
+        }
+      });
+    },
     addUser() {
-      console.log('formUser', this.formUser)
+      // if(!this.validateForm()){
+      //   return;
+      // }
       const formAddUser = {...this.formUser,...this.formMock};
       const now = new Date().getTime();
       formAddUser.createDate = now;
@@ -219,8 +287,14 @@ export default {
           });
       this.clearForm();
       this.isVisible = false;
+      this.$emit('success');
+    },
+    closeForm(){
+      this.isVisible = false;
+      this.clearForm();
     },
     clearForm() {
+      this.$refs.form.resetValidation();
       this.formUser = {};
     }
 }
@@ -231,9 +305,5 @@ export default {
 .v-card-text {
   text-align: left !important;
 }
-/*.small-text-field {*/
-/*  height: 20px !important;*/
-/*  width: 300px; !* Điều chỉnh chiều rộng theo nhu cầu của bạn *!*/
-/*  font-size: 14px; !* Điều chỉnh kích thước chữ *!*/
-/*}*/
+
 </style>
