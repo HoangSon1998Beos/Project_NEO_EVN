@@ -12,12 +12,18 @@
               <v-col cols="6">
                 <span>Tên bot</span>
                 <Required/>
-                <v-text-field v-model="form.botName"
-                              :rules="requiredRule"
+                <v-text-field v-model.trim="form.botName"
+                              :rules="[validateBot]"
                               variant="outlined"
                               placeholder="Nhập tên bot"
+                              clearable
                               :disabled="action === 'isView'"
-                ></v-text-field>
+                              class="custom-tt"
+                >
+                  <template #prepend-inner>
+                    <div :class="{ 'disabled-background': action === 'isView' }"></div>
+                  </template>
+                </v-text-field>
               </v-col>
               <v-col cols="6">
                 <span>Mã bot</span>
@@ -25,7 +31,11 @@
                 <v-text-field v-model="form.botCode"
                               variant="outlined"
                               disabled
-                ></v-text-field>
+                >
+                  <template #prepend-inner>
+                    <div class="disabled-background"></div>
+                  </template>
+                </v-text-field>
               </v-col>
             </v-row>
             <v-row>
@@ -33,25 +43,31 @@
                 <span>Loại bot</span>
                 <Required/>
                 <v-select v-model="form.botType"
-                          :rules="requiredRule"
+                          :rules="[checkRuleServer]"
                           :items="itemsBot"
                           item-title="value"
                           item-value="key"
                           variant="outlined"
                           placeholder="Chọn Loại bot"
                           :disabled="action === 'isView' || action === 'isEdit'"
-                ></v-select>
+                          clearable
+                >
+                  <template #prepend-inner>
+                    <div :class="{ 'disabled-background': action === 'isView' || action === 'isEdit'}"></div>
+                  </template>
+                </v-select>
               </v-col>
               <v-col v-if="action === 'isCreate'" cols="6">
                 <span>Máy chủ lưu trữ 1</span>
                 <Required/>
                 <v-select v-model="form.server1"
-                          :rules="requiredRule"
+                          :rules="[checkRuleServer]"
                           item-title="value"
                           item-value="key"
                           :items="dataServerFake"
                           variant="outlined"
                           placeholder="Máy chủ lưu trữ"
+                          clearable
                 ></v-select>
               </v-col>
               <v-col v-else cols="6">
@@ -60,7 +76,11 @@
                 <v-select v-model="form.botTrain"
                           variant="outlined"
                           disabled
-                ></v-select>
+                >
+                  <template #prepend-inner>
+                    <div class="disabled-background"></div>
+                  </template>
+                </v-select>
               </v-col>
             </v-row>
             <v-row>
@@ -68,12 +88,13 @@
                 <span>Máy chủ lưu trữ 2</span>
                 <Required/>
                 <v-select v-model="form.server2"
-                          :rules="requiredRule"
+                          :rules="[checkRuleServer]"
                           variant="outlined"
                           :items="dataServerFake"
                           item-title="value"
                           item-value="key"
                           placeholder="Máy chủ lưu trữ"
+                          clearable
                 ></v-select>
               </v-col>
               <v-col v-else cols="6">
@@ -82,7 +103,11 @@
                 <v-select v-model="form.server"
                           variant="outlined"
                           disabled
-                ></v-select>
+                >
+                  <template #prepend-inner>
+                    <div class="disabled-background"></div>
+                  </template>
+                </v-select>
               </v-col>
               <v-col cols="6">
                 <span>Thư mục lưu trữ</span>
@@ -90,7 +115,11 @@
                 <v-text-field v-model="form.botSave"
                               variant="outlined"
                               disabled
-                ></v-text-field>
+                >
+                  <template #prepend-inner>
+                    <div class="disabled-background"></div>
+                  </template>
+                </v-text-field>
               </v-col>
             </v-row>
             <v-row>
@@ -100,15 +129,24 @@
                 <v-text-field v-model="form.model"
                               variant="outlined"
                               disabled
-                ></v-text-field>
+                >
+                  <template #prepend-inner>
+                    <div class="disabled-background"></div>
+                  </template>
+                </v-text-field>
               </v-col>
               <v-col cols="6">
                 <span>Mô tả</span>
-                <v-textarea v-model="form.description"
+                <v-textarea v-model.trim="form.description"
                             variant="outlined"
                             placeholder="Mô tả"
                             :disabled="action === 'isView'"
-                ></v-textarea>
+                            clearable
+                >
+                  <template #prepend-inner>
+                    <div :class="{ 'disabled-background': action === 'isView'}"></div>
+                  </template>
+                </v-textarea>
               </v-col>
             </v-row>
           </v-form>
@@ -135,6 +173,7 @@
 
 <script>
 import Required from "./Required.vue";
+import {validateBot, validateServer} from "../../../validate-bot.js";
 
 export default {
   name: 'ModalCreate',
@@ -147,6 +186,10 @@ export default {
     action: {
       type: String,
       default: '',
+    },
+    dataFrom: {
+      type: Array,
+      default: [],
     }
   },
   data() {
@@ -184,15 +227,23 @@ export default {
           value: 'api_server'
         }
       ],
-      requiredRule: [v => !!v || 'Field is required'],
     };
   },
   watch: {
     visible(val){
+      if(val && (this.action === 'isView' || 'isEdit')) {
+        this.form = this.dataFrom
+      }
       this.visibleDialog =val
     }
   },
   methods: {
+    validateBot(data){
+      return validateBot(data)
+    },
+    checkRuleServer(value) {
+      return validateServer(value)
+    },
     submitForm(){
       this.$refs.form.validate().then(valid => {
         if(valid){
@@ -207,11 +258,9 @@ export default {
       })
     },
     saveItem() {
-      console.log("create")
       this.$emit('create',this.form)
     },
     editItem() {
-      console.log("edit")
       this.$emit('edit',this.form)
     },
     closeModal () {
@@ -241,5 +290,15 @@ export default {
   display: flex;
   justify-content: flex-end;
   padding: 20px;
+}
+.disabled-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: gray;
+  color: black;
+  z-index: -1;
 }
 </style>
