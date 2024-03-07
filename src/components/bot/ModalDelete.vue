@@ -1,7 +1,9 @@
 <template>
   <v-dialog v-model="visibleDialog" max-width="400px" persistent>
     <v-card class="text-center body-modal">
-      <span class="material-icons">error_outline</span>
+      <div class="">
+        <warning/>
+      </div>
       <v-card-text>
         <div>
           <slot name="description"></slot>
@@ -20,8 +22,11 @@
 </template>
 
 <script>
+import Warning from "../../assets/bot/warning.vue";
+
 export default {
   name: 'ModalDelete',
+  components: {Warning},
   props: {
     visible: {
       type: Boolean,

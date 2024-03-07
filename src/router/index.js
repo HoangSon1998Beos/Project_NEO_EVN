@@ -4,6 +4,8 @@ import HelloWorld from '../components/HelloWorld.vue'
 import BotManagement from "../views/bot-management/index.vue";
 import QuestionBank from '../components/QuestionBank.vue';
 import Home from '../components/Dashboard/Home.vue';
+import QuestionBank from '../views/question-bank/index.vue';
+
 
 const routes = [
     {

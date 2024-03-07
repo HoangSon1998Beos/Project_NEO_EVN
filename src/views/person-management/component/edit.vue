@@ -2,27 +2,22 @@
   <v-dialog
       transition="dialog-bottom-transition"
       style="width: 900px"
-      v-model="visible"
+      v-model="isVisible"
+
   >
-    <template v-slot:activator="{ props: activatorProps }">
-      <v-btn
-          style="width: 200px;background: #2666de;color: white;border-color: #2666de"
-          v-bind="activatorProps"
-          text="Thêm mới"
-      ></v-btn>
-    </template>
     <v-card
-        title="Thêm mới người dùng"
+        title="Cập nhật người dùng"
 
     >
       <v-card-text>
-        <v-form v-model="formUser">
+        <v-form  ref="form">
         <v-row>
           <v-col
               cols="6"
           >
             <div>Tài khoản</div>
             <v-text-field
+                v-model="formUser.username"
                 required
                 variant="outlined"
                 clearable
@@ -36,6 +31,7 @@
           >
             <div>Mật khẩu</div>
             <v-text-field
+                v-model="formUser.password"
                 :append-inner-icon="visiblePassword ? 'mdi-eye-off' : 'mdi-eye'"
                 :type="visiblePassword ? 'text' : 'password'"
                 @click:append-inner="visiblePassword = !visiblePassword"
@@ -58,7 +54,7 @@
                 variant="outlined"
                 clearable
                 class="small-text-field"
-
+                v-model="formUser.fullname"
             ></v-text-field>
           </v-col>
           <v-col
@@ -70,6 +66,7 @@
                 variant="outlined"
                 clearable
                 class="small-text-field"
+                v-model="formUser.email"
 
             ></v-text-field>
           </v-col>
@@ -84,6 +81,7 @@
                 variant="outlined"
                 clearable
                 class="small-text-field"
+                v-model="formUser.phoneNumber"
 
             ></v-text-field>
           </v-col>
@@ -92,11 +90,14 @@
           >
             <div>Vai trò</div>
             <v-select
+                v-model="formUser.roleId"
                 required
                 variant="outlined"
                 clearable
                 class="small-text-field"
-
+                item-title="roleName"
+                item-value="id"
+                :items="getListRole"
             ></v-select>
           </v-col>
         </v-row>
@@ -130,15 +131,14 @@
 
         <v-btn
             color="primary"
-            text="Thêm mới"
+            text="Cập nhật"
             variant="tonal"
-            @click="dialog = false"
         ></v-btn>
 
         <v-btn
             text="Làm mới"
             variant="tonal"
-            @click="dialog = false"
+            @click="setForm"
 
         ></v-btn>
       </v-card-actions>
@@ -154,6 +154,7 @@ import axios from "axios";
 export default {
   name: "edit",
   props: {
+    listRole : [],
     userInfo: {
       type: Object,
       default: {},
@@ -164,23 +165,34 @@ export default {
     },
 
   },
-  computed: {
-    // formUser:appUtils.mapComputed(this.userInfo),
-    isVisible: appUtils.mapComputed('visible'),
+
+  watch: {
+    visible(val) {
+      if(val){
+        this.setForm();
+      }
+    }
   },
+
+  computed: {
+    getListRole: appUtils.mapComputed('listRole'),
+    isVisible: appUtils.mapComputed('visible'),
+    getUserInfo: appUtils.mapComputed('userInfo')
+  },
+
   data(){
     return{
-      userInfo:{},
-      dialog: true,
-      visible: true,
       visiblePassword: false,
-      // computed: {
-      //   isVisible: appUtils.mapComputed('visible'),
-      // },
-
+      formUser:{},
     }
   },
   methods: {
+    setForm() {
+      this.formUser = this.getUserInfo;
+    },
+    clearForm(){
+      this.formUser = {};
+    }
 
   }
 }
