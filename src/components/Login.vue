@@ -15,7 +15,7 @@
         />
       </a>
       <h3 class="text-center mt-3 dangnhap">Login</h3>
-      <v-form fast-fail @submit.prevent class="form">
+      <v-form fast-fail @submit.prevent="handleSubmit" class="form">
         <v-text-field
           v-model="userName"
           :rules="userNameRules"
@@ -43,6 +43,9 @@
 </template>
     
     <script>
+// import api from "../api/index.js";
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -65,15 +68,26 @@ export default {
     };
   },
   methods: {
-    // async handleSubmit() {
-    //   const response = await axios.post("login", {
-    //     userName: this.userName,
-    //     password: this.password,
-    //   });
-    //   console.log(response);
-
-    //   this.$router.push("/");
-    // },
+    async handleSubmit() {
+      console.log(
+        "import.meta.env.VITE_API_BASE_URL:",
+        import.meta.env.VITE_API_BASE_URL
+      );
+      const data = {
+        username: this.userName,
+        password: this.password,
+      };
+      try {
+        // const response = await api.post("/chatbot/login", data);
+        const response = await axios.post(
+          import.meta.env.VITE_API_BASE_URL + "/chatbot/login",
+          data
+        );
+        console.log("API Response:", response.data);
+      } catch (error) {
+        console.error("API Error:", error);
+      }
+    },
   },
 };
 </script>
