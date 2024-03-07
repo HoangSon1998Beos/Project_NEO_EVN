@@ -15,6 +15,14 @@ export const STATUS_BOT = [
         value: 3,
         label: 'Ngừng hoạt động',
     },
+    {
+        value: 4,
+        label: '',
+    },
+    {
+        value: -1,
+        label: '',
+    },
 ]
 
 export const COLOR_STATUS_BOT = [
@@ -32,6 +40,14 @@ export const COLOR_STATUS_BOT = [
     },
     {
         key: 3,
+        value: '#82868b',
+    },
+    {
+        key: 4,
+        value: '#82868b',
+    },
+    {
+        key: -1,
         value: '#82868b',
     },
 ]
@@ -110,7 +126,7 @@ export const COLOR_STATUS_BOT_TRAIN = [
     },
     {
         key: 5,
-        value: '#28c76f'
+        value: 'rgb(22, 67, 151)'
     },
     {
         key: 6,
