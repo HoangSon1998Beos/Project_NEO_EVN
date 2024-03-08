@@ -69,10 +69,6 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      console.log(
-        "import.meta.env.VITE_API_BASE_URL:",
-        import.meta.env.VITE_API_BASE_URL
-      );
       const data = {
         username: this.userName,
         password: this.password,
@@ -83,7 +79,9 @@ export default {
           import.meta.env.VITE_API_BASE_URL + "/chatbot/login",
           data
         );
-        console.log("API Response:", response.data);
+        const token = response.data.content.Bearer.substring(7);
+        localStorage.setItem("token", token);
+        this.$router.push("/home");
       } catch (error) {
         console.error("API Error:", error);
       }

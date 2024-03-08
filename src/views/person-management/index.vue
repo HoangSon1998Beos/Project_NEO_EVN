@@ -1,100 +1,92 @@
 
 <template>
-  <v-container style="max-width: 100% !important;">
-    <v-card
-        elevation="8"
-        rounded="lg"
-        style="margin-top: 25vh"
-    >
-
-      <v-card-text style="width: 400px;text-align: left !important;">
-        <div class="text-subtitle-1 text-medium-emphasis">Nhập tài khoản họ tên và email</div>
+  <v-container style="max-width: 100% !important">
+    <v-card elevation="8" rounded="lg" style="margin-top: 25vh">
+      <v-card-text style="width: 400px; text-align: left !important">
+        <div class="text-subtitle-1 text-medium-emphasis">
+          Nhập tài khoản họ tên và email
+        </div>
 
         <v-text-field
-            max-width="400"
-            :loading="loading"
-            append-inner-icon="mdi-magnify"
-            density="compact"
-            label="Nhập tài khoản, họ tên"
-            variant="solo"
-            hide-details
-            single-line
-            v-model="searchValue"
-            @click:append-inner="search(true)"
+          max-width="400"
+          :loading="loading"
+          append-inner-icon="mdi-magnify"
+          density="compact"
+          label="Nhập tài khoản, họ tên"
+          variant="solo"
+          hide-details
+          single-line
+          v-model="searchValue"
+          @click:append-inner="search(true)"
         ></v-text-field>
       </v-card-text>
-    </v-card >
+    </v-card>
     <v-card
-        style="background: white;color: yellow;margin-top: 15px;padding: 5px" class="text-right">
+      style="background: white; color: yellow; margin-top: 15px; padding: 5px"
+      class="text-right"
+    >
       <v-spacer></v-spacer>
-      <AddModal v-model:visible="visibleAdd" v-model:list-role="listRole" @success="searchAfter(textAddSuccess)"/>
+      <AddModal
+        v-model:visible="visibleAdd"
+        v-model:list-role="listRole"
+        @success="searchAfter(textAddSuccess)"
+      />
     </v-card>
     <v-data-table
-        style="margin-top: 15px;border: black"
-        :headers="headers"
-        :items="listUser"
-        item-key="id"
-        v-model:items-per-page="perPage"
+      style="margin-top: 15px; border: black"
+      :headers="headers"
+      :items="listUser"
+      item-key="id"
+      v-model:items-per-page="perPage"
     >
-
-
-      <template v-slot:item.index="{ item , index}">
+      <template v-slot:item.index="{ item, index }">
         <div>
           {{ index + 1 }}
         </div>
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-tooltip
-            location="end"
-        >
+        <v-tooltip location="end">
           <template v-slot:activator="{ props }">
-
-          <v-btn icon @click="getUserInfoFormEdit(item.id)" size="x-small" v-bind="props">
-        <v-icon
-            style="color: #2666de"
-        >
-          mdi-pencil
-        </v-icon>
-
-
-        </v-btn>
+            <v-btn
+              icon
+              @click="getUserInfoFormEdit(item.id)"
+              size="x-small"
+              v-bind="props"
+            >
+              <v-icon style="color: #2666de"> mdi-pencil </v-icon>
+            </v-btn>
           </template>
           <span>Cập nhật</span>
         </v-tooltip>
 
-
-        <v-tooltip
-            location="end"
-        >
+        <v-tooltip location="end">
           <template v-slot:activator="{ props }">
-            <v-btn icon @click="deleteUser((item.id))" size="x-small" v-bind="props">
-            <v-icon
-            style="color: #ea5455">
-          mdi-delete
-        </v-icon>
+            <v-btn
+              icon
+              @click="deleteUser(item.id)"
+              size="x-small"
+              v-bind="props"
+            >
+              <v-icon style="color: #ea5455"> mdi-delete </v-icon>
             </v-btn>
           </template>
           <span>Xóa</span>
         </v-tooltip>
 
-        <v-tooltip
-            location="end"
-        >
+        <v-tooltip location="end">
           <template v-slot:activator="{ props }">
-            <v-btn icon @click="lockUser(item.id)" size="x-small" v-bind="props">
-
-        <v-icon
-            style="color: #ff9f43"
-        >
-          mdi-lock-open
-        </v-icon>
-        </v-btn>
-      </template>
-      <span>Khóa</span>
-      </v-tooltip>
-
-
+            <v-btn
+              icon
+              @click="lockUser(item.id)"
+              size="x-small"
+              v-bind="props"
+            >
+              <v-icon style="color: #ff9f43"> mdi-lock-open </v-icon>
+            </v-btn>
+          </template>
+          <span>Khóa</span>
+        </v-tooltip>
       </template>
       <template v-slot:item.roleId="{ item }">
         <div>
@@ -102,25 +94,23 @@
         </div>
       </template>
       <template v-slot:item.status="{ item }">
-
         <div class="text-center">
           <v-chip
-              :color="checkColorStatus(item.status)"
-              :text="filterStatus(item.status)"
-              class="text-uppercase"
-              size="small"
-              label
+            :color="checkColorStatus(item.status)"
+            :text="filterStatus(item.status)"
+            class="text-uppercase"
+            size="small"
+            label
           ></v-chip>
         </div>
 
-<!--        <div>-->
-<!--          {{ filterStatus(item.status) }}-->
-<!--        </div>-->
+        <!--        <div>-->
+        <!--          {{ filterStatus(item.status) }}-->
+        <!--        </div>-->
       </template>
 
-
       <template v-slot:item.createdDate="{ item }">
-        <span>{{ validateDate(item.createdDate)  }}</span>
+        <span>{{ validateDate(item.createdDate) }}</span>
       </template>
       <template v-slot:item.updatedDate="{ item }">
         <span>{{ validateDate(item.updatedDate) }}</span>
@@ -131,19 +121,29 @@
     </v-data-table>
 
     <v-pagination
-        v-if="totalPages>1"
-        v-model="currentPage"
-        :length="totalPages"
-        @update:model-value="search(false)"
+      v-if="totalPages > 1"
+      v-model="currentPage"
+      :length="totalPages"
+      @update:model-value="search(false)"
     ></v-pagination>
-    <EditModal  v-model:user-info="userInfo" v-model:visible="visibleEdit" v-model:list-role="listRole"/>
-    <DeleteModal v-model:visible="visibleDelete" @success="searchAfter(textDeleteSuccess)"/>
-    <LockModal v-model:visible="visibleLock" @success="searchAfter(textLockSuccess)"/>
-    <Successful  v-model:visible="visibleSuccessful" v-model:text="textSuccessful"/>
+    <EditModal
+      v-model:user-info="userInfo"
+      v-model:visible="visibleEdit"
+      v-model:list-role="listRole"
+    />
+    <DeleteModal
+      v-model:visible="visibleDelete"
+      @success="searchAfter(textDeleteSuccess)"
+    />
+    <LockModal
+      v-model:visible="visibleLock"
+      @success="searchAfter(textLockSuccess)"
+    />
+    <Successful
+      v-model:visible="visibleSuccessful"
+      v-model:text="textSuccessful"
+    />
   </v-container>
-
-
-
 </template>
 
 <script>
@@ -160,30 +160,30 @@ export default {
     AddModal,
     DeleteModal,
     Successful,
-    LockModal
+    LockModal,
   },
   name: "index",
   data() {
-    const listStatus= [
+    const listStatus = [
       {
-        id : 1,
-        name: 'Hoạt động'
+        id: 1,
+        name: "Hoạt động",
       },
       {
-        id : 2,
-        name: 'Khóa'
+        id: 2,
+        name: "Khóa",
       },
       {
-        id : 3,
-        name: 'Hết hạn'
-      }
-    ]
+        id: 3,
+        name: "Hết hạn",
+      },
+    ];
     return {
-      textLockSuccess: 'Khóa người dùng thành công',
-      textDeleteSuccess: 'Xóa người dùng thành công',
-      textAddSuccess: 'Thêm người dùng thành công',
+      textLockSuccess: "Khóa người dùng thành công",
+      textDeleteSuccess: "Xóa người dùng thành công",
+      textAddSuccess: "Thêm người dùng thành công",
 
-      textSuccessful: '',
+      textSuccessful: "",
       visibleLock: false,
       visibleSuccessful: false,
       visibleDelete: false,
@@ -192,33 +192,54 @@ export default {
       userInfo: {},
       listStatus,
       headers: [
-        { title: 'Số thứ tự', key: 'index' ,width: 120,align: 'center'},
-        { title: 'Thao tác', key: 'actions', sortable: false ,width: 500 ,align: 'center'},
-        { title: 'Tài khoản', key: 'username',align: 'center',width: 140 },
-        { title: 'Vai Trò', key: 'roleId',align: 'center',width: 140 },
-        { title: 'Email', key: 'email',align: 'center',width: 140},
-        { title: 'Số điện thoại', key: 'phoneNumber',align: 'center',width: 200 },
-        { title: 'Trạng thái', key: 'status',align: 'center',width: 200},
-        { title: 'Ngày tạo', key: 'createdDate',align: 'center',width: 200},
-        { title: 'Ngày cập nhật', key: 'updatedDate',align: 'center',width: 200},
-        { title: 'Ngày đăng nhập', key: 'dateLogin',align: 'center',width: 200},
+        { title: "Số thứ tự", key: "index", width: 120, align: "center" },
+        {
+          title: "Thao tác",
+          key: "actions",
+          sortable: false,
+          width: 500,
+          align: "center",
+        },
+        { title: "Tài khoản", key: "username", align: "center", width: 140 },
+        { title: "Vai Trò", key: "roleId", align: "center", width: 140 },
+        { title: "Email", key: "email", align: "center", width: 140 },
+        {
+          title: "Số điện thoại",
+          key: "phoneNumber",
+          align: "center",
+          width: 200,
+        },
+        { title: "Trạng thái", key: "status", align: "center", width: 200 },
+        { title: "Ngày tạo", key: "createdDate", align: "center", width: 200 },
+        {
+          title: "Ngày cập nhật",
+          key: "updatedDate",
+          align: "center",
+          width: 200,
+        },
+        {
+          title: "Ngày đăng nhập",
+          key: "dateLogin",
+          align: "center",
+          width: 200,
+        },
       ],
-      searchValue: '',
+      searchValue: "",
       listUser: [],
       dialog: false,
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTcxNzA2OSwiZXhwIjoxNzA5ODAzNDY5fQ.tmS02wJrYvhmXKgss96NUj4rm_ue5Ez2UxsXCymoRRlcp6kV0w_yxa94h7uQUNR7r0VG6JRcyi7cNnOmlFTnLg',
+      token: localStorage.getItem("token"),
       loaded: false,
       loading: false,
       editedItem: {
         id: null,
-        name: '',
-        position: '',
-        salary: '',
+        name: "",
+        position: "",
+        salary: "",
       },
       currentPage: 1,
       perPage: 10,
       totalPages: 0,
-      listRole:[],
+      listRole: [],
     };
   },
   created() {
@@ -226,52 +247,51 @@ export default {
   },
   methods: {
     checkColorStatus(status) {
-      if (status === 1) return 'green';
-      else return 'grey';
+      if (status === 1) return "green";
+      else return "grey";
     },
     validateDate(date) {
-
-      if(!date || date === null || date === ''){
-        return '';
-      }else{
+      if (!date || date === null || date === "") {
+        return "";
+      } else {
         return new Date(date).toLocaleString();
       }
     },
     async searchAfter(text) {
       this.textSuccessful = text;
       this.visibleSuccessful = true;
-      this.searchValue = ''
+      this.searchValue = "";
       await this.search(true);
     },
-    getUserInfoFormEdit(id){
-      console.log('id',id)
-      const userInfor = this.listUser.filter(item => item.id === id);
-      console.log('userInfor',userInfor)
+    getUserInfoFormEdit(id) {
+      console.log("id", id);
+      const userInfor = this.listUser.filter((item) => item.id === id);
+      console.log("userInfor", userInfor);
 
-      console.log('this.listUser',this.listUser)
+      console.log("this.listUser", this.listUser);
 
-      if(userInfor.length === 1){
+      if (userInfor.length === 1) {
         this.userInfo = userInfor[0];
         // return userInfor[0];
-      }else{
+      } else {
         this.userInfo = {};
       }
       this.visibleEdit = true;
     },
-    init(){
-      axios.get('http://10.252.10.112:3232/chatbot/roles/get-role', {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-        },
-      })
-          .then(response => {
-            // Xử lý dữ liệu khi thành công
-            this.listRole = response.data.content;
-
-          })
-          .catch(error => {
-            // Xử lý lỗi
-          });
+    init() {
+      axios
+        .get("http://10.252.10.112:3232/chatbot/roles/get-role", {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          // Xử lý dữ liệu khi thành công
+          this.listRole = response.data.content;
+        })
+        .catch((error) => {
+          // Xử lý lỗi
+        });
     },
     lockUser(id) {
       // axios.put('http://10.252.10.112:3232/chatbot/user-info/lock/' + id, {
@@ -292,63 +312,68 @@ export default {
     deleteUser(id) {
       this.visibleDelete = true;
     },
-    formatDate(){
+    formatDate() {},
+    filterStatus(status) {
+      const statusInfo = this.listStatus.filter((item) => item.id === status);
 
-    },
-    filterStatus(status){
-
-      const statusInfo = this.listStatus.filter(item => item.id === status)
-
-      if(statusInfo.length === 1){
+      if (statusInfo.length === 1) {
         return statusInfo[0].name;
-      }else{
-        return '';
+      } else {
+        return "";
       }
     },
-    filterRole(statusId){
-      const roleInfo = this.listRole.filter(item => item.id === statusId)
+    filterRole(statusId) {
+      const roleInfo = this.listRole.filter((item) => item.id === statusId);
 
-      if(roleInfo.length === 1){
+      if (roleInfo.length === 1) {
         return roleInfo[0].roleName;
-      }else{
-        return '';
+      } else {
+        return "";
       }
     },
 
     async search(checkSearch) {
       let currentPage = 0;
-      if(!checkSearch){
+      if (!checkSearch) {
         currentPage = this.currentPage - 1;
       }
-      this.loading = true
-      await axios.get('http://10.252.10.112:3232/chatbot/user-info?keyword='+ `${this.searchValue}`
-          +'&currentPage='+ currentPage + '&perPage='+ `${this.perPage} `, {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-        },
-      })
-          .then(response => {
-
-            setTimeout(() => {
-              this.loading = false
-              this.loaded = true
-            }, 2000)
-            // Xử lý dữ liệu khi thành công
-            this.listUser = response.data.content.items;
-            this.totalPages = Math.ceil(response.data.content.total / this.perPage)
-
-          })
-          .catch(error => {
-            // Xử lý lỗi
-          });
+      this.loading = true;
+      await axios
+        .get(
+          "http://10.252.10.112:3232/chatbot/user-info?keyword=" +
+            `${this.searchValue}` +
+            "&currentPage=" +
+            currentPage +
+            "&perPage=" +
+            `${this.perPage} `,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          setTimeout(() => {
+            this.loading = false;
+            this.loaded = true;
+          }, 2000);
+          // Xử lý dữ liệu khi thành công
+          this.listUser = response.data.content.items;
+          this.totalPages = Math.ceil(
+            response.data.content.total / this.perPage
+          );
+        })
+        .catch((error) => {
+          // Xử lý lỗi
+        });
     },
 
     openDialog(action, item = null) {
       this.dialog = true;
-      if (action === 'edit') {
+      if (action === "edit") {
         this.editedItem = { ...item };
       } else {
-        this.editedItem = { id: null, name: '', position: '', salary: '' };
+        this.editedItem = { id: null, name: "", position: "", salary: "" };
       }
     },
   },
@@ -361,5 +386,4 @@ export default {
 .v-data-table-header {
   background-color: red !important;
 }
-
 </style>

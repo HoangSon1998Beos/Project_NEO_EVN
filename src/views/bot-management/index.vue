@@ -1,27 +1,31 @@
 <template>
   <div class="mx-10">
-    <v-breadcrumbs :items="['Trang chủ', 'Đào tạo Bot', 'Quản lý Bot']"></v-breadcrumbs>
+    <v-breadcrumbs
+      :items="['Trang chủ', 'Đào tạo Bot', 'Quản lý Bot']"
+    ></v-breadcrumbs>
     <div class="layout">
       <div class="card-layout">
-        <v-btn prepend-icon="mdi-plus" color="#2666de" @click="addBot">Thêm mới</v-btn>
+        <v-btn prepend-icon="mdi-plus" color="#2666de" @click="addBot"
+          >Thêm mới</v-btn
+        >
         <v-card class="mt-5">
           <v-data-table
-              :headers="headers"
-              :items="data.items"
-              density="compact"
-              :sort-asc-icon="'mdi-arrow-down'"
-              :sort-desc-icon="'mdi-arrow-up'"
-              :items-per-page="pagination.pageSize"
-              item-key="name"
-              class="custom-table"
+            :headers="headers"
+            :items="data.items"
+            density="compact"
+            :sort-asc-icon="'mdi-arrow-down'"
+            :sort-desc-icon="'mdi-arrow-up'"
+            :items-per-page="pagination.pageSize"
+            item-key="name"
+            class="custom-table"
           >
-            <template v-slot:item.action="{item}">
+            <template v-slot:item.action="{ item }">
               <v-tooltip text="Xem thông tin">
                 <template v-slot:activator="{ props }">
                   <span
-                      v-bind="props"
-                      class="material-icons cursor-pointer"
-                      @click="viewBot(item)"
+                    v-bind="props"
+                    class="material-icons cursor-pointer"
+                    @click="viewBot(item)"
                   >
                     visibility
                   </span>
@@ -30,9 +34,9 @@
               <v-tooltip text="Cập nhật">
                 <template v-slot:activator="{ props }">
                   <span
-                      v-bind="props"
-                      class="material-icons cursor-pointer"
-                      @click="editBot(item)"
+                    v-bind="props"
+                    class="material-icons cursor-pointer"
+                    @click="editBot(item)"
                   >
                     edit
                   </span>
@@ -41,9 +45,9 @@
               <v-tooltip v-if="!item.status" text="Bật bot">
                 <template v-slot:activator="{ props }">
                   <span
-                      v-bind="props"
-                      class="material-icons cursor-pointer"
-                      @click="startBot(item)"
+                    v-bind="props"
+                    class="material-icons cursor-pointer"
+                    @click="startBot(item)"
                   >
                     play_arrow
                   </span>
@@ -52,9 +56,9 @@
               <v-tooltip v-else text="Tắt bot">
                 <template v-slot:activator="{ props }">
                   <span
-                      v-bind="props"
-                      class="material-icons cursor-pointer"
-                      @click="stopBot(item)"
+                    v-bind="props"
+                    class="material-icons cursor-pointer"
+                    @click="stopBot(item)"
                   >
                     stop
                   </span>
@@ -63,9 +67,9 @@
               <v-tooltip v-if="false" text="Triển khai kịch bản">
                 <template v-slot:activator="{ props }">
                   <span
-                      v-bind="props"
-                      class="material-icons cursor-pointer"
-                      @click="deployBot(item)"
+                    v-bind="props"
+                    class="material-icons cursor-pointer"
+                    @click="deployBot(item)"
                   >
                     cached
                   </span>
@@ -74,9 +78,9 @@
               <v-tooltip text="Xoá">
                 <template v-slot:activator="{ props }">
                   <span
-                      v-bind="props"
-                      class="material-icons cursor-pointer"
-                      @click="deleteBot(item)"
+                    v-bind="props"
+                    class="material-icons cursor-pointer"
+                    @click="deleteBot(item)"
                   >
                     delete
                   </span>
@@ -85,9 +89,9 @@
               <v-tooltip text="Kết quả">
                 <template v-slot:activator="{ props }">
                   <span
-                      v-bind="props"
-                      class="material-icons cursor-pointer"
-                      @click="resultBot(item)"
+                    v-bind="props"
+                    class="material-icons cursor-pointer"
+                    @click="resultBot(item)"
                   >
                     error_outline
                   </span>
@@ -97,33 +101,33 @@
             <template v-slot:item.status="{ item }">
               <div>
                 <v-chip
-                    :color="getColorWork(item)"
-                    :text="getTextWork(item)"
-                    class="rounded-be-xl font-weight-medium h-25"
-                    size="small"
-                    label
+                  :color="getColorWork(item)"
+                  :text="getTextWork(item)"
+                  class="rounded-be-xl font-weight-medium h-25"
+                  size="small"
+                  label
                 ></v-chip>
               </div>
             </template>
             <template v-slot:item.botType="{ item }">
               <div>
-                {{ item.botType ? 'Bot khách hàng' : 'Bot đào tạo' }}
+                {{ item.botType ? "Bot khách hàng" : "Bot đào tạo" }}
               </div>
             </template>
             <template v-slot:item.trainStatus="{ item }">
               <div>
                 <v-chip
-                    :color="getColorTrain(item)"
-                    :text="getTextTrain(item)"
-                    class="rounded-be-xl font-weight-medium h-25"
-                    size="small"
-                    label
+                  :color="getColorTrain(item)"
+                  :text="getTextTrain(item)"
+                  class="rounded-be-xl font-weight-medium h-25"
+                  size="small"
+                  label
                 ></v-chip>
               </div>
             </template>
             <template v-slot:item.trainingDate="{ item }">
               <div>
-                {{ moment(item.trainingDate).format('DD-MM-YYYY HH:mm:ss') }}
+                {{ moment(item.trainingDate).format("DD-MM-YYYY HH:mm:ss") }}
               </div>
             </template>
             <template #bottom>
@@ -144,9 +148,13 @@
           :button-ok-text="isDelete ? 'Xoá' : isStart ? 'Start' : 'Stop'"
         >
           <template #description>
-            {{ isDelete ? 'Bạn có chắc chắn yêu cầu xóa ' + botName+' này không ?'
-              : isStart ? 'Bạn có chắc chắn khởi động ' + botName + ' không ?'
-                  : 'Bạn có chắc chắn tắt '+ botName + ' không ?'}}
+            {{
+              isDelete
+                ? "Bạn có chắc chắn yêu cầu xóa " + botName + " này không ?"
+                : isStart
+                ? "Bạn có chắc chắn khởi động " + botName + " không ?"
+                : "Bạn có chắc chắn tắt " + botName + " không ?"
+            }}
           </template>
         </ModalDelete>
         <ModalCreate
@@ -161,60 +169,90 @@
     </div>
     <div class="app">
       <div class="app_chill">
-        <div class="custom-text">
-          Các phiên đang chat
+        <div class="custom-text">Các phiên đang chat</div>
+        <div class="container">
+          <v-btn
+            width="47%"
+            color="#2666de"
+            style="color: white"
+            @click="zaloClick"
+          >
+            Zalo({{ zalo_count }})
+          </v-btn>
+          <v-btn
+            width="47%"
+            color="#2666de"
+            style="color: white"
+            @click="messClick"
+          >
+            Messenge({{ mess_count }})
+          </v-btn>
         </div>
         <div class="container">
-          <v-btn width="47%" color="#2666de" style="color: white" @click="zaloClick">
-            Zalo({{zalo_count}})
+          <v-btn
+            width="47%"
+            color="#2666de"
+            style="color: white"
+            @click="appClick"
+          >
+            App({{ app_count }})
           </v-btn>
-          <v-btn width="47%" color="#2666de" style="color: white"@click="messClick">
-            Messenge({{mess_count}})
+          <v-btn
+            width="47%"
+            color="#2666de"
+            style="color: white"
+            @click="webClick"
+          >
+            Web({{ web_count }})
           </v-btn>
         </div>
-        <div class="container">
-          <v-btn width="47%" color="#2666de" style="color: white"@click="appClick">
-            App({{app_count}})
-          </v-btn>
-          <v-btn width="47%" color="#2666de" style="color: white"@click="webClick">
-            Web({{web_count}})
-          </v-btn>
-        </div>
-        <div class="custom-text mt-10">
-          Phiên chat thuộc {{ appName }}
-        </div>
-        <div> Không có phiên chat nào</div>
+        <div class="custom-text mt-10">Phiên chat thuộc {{ appName }}</div>
+        <div>Không có phiên chat nào</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
-
 import ModalDelete from "../../components/bot/ModalDelete.vue";
 import ModalCreate from "../../components/bot/ModalCreate.vue";
 import axios from "axios";
-import { COLOR_STATUS_BOT, STATUS_BOT, STATUS_BOT_TRAIN,COLOR_STATUS_BOT_TRAIN } from "../../utils/constants.js";
+import {
+  COLOR_STATUS_BOT,
+  STATUS_BOT,
+  STATUS_BOT_TRAIN,
+  COLOR_STATUS_BOT_TRAIN,
+} from "../../utils/constants.js";
 import Pagination from "../../components/Pagination.vue";
 import moment from "moment";
 
 export default {
-  name: 'BotManagement',
-  components: {Pagination, ModalCreate, ModalDelete},
+  name: "BotManagement",
+  components: { Pagination, ModalCreate, ModalDelete },
   data() {
     return {
       headers: [
-        { title: 'STT', align: 'start', sortable: false, key: 'stt'},
-        { title: 'Thao tác', align: 'center', key: 'action', sortable: false,width: '200px'},
-        { title: 'Mã bot', align: 'start', key: 'botCode' },
-        { title: 'Tên Bot', align: 'start', key: 'botName' },
-        { title: 'Loại bot', align: 'start', key: 'botType' },
-        { title: 'Trạng thái hoạt động', align: 'start', key: 'status' },
-        { title: 'Trạng thái đào tạo', align: 'start', key: 'trainStatus' },
-        { title: 'Ngày đào tạo', align: 'start', key: 'trainingDate',width: '150px' },
-        { title: 'Phiên bản', align: 'start', key: 'nameModel' },
-        { title: 'Máy chủ lưu trữ', align: 'start', key: 'hostName' },
+        { title: "STT", align: "start", sortable: false, key: "stt" },
+        {
+          title: "Thao tác",
+          align: "center",
+          key: "action",
+          sortable: false,
+          width: "200px",
+        },
+        { title: "Mã bot", align: "start", key: "botCode" },
+        { title: "Tên Bot", align: "start", key: "botName" },
+        { title: "Loại bot", align: "start", key: "botType" },
+        { title: "Trạng thái hoạt động", align: "start", key: "status" },
+        { title: "Trạng thái đào tạo", align: "start", key: "trainStatus" },
+        {
+          title: "Ngày đào tạo",
+          align: "start",
+          key: "trainingDate",
+          width: "150px",
+        },
+        { title: "Phiên bản", align: "start", key: "nameModel" },
+        { title: "Máy chủ lưu trữ", align: "start", key: "hostName" },
       ],
       data: [],
       zalo_count: 0,
@@ -226,21 +264,20 @@ export default {
       isDelete: false,
       isStart: false,
       isStop: false,
-      botName: '',
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTc5OTU1MCwiZXhwIjoxNzA5ODg1OTUwfQ.fZMewRkx4v8zSgdgFWeRGAad7R0VglxtrUGwyTfTH91Aix2XSCKCPUHiOzrmHo0CHJUgqDKHcf4EDl6qwso3og',
-      config: {},
-      appName:'',
-      actionCode: '',
+      botName: "",
+      token: localStorage.getItem("token"),
+      appName: "",
+      actionCode: "",
       pagination: {
         page: 1, // Trang hiện tại
         pageSize: 10, // Số mục trên mỗi trang
       },
       totalItems: 0, // Tổng số mục
       dataForm: [],
-    }
+    };
   },
   created() {
-    this.getAllBot()
+    this.getAllBot();
   },
   watch: {
     data() {
@@ -249,7 +286,7 @@ export default {
   },
   computed: {
     moment() {
-      return moment
+      return moment;
     },
     totalPage() {
       return Math.ceil(this.totalItems / this.pagination.pageSize);
@@ -261,110 +298,110 @@ export default {
         item.stt = index + 1; // Tính chỉ số STT cho mỗi item dựa trên số lượng các mục trong mảng items
       });
     },
-    async getAllBot(){
+    async getAllBot() {
       try {
         this.config = {
           headers: {
-            'Authorization': `Bearer ${this.token}`,
+            Authorization: `Bearer ${this.token}`,
           },
-        }
-        const dataResponse = await axios.get(`http://10.252.10.112:3232/chatbot/bot/get-all?currentPage=${this.pagination.page - 1}&perPage=${this.pagination.pageSize}`, this.config)
-        this.data = dataResponse.data.content
-        this.totalItems = this.data.total
+        };
+        const dataResponse = await axios.get(
+          `http://10.252.10.112:3232/chatbot/bot/get-all?currentPage=${
+            this.pagination.page - 1
+          }&perPage=${this.pagination.pageSize}`,
+          this.config
+        );
+        this.data = dataResponse.data.content;
+        this.totalItems = this.data.total;
       } catch (e) {
         console.log("=>(index.vue:268) e", e);
       }
     },
     getColorWork(item) {
-      return COLOR_STATUS_BOT.find((x) => x.key === item.status).value
+      return COLOR_STATUS_BOT.find((x) => x.key === item.status).value;
     },
     getColorTrain(item) {
-      return COLOR_STATUS_BOT_TRAIN.find((x) => x.key === item.trainStatus).value
+      return COLOR_STATUS_BOT_TRAIN.find((x) => x.key === item.trainStatus)
+        .value;
     },
     getTextWork(item) {
-      return STATUS_BOT.find((x) => x.value === item.status).label
+      return STATUS_BOT.find((x) => x.value === item.status).label;
     },
     getTextTrain(item) {
-      return STATUS_BOT_TRAIN.find((x) => x.value === item.trainStatus).label
+      return STATUS_BOT_TRAIN.find((x) => x.value === item.trainStatus).label;
     },
     addBot() {
-      this.actionCode = 'isCreate'
-      this.visibleModalCreate = true
+      this.actionCode = "isCreate";
+      this.visibleModalCreate = true;
     },
-    viewBot(item){
-      this.dataForm = item
-      this.actionCode = 'isView'
-      this.visibleModalCreate = true
+    viewBot(item) {
+      this.dataForm = item;
+      this.actionCode = "isView";
+      this.visibleModalCreate = true;
     },
-    editBot(item){
-      this.dataForm = item
-      this.actionCode = 'isEdit'
-      this.visibleModalCreate = true
+    editBot(item) {
+      this.dataForm = item;
+      this.actionCode = "isEdit";
+      this.visibleModalCreate = true;
     },
-    startBot(item){
-      this.botName = item.botName
-      this.isStart = true
-      this.visibleModal = true
+    startBot(item) {
+      this.botName = item.botName;
+      this.isStart = true;
+      this.visibleModal = true;
     },
-    stopBot(item){
-      this.botName = item.botName
-      this.isStop = true
-      this.visibleModal = true
+    stopBot(item) {
+      this.botName = item.botName;
+      this.isStop = true;
+      this.visibleModal = true;
     },
-    deployBot(item) {
-
+    deployBot(item) {},
+    deleteBot(item) {
+      this.botName = item.botName;
+      this.isDelete = true;
+      this.visibleModal = true;
     },
-    deleteBot(item){
-      this.botName = item.botName
-      this.isDelete = true
-      this.visibleModal = true
-    },
-    resultBot(item){
-
-    },
+    resultBot(item) {},
     cancelModal() {
-      this.visibleModal = false
+      this.visibleModal = false;
       setTimeout(() => {
-        this.isDelete = false
-        this.isStart = false
-        this.isStop = false
-      },200)
+        this.isDelete = false;
+        this.isStart = false;
+        this.isStop = false;
+      }, 200);
     },
     cancelModalCreate() {
-      this.dataForm = []
-      this.visibleModalCreate =false
+      this.dataForm = [];
+      this.visibleModalCreate = false;
     },
     saveForm(formData) {
       console.log("=>(index.vue:328) formData", formData);
     },
-    confirmModal() {
-
-    },
+    confirmModal() {},
     zaloClick() {
-      this.appName = 'Zalo'
+      this.appName = "Zalo";
     },
     messClick() {
-      this.appName = 'Messenger'
+      this.appName = "Messenger";
     },
     appClick() {
-      this.appName = 'App'
+      this.appName = "App";
     },
     webClick() {
-      this.appName = 'Web'
+      this.appName = "Web";
     },
-    updatePage(page){
-      this.pagination.page = page
-      this.getAllBot()
+    updatePage(page) {
+      this.pagination.page = page;
+      this.getAllBot();
     },
     updatePerPage(item) {
-      this.pagination.pageSize = item
-      this.pagination.page = 1
+      this.pagination.pageSize = item;
+      this.pagination.page = 1;
       this.$nextTick(() => {
-        this.getAllBot()
-      })
-    }
+        this.getAllBot();
+      });
+    },
   },
-}
+};
 </script>
 
 <style scoped lang="css">

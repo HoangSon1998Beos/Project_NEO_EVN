@@ -28,8 +28,7 @@ export default {
   data() {
     return {
       StoryMaxMonth: [],
-      token:
-        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTc3ODEzMSwiZXhwIjoxNzA5ODY0NTMxfQ.VBFK3NxmcdBZ8ugTBZZn3BIUTRjydhkXQ4QEj-sgILc65VFC11D28gYGneahCKZFAVibhF5WLpqIQTWfN1Apxg",
+      token: localStorage.getItem("token"),
       chartData: {
         labels: [],
         datasets: [
