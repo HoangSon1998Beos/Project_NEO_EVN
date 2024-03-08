@@ -14,6 +14,4 @@ export default (axios) => (resource) => ({
     update(body, id, config = {}) {
         return axios.put(`${resource}/${id}`, body, config)
     },
-        return axios.get(`${resource}/${path}`,config)
-    }
 })

@@ -36,12 +36,11 @@ const routes = [
         path: '/person',
         name: 'person-management',
         component: Person,
-     },
-     {
-      path: '/list-customer',
-      name: 'ListCustomer',
-      component: ListCustomer,
-      },
+    },
+    {
+        path: '/list-customer',
+        name: 'ListCustomer',
+        component: ListCustomer,
     },
 
     // Thêm các route khác tại đây
