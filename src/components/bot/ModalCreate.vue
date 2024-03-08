@@ -173,7 +173,7 @@
 
 <script>
 import Required from "./Required.vue";
-import {validateBot, validateServer} from "../../../validate-bot.js";
+import {validate, validateServer} from "../../../validate.js";
 
 export default {
   name: 'ModalCreate',
@@ -239,7 +239,7 @@ export default {
   },
   methods: {
     validateBot(data){
-      return validateBot(data)
+      return validate(data)
     },
     checkRuleServer(value) {
       return validateServer(value)
