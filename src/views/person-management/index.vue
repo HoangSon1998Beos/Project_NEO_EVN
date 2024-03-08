@@ -155,13 +155,13 @@
 
 <script>
 import axios from "axios";
-import AddModal from "./component/add.vue";
-import EditModal from "./component/edit.vue";
-import DeleteModal from "./component/delete-modal.vue";
-import Successful from "./component/successful-modal.vue";
-import LockModal from "./component/lock-modal.vue";
-import ErrorModal from "./component/error-modal.vue";
-import InfoModal from "./component/info-modal.vue";
+import AddModal from "./modal-person/add.vue";
+import EditModal from "./modal-person/edit.vue";
+import DeleteModal from "./modal-person/delete-modal.vue";
+import Successful from "./modal-person/successful-modal.vue";
+import LockModal from "./modal-person/lock-modal.vue";
+import ErrorModal from "./modal-person/error-modal.vue";
+import InfoModal from "./modal-person/info-modal.vue";
 
 
 // import Pagination from "../../components/Pagination.vue";
