@@ -1,6 +1,6 @@
 <template>
   <v-container style="max-width: 100% !important">
-    <v-card elevation="8" rounded="lg" style="margin-top: 25vh">
+    <v-card elevation="8" rounded="lg">
       <v-card-text style="width: 400px; text-align: left !important">
         <div class="text-subtitle-1 text-medium-emphasis">
           Nhập tài khoản họ tên và email
