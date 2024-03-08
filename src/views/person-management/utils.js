@@ -6,7 +6,7 @@ const mapComputed = (propName) => {
         },
         // setter
         set: function (newValue) {
-            this.$emit('update:'+propName, newValue);
+            this.$emit('update:' + propName, newValue);
         }
     }
 }

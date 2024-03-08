@@ -13,17 +13,17 @@
     />
     <span class="ml-5"> bản ghi/trang</span>
     <span class="ml-16">Tổng số {{ getTotalRecord }} bản ghi</span>
-<!--      <div>-->
-<!--        <v-pagination-->
-<!--            class="ml-16"-->
-<!--            rounded="circle"-->
-<!--            last-icon="mdi-arrow-down"-->
-<!--            first-icon="mdi-arrow-down"-->
-<!--            v-model="getCurrentPage"-->
-<!--            :length="getTotalPages"-->
-<!--            @update:model-value="changePage"-->
-<!--        ></v-pagination>-->
-<!--      </div>-->
+    <!--      <div>-->
+    <!--        <v-pagination-->
+    <!--            class="ml-16"-->
+    <!--            rounded="circle"-->
+    <!--            last-icon="mdi-arrow-down"-->
+    <!--            first-icon="mdi-arrow-down"-->
+    <!--            v-model="getCurrentPage"-->
+    <!--            :length="getTotalPages"-->
+    <!--            @update:model-value="changePage"-->
+    <!--        ></v-pagination>-->
+    <!--      </div>-->
   </div>
   <v-pagination
       v-if="getTotalPages > 1"
@@ -79,23 +79,9 @@ export default {
     getTotalPages: mapComputed('totalPages'),
     getCurrentPage: mapComputed('currentPage'),
     getTotalRecord: mapComputed('totalRecord'),
-    pages ()
-    {
-      if (this.getPerPage == null || this.getTotalRecord == null)
-      {
-        this.totalPage = 0
-        return 0
-      }
-      console.log('Math.ceil(this.getTotalRecord / this.getPerPage',Math.ceil(this.getTotalRecord / this.getPerPage));
-      this.totalPage = Math.ceil(this.getTotalRecord / this.getPerPage);
-      return Math.ceil(this.getTotalRecord / this.getPerPage)
-
-    },
   },
   data() {
     return {
-      // currentPage: this.value, // Trang hiện tại được gán từ props
-      // selectItem: 10,
       totalPage: 0,
       item: 4,
       items: [
@@ -124,25 +110,12 @@ export default {
   },
   watch: {
     perPage(val) {
-      // console.log('getTotalPages', this.getTotalPages)
-      // console.log('val', val);
       this.$emit('changePage', true)
-      // this.totalPage = this.totalPages;
     },
-    // totalPage(){
-    //   this.totalPage =  this.getTotalPages
-    //
-    // }
 
   },
   methods: {
-    // setTotalPage(totalPage) {
-    //   console.log('this.totalPages',this.totalPages)
-    //   this.totalPage =  this.totalPages
-    //
-    // },
     changePage(page) {
-      // this.currentPage = page;
       this.$emit('changePage', false);
     },
   },

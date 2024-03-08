@@ -1,8 +1,8 @@
 <template>
-    <v-container >
-      <v-dialog v-model="isVisible" max-width="400" >
-        <v-card class="text-center body-modal">
-          <div class="margin-15">
+  <v-container>
+    <v-dialog v-model="isVisible" max-width="400">
+      <v-card class="text-center body-modal">
+        <div class="margin-15">
           <div style="margin-top: 10px">
             <v-icon
                 color="success"
@@ -15,14 +15,14 @@
               {{ this.getText }}
             </div>
           </v-card-text>
-          <v-card-actions class="button" >
+          <v-card-actions class="button">
             <v-btn style="color: white;background-color: #164397;border-color: #164397" @click="confirm">Đồng ý</v-btn>
           </v-card-actions>
-          </div>
-        </v-card>
+        </div>
+      </v-card>
 
-      </v-dialog>
-    </v-container>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
@@ -30,7 +30,7 @@ import appUtils from "../utils.js";
 
 export default {
   name: "successful-modal",
-  props :{
+  props: {
     visible: {
       type: Boolean,
       default: true,
@@ -54,9 +54,10 @@ export default {
 </script>
 
 <style scoped>
-.margin-15{
+.margin-15 {
   margin: 15px;
 }
+
 .font-text {
   margin-bottom: 0.5rem;
   font-family: inherit;
@@ -65,6 +66,7 @@ export default {
   font-size: x-large;
   color: #5e5873;
 }
+
 .button {
   display: flex;
   column-gap: 1rem;

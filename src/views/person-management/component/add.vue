@@ -27,120 +27,120 @@
         ></v-btn>
       </v-card-title>
       <v-card-text>
-        <v-form  ref="form" v-model="valid" lazy-validation>
-        <v-row>
-          <v-col
-              cols="6"
-          >
-            <div>Tài khoản</div>
-            <v-text-field
-                v-model="formUser.username"
-                required
-                variant="outlined"
-                clearable
-                class="small-text-field"
-                :rules="userNameRules"
-            ></v-text-field>
-          </v-col>
-          <v-col
-              cols="6"
-          >
-            <div>Mật khẩu</div>
-            <v-text-field
-                v-model="formUser.password"
-                :append-inner-icon="visiblePassword ? 'mdi-eye-off' : 'mdi-eye'"
-                :type="visiblePassword ? 'text' : 'password'"
-                @click:append-inner="visiblePassword = !visiblePassword"
-                required
-                variant="outlined"
-                clearable
-                class="small-text-field"
-                :rules="passwordRules"
-                autocomplete="null"
-            ></v-text-field>
-          </v-col>
-
-        </v-row>
-        <v-row>
-          <v-col
-              cols="6"
-          >
-            <div>Họ tên</div>
-            <v-text-field
-                v-model="formUser.fullname"
-                required
-                variant="outlined"
-                clearable
-                class="small-text-field"
-                :rules="fullNameRules"
-            ></v-text-field>
-          </v-col>
-          <v-col
-              cols="6"
-          >
-            <div>Email</div>
-            <v-text-field
-                v-model="formUser.email"
-                required
-                variant="outlined"
-                clearable
-                class="small-text-field"
-                :rules="emailRules"
-                autocomplete="null"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col
-              cols="6"
-          >
-            <div>Số điện thoại</div>
-            <v-text-field
-                v-model="formUser.phoneNumber"
-                required
-                variant="outlined"
-                clearable
-                class="small-text-field"
-                :rules="phoneNumberRules"
-            ></v-text-field>
-          </v-col>
-          <v-col
-              cols="6"
-          >
-            <div>Vai trò</div>
-            <v-select
-                v-model="formUser.roleId"
-                required
-                variant="outlined"
-                clearable
-                class="small-text-field"
-                item-title="roleName"
-                item-value="id"
-                :items="getListRole"
-                :rules="roleRules"
-            ></v-select>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col  cols="1">
-            <v-icon
-                size="70"
-                style="color: #2666de"
+        <v-form ref="form" v-model="valid" lazy-validation>
+          <v-row>
+            <v-col
+                cols="6"
             >
-              mdi-account
-            </v-icon>
-          </v-col>
-          <v-col
-              cols="3"
-          >
-            <v-file-input
-                accept="image/*"
-                label="Chọn ảnh"
-                style="color: #2666de"
-                class="small-text-field"
-            ></v-file-input>
-          </v-col>
-        </v-row>
+              <div>Tài khoản</div>
+              <v-text-field
+                  v-model="formUser.username"
+                  required
+                  variant="outlined"
+                  clearable
+                  class="small-text-field"
+                  :rules="userNameRules"
+              ></v-text-field>
+            </v-col>
+            <v-col
+                cols="6"
+            >
+              <div>Mật khẩu</div>
+              <v-text-field
+                  v-model="formUser.password"
+                  :append-inner-icon="visiblePassword ? 'mdi-eye-off' : 'mdi-eye'"
+                  :type="visiblePassword ? 'text' : 'password'"
+                  @click:append-inner="visiblePassword = !visiblePassword"
+                  required
+                  variant="outlined"
+                  clearable
+                  class="small-text-field"
+                  :rules="passwordRules"
+                  autocomplete="null"
+              ></v-text-field>
+            </v-col>
+
+          </v-row>
+          <v-row>
+            <v-col
+                cols="6"
+            >
+              <div>Họ tên</div>
+              <v-text-field
+                  v-model="formUser.fullname"
+                  required
+                  variant="outlined"
+                  clearable
+                  class="small-text-field"
+                  :rules="fullNameRules"
+              ></v-text-field>
+            </v-col>
+            <v-col
+                cols="6"
+            >
+              <div>Email</div>
+              <v-text-field
+                  v-model="formUser.email"
+                  required
+                  variant="outlined"
+                  clearable
+                  class="small-text-field"
+                  :rules="emailRules"
+                  autocomplete="null"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+                cols="6"
+            >
+              <div>Số điện thoại</div>
+              <v-text-field
+                  v-model="formUser.phoneNumber"
+                  required
+                  variant="outlined"
+                  clearable
+                  class="small-text-field"
+                  :rules="phoneNumberRules"
+              ></v-text-field>
+            </v-col>
+            <v-col
+                cols="6"
+            >
+              <div>Vai trò</div>
+              <v-select
+                  v-model="formUser.roleId"
+                  required
+                  variant="outlined"
+                  clearable
+                  class="small-text-field"
+                  item-title="roleName"
+                  item-value="id"
+                  :items="getListRole"
+                  :rules="roleRules"
+              ></v-select>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="1">
+              <v-icon
+                  size="70"
+                  style="color: #2666de"
+              >
+                mdi-account
+              </v-icon>
+            </v-col>
+            <v-col
+                cols="3"
+            >
+              <v-file-input
+                  accept="image/*"
+                  label="Chọn ảnh"
+                  style="color: #2666de"
+                  class="small-text-field"
+              ></v-file-input>
+            </v-col>
+          </v-row>
         </v-form>
       </v-card-text>
 
@@ -175,7 +175,7 @@ import axios from "axios";
 export default {
   name: "add",
   props: {
-    listRole : [],
+    listRole: [],
     visible: {
       type: Boolean,
       default: true,
@@ -227,10 +227,10 @@ export default {
       ];
     },
   },
-  data(){
-    return{
+  data() {
+    return {
       token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTcxNzA2OSwiZXhwIjoxNzA5ODAzNDY5fQ.tmS02wJrYvhmXKgss96NUj4rm_ue5Ez2UxsXCymoRRlcp6kV0w_yxa94h7uQUNR7r0VG6JRcyi7cNnOmlFTnLg',
-      formUser:{},
+      formUser: {},
       visiblePassword: false,
       formMock: {
         action: "insert",
@@ -254,7 +254,7 @@ export default {
 
     validateForm() {
       this.$refs.form.validate((valid) => {
-        console.log('valid',valid);
+        console.log('valid', valid);
         if (valid) {
           // Xử lý gửi form khi nó được xác thực thành công
           return true;
@@ -270,7 +270,7 @@ export default {
       if (!this.valid) {
         return;
       }
-      const formAddUser = {...this.formUser,...this.formMock};
+      const formAddUser = {...this.formUser, ...this.formMock};
       const now = new Date().getTime();
       formAddUser.createDate = now;
       // Thực hiện POST request sử dụng Axios
@@ -291,7 +291,7 @@ export default {
       this.isVisible = false;
       this.$emit('success');
     },
-    closeForm(){
+    closeForm() {
       this.isVisible = false;
       this.clearForm();
     },
@@ -299,7 +299,7 @@ export default {
       this.$refs.form.resetValidation();
       this.formUser = {};
     }
-}
+  }
 }
 </script>
 
