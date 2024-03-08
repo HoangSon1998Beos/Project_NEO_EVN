@@ -95,7 +95,9 @@
     <v-row align="start" style="height: 400" no-gutters class="row1">
       <v-col cols="4" class="col1">
         <v-card height="400px">
-          <a href="">10 kịch bản dùng nhiều nhất trong tháng</a>
+          <a href="" style="margin-left: 10px"
+            >10 kịch bản dùng nhiều nhất trong tháng</a
+          >
           <div class="dataQuestion" style="margin-top: 20px">
             <HorizontalBar />
           </div>
@@ -103,7 +105,9 @@
       </v-col>
       <v-col>
         <v-card height="400px">
-          <a href=""> 20 câu hỏi chưa được xử lý trong tháng </a>
+          <a href="" style="margin-left: 10px">
+            20 câu hỏi chưa được xử lý trong tháng
+          </a>
           <v-card class="dataQuestion">
             <v-data-table-virtual
               v-model="selected"
@@ -114,7 +118,12 @@
               <template v-slot:item="{ item, index }">
                 <tr :style="{ backgroundColor: getRowColor(index) }">
                   <td>{{ item.questions }}</td>
-                  <td v-if="item.chanelCode === 'messenger'">logo fb</td>
+                  <td v-if="item.chanelCode === 'messenger'">
+                    <font-awesome-icon
+                      :icon="['fab', 'facebook']"
+                      style="color: blueviolet; font-size: 20px"
+                    />
+                  </td>
                   <td>{{ item.dateChat }}</td>
                   <td>{{ item.cusName }}</td>
                   <td>{{ item.cusName }}</td>
@@ -138,7 +147,10 @@
             >
               <v-row>
                 <v-col cols="2">
-                  <font-awesome-icon :icon="['fab', 'facebook']" />
+                  <font-awesome-icon
+                    :icon="['fab', 'facebook']"
+                    style="color: blueviolet; font-size: 20px"
+                  />
                 </v-col>
                 <v-col
                   ><v-list-item-title v-text="item.cusName"></v-list-item-title
@@ -155,10 +167,12 @@
         <v-card height="300px">
           <a href="" class="title">5 phiên chat mới nhất </a>
           <v-data-table-virtual
+            v-model="chatModel"
             :headers="chat"
             height="400"
-            item-value="name"
-          ></v-data-table-virtual>
+            :items="chatItem"
+          >
+          </v-data-table-virtual>
         </v-card>
       </v-col>
       <v-col>
@@ -202,11 +216,20 @@
             >4 kịch bản được sử dụng nhiều nhất trong ngày</a
           >
           <v-data-table-virtual
+            v-model="kichbanModel"
             :headers="kichban"
-            :items="listChat"
+            :items="listKichban"
             height="400"
             item-value="name"
-          ></v-data-table-virtual>
+          >
+            <template v-slot:item="{ item, index }">
+              <tr>
+                <td style="color: orange">{{ item.channelName }}</td>
+                <td>{{ item.sessionCount }}</td>
+                <td>{{ item.intentName }}</td>
+              </tr>
+            </template></v-data-table-virtual
+          >
         </v-card>
       </v-col>
       <v-col>
@@ -227,9 +250,7 @@ import axios from "axios";
 export default {
   components: { BarChart, HorizontalBar },
   data: () => ({
-    token:
-      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTc3ODEzMSwiZXhwIjoxNzA5ODY0NTMxfQ.VBFK3NxmcdBZ8ugTBZZn3BIUTRjydhkXQ4QEj-sgILc65VFC11D28gYGneahCKZFAVibhF5WLpqIQTWfN1Apxg",
-
+    token: localStorage.getItem("token"),
     qtht: [
       { title: "Quản lý người dùng" },
       { title: "Quản lý Menu" },
@@ -262,22 +283,24 @@ export default {
       { title: "Quản lý các phiên bản sao lưu" },
     ],
     selected: [],
+    chatModel: [],
     headers: [
       { title: "CÂU HỎI", align: "start", key: "questions" },
-      { title: "KÊNH CHAT", align: "center", key: "chanelCode" },
-      { title: "THỜI GIAN", align: "center", key: "dateChat" },
-      { title: "KHÁCH HÀNG", align: "center", key: "cusName" },
-      { title: "CHUYỂN XỬ LÝ", align: "center", key: "cusName" },
+      { title: "KÊNH CHAT", align: "start", key: "chanelCode" },
+      { title: "THỜI GIAN", align: "start", key: "dateChat" },
+      { title: "KHÁCH HÀNG", align: "start", key: "cusName" },
+      { title: "CHUYỂN XỬ LÝ", align: "start", key: "cusName" },
     ],
     chat: [
-      { title: "KÊNH CHAT", align: "start", key: "chat" },
-      { title: "KHÁCH HÀNG", align: "end", key: "kh" },
+      { title: "KÊNH CHAT", align: "center", key: "channelName" },
+      { title: "KHÁCH HÀNG", align: "center", key: "cusName" },
     ],
     kichban: [
-      { title: "KÊNH CHAT", align: "start", key: "chat" },
-      { title: "SỐ LƯỢNG PHIÊN ĐÃ CHAT", align: "end", key: "kh" },
-      { title: "Ý ĐỊNH", align: "end", key: "yd" },
+      { title: "KÊNH CHAT", align: "start", key: "channelName" },
+      { title: "SỐ LƯỢNG PHIÊN ĐÃ CHAT", align: "start", key: "sessionCount" },
+      { title: "Ý ĐỊNH", align: "start", key: "intentName" },
     ],
+    kichbanModel: [],
     desserts: [],
     listCustomer: [],
     listRating: [],
@@ -362,7 +385,7 @@ export default {
             },
           }
         );
-        this.listChat = response.data.content;
+        this.listKichban = response.data.content;
       } catch (error) {
         console.error("API Error:", error);
       }
@@ -388,6 +411,9 @@ export default {
 }
 .col1 {
   margin-right: 20px;
+}
+.col1 >>> .v-data-table-header__content {
+  display: block;
 }
 .dataQuestion {
   margin: 15px 15px 15px 15px;
