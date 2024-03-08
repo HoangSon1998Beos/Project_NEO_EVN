@@ -10,6 +10,11 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import '@mdi/font/css/materialdesignicons.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faFacebook } from '@fortawesome/free-brands-svg-icons';
+
+library.add(faFacebook);
 
 const vuetify = createVuetify({
   components,
@@ -17,7 +22,8 @@ const vuetify = createVuetify({
 })
 
 createApp(App)
-.use(vuetify)
-.use(router)
-.use(VueAxios, axios)
-.mount('#app')
+  .use(vuetify)
+  .use(router)
+  .component('font-awesome-icon', FontAwesomeIcon)
+  .use(VueAxios, axios)
+  .mount('#app')

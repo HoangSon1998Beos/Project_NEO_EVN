@@ -359,9 +359,7 @@ export default {
       showPicker: false,
       selectedDate: null,
       date: null,
-      token:
-        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudnF1YW4iLCJuYW1lIjoiTmd1eeG7hW4gVsSDbiBRdcOibiIsInR5cGUiOiJBRE1JTiIsImlkIjoyNSwiaWF0IjoxNzA5Njg4MzQ4LCJleHAiOjE3MDk3NzQ3NDh9.F9ZPgK_4eaHTM6PFAjoPE6vL0dJx1e36sMnoUeG6Jo3wJ1LTQL7mhsJXJbDKUV7W1JxdbB2KtOSaWnnnJwN1Gg",
-
+      token: localStorage.getItem("token"),
       questionInput: "",
       intent: [],
       entity: [],
