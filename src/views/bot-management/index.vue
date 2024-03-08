@@ -38,7 +38,7 @@
                   </span>
                 </template>
               </v-tooltip>
-              <v-tooltip v-if="!item.status" text="Bật bot">
+              <v-tooltip v-if="item.status === 3" text="Bật bot">
                 <template v-slot:activator="{ props }">
                   <span
                       v-bind="props"
@@ -49,7 +49,7 @@
                   </span>
                 </template>
               </v-tooltip>
-              <v-tooltip v-else text="Tắt bot">
+              <v-tooltip v-if="item.status === 2 || item.status === 1" text="Tắt bot">
                 <template v-slot:activator="{ props }">
                   <span
                       v-bind="props"
@@ -195,6 +195,7 @@
 import ModalDelete from "../../components/bot/ModalDelete.vue";
 import ModalCreate from "../../components/bot/ModalCreate.vue";
 import axios from "axios";
+import Api from "../../api/api.js";
 import { COLOR_STATUS_BOT, STATUS_BOT, STATUS_BOT_TRAIN,COLOR_STATUS_BOT_TRAIN } from "../../utils/constants.js";
 import Pagination from "../../components/Pagination.vue";
 import moment from "moment";
@@ -214,7 +215,7 @@ export default {
         { title: 'Trạng thái đào tạo', align: 'start', key: 'trainStatus' },
         { title: 'Ngày đào tạo', align: 'start', key: 'trainingDate',width: '150px' },
         { title: 'Phiên bản', align: 'start', key: 'nameModel' },
-        { title: 'Máy chủ lưu trữ', align: 'start', key: 'hostName' },
+        { title: 'Máy chủ lưu trữ', align: 'start', key: 'hostName' ,width: '150px'},
       ],
       data: [],
       zalo_count: 0,
@@ -227,7 +228,6 @@ export default {
       isStart: false,
       isStop: false,
       botName: '',
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTc5OTU1MCwiZXhwIjoxNzA5ODg1OTUwfQ.fZMewRkx4v8zSgdgFWeRGAad7R0VglxtrUGwyTfTH91Aix2XSCKCPUHiOzrmHo0CHJUgqDKHcf4EDl6qwso3og',
       config: {},
       appName:'',
       actionCode: '',
@@ -264,11 +264,12 @@ export default {
     async getAllBot(){
       try {
         this.config = {
-          headers: {
-            'Authorization': `Bearer ${this.token}`,
-          },
+          params: {
+            currentPage: this.pagination.page - 1,
+            perPage: this.pagination.pageSize
+          }
         }
-        const dataResponse = await axios.get(`http://10.252.10.112:3232/chatbot/bot/get-all?currentPage=${this.pagination.page - 1}&perPage=${this.pagination.pageSize}`, this.config)
+        const dataResponse = await Api.bot.index(this.config)
         this.data = dataResponse.data.content
         this.totalItems = this.data.total
       } catch (e) {
@@ -292,6 +293,7 @@ export default {
       this.visibleModalCreate = true
     },
     viewBot(item){
+      console.log("=>(index.vue:295) item", item);
       this.dataForm = item
       this.actionCode = 'isView'
       this.visibleModalCreate = true
