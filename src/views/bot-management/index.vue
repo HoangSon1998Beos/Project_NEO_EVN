@@ -312,12 +312,12 @@ export default {
         this.config = {
           params: {
             currentPage: this.pagination.page - 1,
-            perPage: this.pagination.pageSize,
-          },
-        };
-        const dataResponse = await Api.bot.index(this.config);
-        this.data = dataResponse.data.content;
-        this.totalItems = this.data.total;
+            perPage: this.pagination.pageSize
+          }
+        }
+        const dataResponse = await Api.bot.indexWidthPath(`get-all`,this.config)
+        this.data = dataResponse.data.content
+        this.totalItems = this.data.total
       } catch (e) {
         console.log("=>(index.vue:268) e", e);
       }

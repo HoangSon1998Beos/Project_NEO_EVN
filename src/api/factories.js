@@ -14,6 +14,6 @@ export default (axios) => (resource) => ({
     update(body, id, config = {}) {
         return axios.put(`${resource}/${id}`, body, config)
     },
-
-    //Khai báo get, post, put,delete ở đây
+        return axios.get(`${resource}/${path}`,config)
+    }
 })
