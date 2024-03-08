@@ -269,7 +269,7 @@ export default {
             perPage: this.pagination.pageSize
           }
         }
-        const dataResponse = await Api.bot.index(this.config)
+        const dataResponse = await Api.bot.indexWidthPath(`get-all`,this.config)
         this.data = dataResponse.data.content
         this.totalItems = this.data.total
       } catch (e) {
