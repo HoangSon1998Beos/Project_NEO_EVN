@@ -1,4 +1,5 @@
 import BotRepository from "./bot/BotRepository.js";
+import LoginRepository from "./login/LoginRepository.js";
 import axios from "axios";
 
 axios.interceptors.request.use(
@@ -16,5 +17,6 @@ axios.interceptors.request.use(
 
 export default {
     bot: BotRepository(axios),
+    login: LoginRepository(axios),
     //Khai báo các repositories khác ở đây
 }

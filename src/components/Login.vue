@@ -43,8 +43,7 @@
 </template>
     
     <script>
-// import api from "../api/index.js";
-import axios from "axios";
+import Api from "../api/api.js";
 
 export default {
   data() {
@@ -74,11 +73,7 @@ export default {
         password: this.password,
       };
       try {
-        // const response = await api.post("/chatbot/login", data);
-        const response = await axios.post(
-          import.meta.env.VITE_API_BASE_URL + "/chatbot/login",
-          data
-        );
+        const response = await Api.login.create(data);
         const token = response.data.content.Bearer.substring(7);
         localStorage.setItem("token", token);
         this.$router.push("/home");
