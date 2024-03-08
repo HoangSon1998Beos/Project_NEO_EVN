@@ -5,6 +5,7 @@ import BotManagement from "../views/bot-management/index.vue";
 import Home from '../components/Dashboard/Home.vue';
 import QuestionBank from '../views/question-bank/index.vue';
 import Person from '../views/person-management/index.vue';
+import ListCustomer from "../views/list-customer/index.vue";
 
 
 const routes = [
@@ -35,6 +36,12 @@ const routes = [
         path: '/person',
         name: 'person-management',
         component: Person,
+     },
+     {
+      path: '/list-customer',
+      name: 'ListCustomer',
+      component: ListCustomer,
+      },
     },
 
     // Thêm các route khác tại đây

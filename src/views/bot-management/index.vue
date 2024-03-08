@@ -38,7 +38,7 @@
                   </span>
                 </template>
               </v-tooltip>
-              <v-tooltip v-if="!item.status" text="Bật bot">
+              <v-tooltip v-if="item.status === 3" text="Bật bot">
                 <template v-slot:activator="{ props }">
                   <span
                       v-bind="props"
@@ -49,7 +49,7 @@
                   </span>
                 </template>
               </v-tooltip>
-              <v-tooltip v-else text="Tắt bot">
+              <v-tooltip v-if="item.status === 2 || item.status === 1" text="Tắt bot">
                 <template v-slot:activator="{ props }">
                   <span
                       v-bind="props"
@@ -60,7 +60,7 @@
                   </span>
                 </template>
               </v-tooltip>
-              <v-tooltip text="Triển khai kịch bản">
+              <v-tooltip v-if="false" text="Triển khai kịch bản">
                 <template v-slot:activator="{ props }">
                   <span
                       v-bind="props"
@@ -121,6 +121,11 @@
                 ></v-chip>
               </div>
             </template>
+            <template v-slot:item.trainingDate="{ item }">
+              <div>
+                {{ moment(item.trainingDate).format('DD-MM-YYYY HH:mm:ss') }}
+              </div>
+            </template>
             <template #bottom>
               <Pagination
                 :value="pagination.page"
@@ -131,7 +136,6 @@
               />
             </template>
           </v-data-table>
-
         </v-card>
         <ModalDelete
           :visible="visibleModal"
@@ -140,20 +144,19 @@
           :button-ok-text="isDelete ? 'Xoá' : isStart ? 'Start' : 'Stop'"
         >
           <template #description>
-            {{ isDelete ? 'Bạn có chắc chắn yêu cầu xóa ' + botName+' này không?'
+            {{ isDelete ? 'Bạn có chắc chắn yêu cầu xóa ' + botName+' này không ?'
               : isStart ? 'Bạn có chắc chắn khởi động ' + botName + ' không ?'
-                  : 'Bạn có chắc chắn tắt '+ botName + 'không ?'}}
+                  : 'Bạn có chắc chắn tắt '+ botName + ' không ?'}}
           </template>
         </ModalDelete>
         <ModalCreate
           :visible="visibleModalCreate"
           :action="actionCode"
+          :data-from="dataForm"
           @cancel="cancelModalCreate"
           @create="saveForm"
           @edit="editForm"
-        >
-
-        </ModalCreate>
+        />
       </div>
     </div>
     <div class="app">
@@ -192,8 +195,10 @@
 import ModalDelete from "../../components/bot/ModalDelete.vue";
 import ModalCreate from "../../components/bot/ModalCreate.vue";
 import axios from "axios";
+import Api from "../../api/api.js";
 import { COLOR_STATUS_BOT, STATUS_BOT, STATUS_BOT_TRAIN,COLOR_STATUS_BOT_TRAIN } from "../../utils/constants.js";
 import Pagination from "../../components/Pagination.vue";
+import moment from "moment";
 
 export default {
   name: 'BotManagement',
@@ -208,9 +213,9 @@ export default {
         { title: 'Loại bot', align: 'start', key: 'botType' },
         { title: 'Trạng thái hoạt động', align: 'start', key: 'status' },
         { title: 'Trạng thái đào tạo', align: 'start', key: 'trainStatus' },
-        { title: 'Ngày đào tạo', align: 'start', key: 'trainingDate' },
+        { title: 'Ngày đào tạo', align: 'start', key: 'trainingDate',width: '150px' },
         { title: 'Phiên bản', align: 'start', key: 'nameModel' },
-        { title: 'Máy chủ lưu trữ', align: 'start', key: 'hostName' },
+        { title: 'Máy chủ lưu trữ', align: 'start', key: 'hostName' ,width: '150px'},
       ],
       data: [],
       zalo_count: 0,
@@ -223,7 +228,6 @@ export default {
       isStart: false,
       isStop: false,
       botName: '',
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTcwODg5MywiZXhwIjoxNzA5Nzk1MjkzfQ.6Ykyx_gOwIHYsGvw_jEH3-8k8iATY9EUio0hmLUGaYHmP3rgut4RXvEpMlo4GrTBUW1FuExIcqdy7G8bFMuh9g',
       config: {},
       appName:'',
       actionCode: '',
@@ -232,6 +236,7 @@ export default {
         pageSize: 10, // Số mục trên mỗi trang
       },
       totalItems: 0, // Tổng số mục
+      dataForm: [],
     }
   },
   created() {
@@ -243,9 +248,11 @@ export default {
     },
   },
   computed: {
+    moment() {
+      return moment
+    },
     totalPage() {
-      // return Math.ceil(this.totalItems / this.pagination.perPage);
-      return 5;
+      return Math.ceil(this.totalItems / this.pagination.pageSize);
     },
   },
   methods: {
@@ -257,11 +264,12 @@ export default {
     async getAllBot(){
       try {
         this.config = {
-          headers: {
-            'Authorization': `Bearer ${this.token}`,
-          },
+          params: {
+            currentPage: this.pagination.page - 1,
+            perPage: this.pagination.pageSize
+          }
         }
-        const dataResponse = await axios.get(`http://10.252.10.112:3232/chatbot/bot/get-all?currentPage=${this.pagination.page}&perPage=${this.pagination.pageSize}`, this.config)
+        const dataResponse = await Api.bot.indexWidthPath(`get-all`,this.config)
         this.data = dataResponse.data.content
         this.totalItems = this.data.total
       } catch (e) {
@@ -285,20 +293,23 @@ export default {
       this.visibleModalCreate = true
     },
     viewBot(item){
+      console.log("=>(index.vue:295) item", item);
+      this.dataForm = item
       this.actionCode = 'isView'
       this.visibleModalCreate = true
     },
     editBot(item){
+      this.dataForm = item
       this.actionCode = 'isEdit'
       this.visibleModalCreate = true
     },
     startBot(item){
-      this.botName = item.name
+      this.botName = item.botName
       this.isStart = true
       this.visibleModal = true
     },
     stopBot(item){
-      this.botName = item.name
+      this.botName = item.botName
       this.isStop = true
       this.visibleModal = true
     },
@@ -306,7 +317,7 @@ export default {
 
     },
     deleteBot(item){
-      this.botName = item.name
+      this.botName = item.botName
       this.isDelete = true
       this.visibleModal = true
     },
@@ -322,9 +333,11 @@ export default {
       },200)
     },
     cancelModalCreate() {
+      this.dataForm = []
       this.visibleModalCreate =false
     },
     saveForm(formData) {
+      console.log("=>(index.vue:328) formData", formData);
     },
     confirmModal() {
 

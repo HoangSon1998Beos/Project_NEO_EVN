@@ -1,32 +1,35 @@
 <template>
-  <v-container style="max-width: 100% !important;">
-    <v-card
-        elevation="8"
-        rounded="lg"
-        style="margin-top: 25vh"
-    >
-
-      <v-card-text style="width: 400px;text-align: left !important;">
-        <div class="text-subtitle-1 text-medium-emphasis">Nhập tài khoản họ tên và email</div>
+  <v-container style="max-width: 100% !important">
+    <v-card elevation="8" rounded="lg" style="margin-top: 25vh">
+      <v-card-text style="width: 400px; text-align: left !important">
+        <div class="text-subtitle-1 text-medium-emphasis">
+          Nhập tài khoản họ tên và email
+        </div>
 
         <v-text-field
-            max-width="400"
-            :loading="loading"
-            append-inner-icon="mdi-magnify"
-            density="compact"
-            label="Nhập tài khoản, họ tên"
-            variant="solo"
-            hide-details
-            single-line
-            v-model="searchValue"
-            @click:append-inner="search(true)"
+          max-width="400"
+          :loading="loading"
+          append-inner-icon="mdi-magnify"
+          density="compact"
+          label="Nhập tài khoản, họ tên"
+          variant="solo"
+          hide-details
+          single-line
+          v-model="searchValue"
+          @click:append-inner="search(true)"
         ></v-text-field>
       </v-card-text>
     </v-card>
     <v-card
-        style="background: white;color: yellow;margin-top: 15px;padding: 5px" class="text-right">
+      style="background: white; color: yellow; margin-top: 15px; padding: 5px"
+      class="text-right"
+    >
       <v-spacer></v-spacer>
-      <AddModal v-model:visible="visibleAdd" v-model:list-role="listRole" @success="searchAfter(textAddSuccess)"/>
+      <AddModal
+        v-model:visible="visibleAdd"
+        v-model:list-role="listRole"
+        @success="searchAfter(textAddSuccess)"
+      />
     </v-card>
     <v-data-table
         style="margin-top: 15px;border: black"
@@ -35,19 +38,16 @@
         item-key="id"
         v-model:items-per-page="perPage"
         :pagination.sync="totalPages"
+
     >
-
-
-      <template v-slot:item.index="{ item , index}">
+      <template v-slot:item.index="{ item, index }">
         <div>
           {{ indexRow(index) }}
         </div>
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-tooltip
-            location="end"
-        >
+        <v-tooltip location="end">
           <template v-slot:activator="{ props }">
 
             <v-btn icon @click="getUserInfoFormEdit(item.id)" size="x-small" v-bind="props">
@@ -56,6 +56,7 @@
               >
                 mdi-pencil
               </v-icon>
+
             </v-btn>
           </template>
           <span>Cập nhật</span>
@@ -70,14 +71,13 @@
                   style="color: #ea5455">
                 mdi-delete
               </v-icon>
+
             </v-btn>
           </template>
           <span>Xóa</span>
         </v-tooltip>
 
-        <v-tooltip
-            location="end"
-        >
+        <v-tooltip location="end">
           <template v-slot:activator="{ props }">
             <v-btn icon @click="lockUser(item.id)" size="x-small" v-bind="props">
 
@@ -86,6 +86,7 @@
               >
                 mdi-lock-open
               </v-icon>
+
             </v-btn>
           </template>
           <span>Khóa</span>
@@ -95,6 +96,7 @@
         <a @click="getUserInfoFormView(item.id)">
           {{ item.username }}
         </a>
+
       </template>
       <template v-slot:item.roleId="{ item }">
         <div>
@@ -102,18 +104,17 @@
         </div>
       </template>
       <template v-slot:item.status="{ item }">
-
         <div class="text-center">
           <v-chip
-              :color="checkColorStatus(item.status)"
-              :text="filterStatus(item.status)"
-              class="text-uppercase"
-              size="small"
-              label
+            :color="checkColorStatus(item.status)"
+            :text="filterStatus(item.status)"
+            class="text-uppercase"
+            size="small"
+            label
           ></v-chip>
         </div>
-      </template>
 
+      </template>
 
       <template v-slot:item.createdDate="{ item }">
         <span>{{ validateDate(item.createdDate) }}</span>
@@ -149,6 +150,7 @@
 
 
   <!--  v-model:visible="visibleInfo"-->
+
 </template>
 
 <script>
@@ -175,6 +177,7 @@ export default {
     LockModal,
     PaginationApi,
     InfoModal
+
   },
   name: "index",
   data() {
@@ -192,11 +195,11 @@ export default {
         name: 'Hết hạn'
       }
     ]
-    return {
-      textLockSuccess: 'Khóa người dùng thành công',
-      textDeleteSuccess: 'Xóa người dùng thành công',
-      textAddSuccess: 'Thêm người dùng thành công',
 
+    return {
+      textLockSuccess: "Khóa người dùng thành công",
+      textDeleteSuccess: "Xóa người dùng thành công",
+      textAddSuccess: "Thêm người dùng thành công",
       textSuccessful: '',
       visibleInfo: false,
       visibleError: false,
@@ -218,8 +221,9 @@ export default {
         {title: 'Ngày tạo', key: 'createdDate', align: 'center', width: 200},
         {title: 'Ngày cập nhật', key: 'updatedDate', align: 'center', width: 200},
         {title: 'Ngày đăng nhập', key: 'dateLogin', align: 'center', width: 200},
+
       ],
-      searchValue: '',
+      searchValue: "",
       listUser: [],
       dialog: false,
       token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTgwNDI0NCwiZXhwIjoxNzA5ODkwNjQ0fQ.juYqwYdwcVMQP9r9Li0t6TSe9GmFHvTunWi9LDcLKVln5FYfztm05Gzve8hiX46zZxrS824gzW7uslbs4EGejg',
@@ -227,9 +231,9 @@ export default {
       loading: false,
       editedItem: {
         id: null,
-        name: '',
-        position: '',
-        salary: '',
+        name: "",
+        position: "",
+        salary: "",
       },
       totalRecord: 0,
       currentPage: 1,
@@ -264,12 +268,13 @@ export default {
     async searchAfter(text) {
       this.textSuccessful = text;
       this.visibleSuccessful = true;
-      this.searchValue = ''
+      this.searchValue = "";
       await this.search(true);
     },
     getUser(id) {
       const userInfor = this.listUser.filter(item => item.id === id);
       if (userInfor.length === 1) {
+
 
         this.userInfo = userInfor[0];
         this.userInfo.roleLabel = this.filterRole(this.userInfo.roleId)
@@ -302,6 +307,7 @@ export default {
           .catch(error => {
             // Xử lý lỗi
           });
+
     },
     lockUser(id) {
       // axios.put('http://10.252.10.112:3232/chatbot/user-info/lock/' + id, {
@@ -333,10 +339,12 @@ export default {
     filterRole(statusId) {
       const roleInfo = this.listRole.filter(item => item.id === statusId)
 
+
       if (roleInfo.length === 1) {
         return roleInfo[0].roleName;
       } else {
         return '';
+
       }
     },
 
@@ -381,6 +389,7 @@ export default {
               return
             }
           });
+
     },
 
     openDialog(action, item = null) {
@@ -389,6 +398,7 @@ export default {
         this.editedItem = {...item};
       } else {
         this.editedItem = {id: null, name: '', position: '', salary: ''};
+
       }
     },
   },
@@ -402,5 +412,4 @@ export default {
 .v-data-table-header {
   background-color: red !important;
 }
-
 </style>

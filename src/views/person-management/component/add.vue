@@ -1,30 +1,27 @@
 <template>
   <v-dialog
-      style="width: 900px"
-      v-model="isVisible"
-      activator="parent"
-      persistent
+    style="width: 900px"
+    v-model="isVisible"
+    activator="parent"
+    persistent
   >
-
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn
-          style="width: 200px;background: #2666de;color: white;border-color: #2666de"
-          v-bind="activatorProps"
-          text="Thêm mới"
+        style="
+          width: 200px;
+          background: #2666de;
+          color: white;
+          border-color: #2666de;
+        "
+        v-bind="activatorProps"
+        text="Thêm mới"
       ></v-btn>
     </template>
-    <v-card
-    >
+    <v-card>
       <v-card-title class="d-flex justify-space-between align-center">
-        <div class="text-h5 text-medium-emphasis ps-2">
-          Thêm mới người dùng
-        </div>
+        <div class="text-h5 text-medium-emphasis ps-2">Thêm mới người dùng</div>
 
-        <v-btn
-            icon="mdi-close"
-            variant="text"
-            @click="closeForm"
-        ></v-btn>
+        <v-btn icon="mdi-close" variant="text" @click="closeForm"></v-btn>
       </v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
@@ -150,26 +147,20 @@
         <v-spacer></v-spacer>
 
         <v-btn
-            color="primary"
-            text="Thêm mới"
-            variant="tonal"
-            @click="addUser"
+          color="primary"
+          text="Thêm mới"
+          variant="tonal"
+          @click="addUser"
         ></v-btn>
 
-        <v-btn
-            text="Làm mới"
-            variant="tonal"
-            @click="clearForm"
-
-        ></v-btn>
+        <v-btn text="Làm mới" variant="tonal" @click="clearForm"></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
-
 </template>
 
 <script>
-import appUtils from '../utils.js';
+import appUtils from "../utils.js";
 import axios from "axios";
 
 export default {
@@ -180,61 +171,58 @@ export default {
       type: Boolean,
       default: true,
     },
-
   },
   computed: {
-    getListRole: appUtils.mapComputed('listRole'),
-    isVisible: appUtils.mapComputed('visible'),
+    getListRole: appUtils.mapComputed("listRole"),
+    isVisible: appUtils.mapComputed("visible"),
 
     userNameRules() {
-      return [
-        v => !!v || 'Chưa nhập tên tài khoản',
-      ];
+      return [(v) => !!v || "Chưa nhập tên tài khoản"];
     },
 
     fullNameRules() {
-      return [
-        v => !!v || 'Chưa nhập họ tên',
-      ];
+      return [(v) => !!v || "Chưa nhập họ tên"];
     },
 
     roleRules() {
-      return [
-        v => !!v || 'Chưa chọn vai trò',
-      ];
+      return [(v) => !!v || "Chưa chọn vai trò"];
     },
 
     phoneNumberRules() {
       return [
-        v => !!v || 'Chưa nhập số điện thoại',
-        v => /^\d+$/.test(v) || 'thông tin nhập vào không hợp lệ',
-        v => v.length <= 10 || 'Số điện thoại nhập không được quá 10 kí tự',
-        v => /^[1-9]/.test(v) || 'Số điện thoại không đúng định dạng',
+        (v) => !!v || "Chưa nhập số điện thoại",
+        (v) => /^\d+$/.test(v) || "thông tin nhập vào không hợp lệ",
+        (v) => v.length <= 10 || "Số điện thoại nhập không được quá 10 kí tự",
+        (v) => /^[1-9]/.test(v) || "Số điện thoại không đúng định dạng",
       ];
     },
 
     emailRules() {
       return [
-        v => !!v || 'Chưa nhập email',
-        v => /.+@.+\..+/.test(v) || 'Email không đúng định dạng',
+        (v) => !!v || "Chưa nhập email",
+        (v) => /.+@.+\..+/.test(v) || "Email không đúng định dạng",
       ];
     },
 
     passwordRules() {
       return [
-        v => !!v || 'Chưa nhập mật khẩu',
-        v => /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(v) || 'Mật khẩu chưa đúng định dạng',
+        (v) => !!v || "Chưa nhập mật khẩu",
+        (v) =>
+          /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(v) ||
+          "Mật khẩu chưa đúng định dạng",
       ];
     },
   },
   data() {
     return {
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTcxNzA2OSwiZXhwIjoxNzA5ODAzNDY5fQ.tmS02wJrYvhmXKgss96NUj4rm_ue5Ez2UxsXCymoRRlcp6kV0w_yxa94h7uQUNR7r0VG6JRcyi7cNnOmlFTnLg',
+      //token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTcxNzA2OSwiZXhwIjoxNzA5ODAzNDY5fQ.tmS02wJrYvhmXKgss96NUj4rm_ue5Ez2UxsXCymoRRlcp6kV0w_yxa94h7uQUNR7r0VG6JRcyi7cNnOmlFTnLg',
+      token: localStorage.getItem("token"),
       formUser: {},
       visiblePassword: false,
       formMock: {
         action: "insert",
-        traceCall: "add-user.component.ts -> addUser() -> UserInfoController.doCreate()",
+        traceCall:
+          "add-user.component.ts -> addUser() -> UserInfoController.doCreate()",
         tableName: "USER_INFO",
         currentMenuURL: "admin/user/list-user",
         role: {
@@ -243,24 +231,21 @@ export default {
           id: 5,
           roleCode: "LEADER",
           roleName: "Lãnh đạo",
-          status: 1
-        }
-
-      }
-
-    }
+          status: 1,
+        },
+      },
+    };
   },
   methods: {
 
     validateForm() {
       this.$refs.form.validate((valid) => {
-        console.log('valid', valid);
         if (valid) {
           // Xử lý gửi form khi nó được xác thực thành công
           return true;
         } else {
           // Hiển thị thông báo hoặc thực hiện hành động khi form không hợp lệ
-          console.log('Form không hợp lệ');
+          console.log("Form không hợp lệ");
           return false;
         }
       });
@@ -274,22 +259,23 @@ export default {
       const now = new Date().getTime();
       formAddUser.createDate = now;
       // Thực hiện POST request sử dụng Axios
-      axios.post('http://10.252.10.112:3232/chatbot/user-info', formAddUser, {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-        },
-      })
-          .then(response => {
-            console.log('Response:', response.data);
-            // Xử lý dữ liệu trả về nếu cần
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            // Xử lý lỗi nếu cần
-          });
+      axios
+        .post("http://10.252.10.112:3232/chatbot/user-info", formAddUser, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Response:", response.data);
+          // Xử lý dữ liệu trả về nếu cần
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          // Xử lý lỗi nếu cần
+        });
       this.clearForm();
       this.isVisible = false;
-      this.$emit('success');
+      this.$emit("success");
     },
     closeForm() {
       this.isVisible = false;
@@ -301,11 +287,11 @@ export default {
     }
   }
 }
+
 </script>
 
 <style scoped>
 .v-card-text {
   text-align: left !important;
 }
-
 </style>
