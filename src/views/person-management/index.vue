@@ -1,4 +1,3 @@
-
 <template>
   <v-container style="max-width: 100% !important">
     <v-card elevation="8" rounded="lg" style="margin-top: 25vh">
@@ -33,42 +32,46 @@
       />
     </v-card>
     <v-data-table
-      style="margin-top: 15px; border: black"
-      :headers="headers"
-      :items="listUser"
-      item-key="id"
-      v-model:items-per-page="perPage"
+        style="margin-top: 15px;border: black"
+        :headers="headers"
+        :items="listUser"
+        item-key="id"
+        v-model:items-per-page="perPage"
+        :pagination.sync="totalPages"
+
     >
       <template v-slot:item.index="{ item, index }">
         <div>
-          {{ index + 1 }}
+          {{ indexRow(index) }}
         </div>
       </template>
 
       <template v-slot:item.actions="{ item }">
         <v-tooltip location="end">
           <template v-slot:activator="{ props }">
-            <v-btn
-              icon
-              @click="getUserInfoFormEdit(item.id)"
-              size="x-small"
-              v-bind="props"
-            >
-              <v-icon style="color: #2666de"> mdi-pencil </v-icon>
+
+            <v-btn icon @click="getUserInfoFormEdit(item.id)" size="x-small" v-bind="props">
+              <v-icon
+                  style="color: #2666de"
+              >
+                mdi-pencil
+              </v-icon>
+
             </v-btn>
           </template>
           <span>Cập nhật</span>
         </v-tooltip>
 
-        <v-tooltip location="end">
+        <v-tooltip
+            location="end"
+        >
           <template v-slot:activator="{ props }">
-            <v-btn
-              icon
-              @click="deleteUser(item.id)"
-              size="x-small"
-              v-bind="props"
-            >
-              <v-icon style="color: #ea5455"> mdi-delete </v-icon>
+            <v-btn icon @click="deleteUser((item.id))" size="x-small" v-bind="props">
+              <v-icon
+                  style="color: #ea5455">
+                mdi-delete
+              </v-icon>
+
             </v-btn>
           </template>
           <span>Xóa</span>
@@ -76,17 +79,24 @@
 
         <v-tooltip location="end">
           <template v-slot:activator="{ props }">
-            <v-btn
-              icon
-              @click="lockUser(item.id)"
-              size="x-small"
-              v-bind="props"
-            >
-              <v-icon style="color: #ff9f43"> mdi-lock-open </v-icon>
+            <v-btn icon @click="lockUser(item.id)" size="x-small" v-bind="props">
+
+              <v-icon
+                  style="color: #ff9f43"
+              >
+                mdi-lock-open
+              </v-icon>
+
             </v-btn>
           </template>
           <span>Khóa</span>
         </v-tooltip>
+      </template>
+      <template v-slot:item.username="{ item }">
+        <a @click="getUserInfoFormView(item.id)">
+          {{ item.username }}
+        </a>
+
       </template>
       <template v-slot:item.roleId="{ item }">
         <div>
@@ -104,9 +114,6 @@
           ></v-chip>
         </div>
 
-        <!--        <div>-->
-        <!--          {{ filterStatus(item.status) }}-->
-        <!--        </div>-->
       </template>
 
       <template v-slot:item.createdDate="{ item }">
@@ -118,72 +125,84 @@
       <template v-slot:item.dateLogin="{ item }">
         <span>{{ validateDate(item.dateLogin) }}</span>
       </template>
+
+
+      <template #bottom>
+        <PaginationApi
+            ref="pagina"
+            @changePage="search"
+            v-model:total-pages="totalPages"
+            v-model:current-page="currentPage"
+            v-model:per-page="perPage"
+            v-model:total-record="totalRecord"
+        />
+      </template>
     </v-data-table>
 
-    <v-pagination
-      v-if="totalPages > 1"
-      v-model="currentPage"
-      :length="totalPages"
-      @update:model-value="search(false)"
-    ></v-pagination>
-    <EditModal
-      v-model:user-info="userInfo"
-      v-model:visible="visibleEdit"
-      v-model:list-role="listRole"
-    />
-    <DeleteModal
-      v-model:visible="visibleDelete"
-      @success="searchAfter(textDeleteSuccess)"
-    />
-    <LockModal
-      v-model:visible="visibleLock"
-      @success="searchAfter(textLockSuccess)"
-    />
-    <Successful
-      v-model:visible="visibleSuccessful"
-      v-model:text="textSuccessful"
-    />
+    <EditModal v-model:user-info="userInfo" v-model:visible="visibleEdit" v-model:list-role="listRole"/>
+    <DeleteModal v-model:visible="visibleDelete" @success="searchAfter(textDeleteSuccess)"/>
+    <LockModal v-model:visible="visibleLock" @success="searchAfter(textLockSuccess)"/>
+    <Successful v-model:visible="visibleSuccessful" v-model:text="textSuccessful"/>
+    <ErrorModal v-model:visible="visibleError"/>
+    <InfoModal v-model:user-info="userInfo" v-model:visible="visibleInfo"/>
+
   </v-container>
+
+
+  <!--  v-model:visible="visibleInfo"-->
+
 </template>
 
 <script>
 import axios from "axios";
-import AddModal from "./component/add.vue";
-import EditModal from "./component/edit.vue";
-import DeleteModal from "./component/delete-modal.vue";
-import Successful from "./component/successful-modal.vue";
-import LockModal from "./component/lock-modal.vue";
+import AddModal from "./modal-person/add.vue";
+import EditModal from "./modal-person/edit.vue";
+import DeleteModal from "./modal-person/delete-modal.vue";
+import Successful from "./modal-person/successful-modal.vue";
+import LockModal from "./modal-person/lock-modal.vue";
+import ErrorModal from "./modal-person/error-modal.vue";
+import InfoModal from "./modal-person/info-modal.vue";
+
+
+// import Pagination from "../../components/Pagination.vue";
+import PaginationApi from "../../components/Pagination-api.vue";
 
 export default {
   components: {
+    ErrorModal,
     EditModal,
     AddModal,
     DeleteModal,
     Successful,
     LockModal,
+    PaginationApi,
+    InfoModal
+
   },
   name: "index",
   data() {
     const listStatus = [
       {
         id: 1,
-        name: "Hoạt động",
+        name: 'Hoạt động'
       },
       {
         id: 2,
-        name: "Khóa",
+        name: 'Khóa'
       },
       {
         id: 3,
-        name: "Hết hạn",
-      },
-    ];
+        name: 'Hết hạn'
+      }
+    ]
+
     return {
       textLockSuccess: "Khóa người dùng thành công",
       textDeleteSuccess: "Xóa người dùng thành công",
       textAddSuccess: "Thêm người dùng thành công",
-
-      textSuccessful: "",
+      textSuccessful: '',
+      visibleInfo: false,
+      visibleError: false,
       visibleLock: false,
       visibleSuccessful: false,
       visibleDelete: false,
@@ -192,42 +211,22 @@ export default {
       userInfo: {},
       listStatus,
       headers: [
-        { title: "Số thứ tự", key: "index", width: 120, align: "center" },
-        {
-          title: "Thao tác",
-          key: "actions",
-          sortable: false,
-          width: 500,
-          align: "center",
-        },
-        { title: "Tài khoản", key: "username", align: "center", width: 140 },
-        { title: "Vai Trò", key: "roleId", align: "center", width: 140 },
-        { title: "Email", key: "email", align: "center", width: 140 },
-        {
-          title: "Số điện thoại",
-          key: "phoneNumber",
-          align: "center",
-          width: 200,
-        },
-        { title: "Trạng thái", key: "status", align: "center", width: 200 },
-        { title: "Ngày tạo", key: "createdDate", align: "center", width: 200 },
-        {
-          title: "Ngày cập nhật",
-          key: "updatedDate",
-          align: "center",
-          width: 200,
-        },
-        {
-          title: "Ngày đăng nhập",
-          key: "dateLogin",
-          align: "center",
-          width: 200,
-        },
+        {title: 'Số thứ tự', key: 'index', width: 120, align: 'center'},
+        {title: 'Thao tác', key: 'actions', sortable: false, width: 500, align: 'center'},
+        {title: 'Tài khoản', key: 'username', align: 'center', width: 140},
+        {title: 'Vai Trò', key: 'roleId', align: 'center', width: 140},
+        {title: 'Email', key: 'email', align: 'center', width: 140},
+        {title: 'Số điện thoại', key: 'phoneNumber', align: 'center', width: 200},
+        {title: 'Trạng thái', key: 'status', align: 'center', width: 200},
+        {title: 'Ngày tạo', key: 'createdDate', align: 'center', width: 200},
+        {title: 'Ngày cập nhật', key: 'updatedDate', align: 'center', width: 200},
+        {title: 'Ngày đăng nhập', key: 'dateLogin', align: 'center', width: 200},
+
       ],
       searchValue: "",
       listUser: [],
       dialog: false,
-      token: localStorage.getItem("token"),
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTgwNDI0NCwiZXhwIjoxNzA5ODkwNjQ0fQ.juYqwYdwcVMQP9r9Li0t6TSe9GmFHvTunWi9LDcLKVln5FYfztm05Gzve8hiX46zZxrS824gzW7uslbs4EGejg',
       loaded: false,
       loading: false,
       editedItem: {
@@ -236,6 +235,7 @@ export default {
         position: "",
         salary: "",
       },
+      totalRecord: 0,
       currentPage: 1,
       perPage: 10,
       totalPages: 0,
@@ -246,13 +246,21 @@ export default {
     this.init();
   },
   methods: {
+    indexRow(index) {
+      return index + ((this.currentPage - 1) * this.perPage) + 1;
+    },
+    returnTotalPage(total) {
+      return total;
+    },
     checkColorStatus(status) {
-      if (status === 1) return "green";
-      else return "grey";
+      if (status === 1) return 'green';
+      if (status === 3) return 'grey';
+      if (status === 2) return 'red';
     },
     validateDate(date) {
-      if (!date || date === null || date === "") {
-        return "";
+
+      if (!date || date === null || date === '') {
+        return '';
       } else {
         return new Date(date).toLocaleString();
       }
@@ -263,35 +271,43 @@ export default {
       this.searchValue = "";
       await this.search(true);
     },
-    getUserInfoFormEdit(id) {
-      console.log("id", id);
-      const userInfor = this.listUser.filter((item) => item.id === id);
-      console.log("userInfor", userInfor);
-
-      console.log("this.listUser", this.listUser);
-
+    getUser(id) {
+      const userInfor = this.listUser.filter(item => item.id === id);
       if (userInfor.length === 1) {
+
+
         this.userInfo = userInfor[0];
+        this.userInfo.roleLabel = this.filterRole(this.userInfo.roleId)
+        this.userInfo.statusLabel = this.filterStatus(this.userInfo.status)
+
         // return userInfor[0];
       } else {
         this.userInfo = {};
       }
+    },
+    getUserInfoFormEdit(id) {
+      this.getUser(id);
       this.visibleEdit = true;
     },
+    getUserInfoFormView(id) {
+      this.getUser(id);
+      this.visibleInfo = true;
+    },
     init() {
-      axios
-        .get("http://10.252.10.112:3232/chatbot/roles/get-role", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-        .then((response) => {
-          // Xử lý dữ liệu khi thành công
-          this.listRole = response.data.content;
-        })
-        .catch((error) => {
-          // Xử lý lỗi
-        });
+      axios.get('http://10.252.10.112:3232/chatbot/roles/get-role', {
+        headers: {
+          'Authorization': `Bearer ${this.token}`,
+        },
+      })
+          .then(response => {
+            // Xử lý dữ liệu khi thành công
+            this.listRole = response.data.content;
+
+          })
+          .catch(error => {
+            // Xử lý lỗi
+          });
+
     },
     lockUser(id) {
       // axios.put('http://10.252.10.112:3232/chatbot/user-info/lock/' + id, {
@@ -312,23 +328,23 @@ export default {
     deleteUser(id) {
       this.visibleDelete = true;
     },
-    formatDate() {},
     filterStatus(status) {
-      const statusInfo = this.listStatus.filter((item) => item.id === status);
-
+      const statusInfo = this.listStatus.filter(item => item.id === status)
       if (statusInfo.length === 1) {
         return statusInfo[0].name;
       } else {
-        return "";
+        return '';
       }
     },
     filterRole(statusId) {
-      const roleInfo = this.listRole.filter((item) => item.id === statusId);
+      const roleInfo = this.listRole.filter(item => item.id === statusId)
+
 
       if (roleInfo.length === 1) {
         return roleInfo[0].roleName;
       } else {
-        return "";
+        return '';
+
       }
     },
 
@@ -337,43 +353,52 @@ export default {
       if (!checkSearch) {
         currentPage = this.currentPage - 1;
       }
-      this.loading = true;
-      await axios
-        .get(
-          "http://10.252.10.112:3232/chatbot/user-info?keyword=" +
-            `${this.searchValue}` +
-            "&currentPage=" +
-            currentPage +
-            "&perPage=" +
-            `${this.perPage} `,
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        )
-        .then((response) => {
-          setTimeout(() => {
-            this.loading = false;
-            this.loaded = true;
-          }, 2000);
-          // Xử lý dữ liệu khi thành công
-          this.listUser = response.data.content.items;
-          this.totalPages = Math.ceil(
-            response.data.content.total / this.perPage
-          );
-        })
-        .catch((error) => {
-          // Xử lý lỗi
-        });
+      this.loading = true
+      await axios.get('http://10.252.10.112:3232/chatbot/user-info?keyword=' + `${this.searchValue}`
+          + '&currentPage=' + currentPage + '&perPage=' + `${this.perPage} `, {
+        headers: {
+          'Authorization': `Bearer ${this.token}`,
+        },
+      })
+          .then(async response => {
+
+            setTimeout(() => {
+              this.loading = false
+              this.loaded = true
+            }, 2000)
+            // Xử lý dữ liệu khi thành công
+            this.listUser = response.data.content.items;
+            this.totalRecord = response.data.content.total;
+
+            this.totalPages = Math.ceil(response.data.content.total / this.perPage)
+            // this.$refs.pagina.setTotalPage(this.totalPages)
+
+            // this.returnTotalPage(this.totalPages);
+            console.log('this.perPage', this.perPage)
+            console.log('this.totalPages', this.totalPages)
+
+          })
+          .catch(error => {
+            // Xử lý lỗi
+            if (error.response.status !== 200) {
+              setTimeout(() => {
+                this.loading = false
+                this.loaded = true
+              }, 2000)
+              this.visibleError = true;
+              return
+            }
+          });
+
     },
 
     openDialog(action, item = null) {
       this.dialog = true;
-      if (action === "edit") {
-        this.editedItem = { ...item };
+      if (action === 'edit') {
+        this.editedItem = {...item};
       } else {
-        this.editedItem = { id: null, name: "", position: "", salary: "" };
+        this.editedItem = {id: null, name: '', position: '', salary: ''};
+
       }
     },
   },
@@ -383,6 +408,7 @@ export default {
 .v-card-text {
   text-align: left !important;
 }
+
 .v-data-table-header {
   background-color: red !important;
 }
