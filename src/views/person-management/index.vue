@@ -35,6 +35,7 @@
         :items="listUser"
         item-key="id"
         v-model:items-per-page="perPage"
+        :pagination.sync="totalPages"
     >
 
 
@@ -113,9 +114,7 @@
           ></v-chip>
         </div>
 
-<!--        <div>-->
-<!--          {{ filterStatus(item.status) }}-->
-<!--        </div>-->
+
       </template>
 
 
@@ -128,18 +127,33 @@
       <template v-slot:item.dateLogin="{ item }">
         <span>{{ validateDate(item.dateLogin) }}</span>
       </template>
+
+
+      <template #bottom>
+        <PaginationApi
+            ref="pagina"
+            @changePage="search"
+            v-model:total-pages="totalPages"
+            v-model:current-page="currentPage"
+            v-model:per-page="perPage"
+            v-model:total-record="totalRecord"
+        />
+      </template>
     </v-data-table>
 
-    <v-pagination
-        v-if="totalPages>1"
-        v-model="currentPage"
-        :length="totalPages"
-        @update:model-value="search(false)"
-    ></v-pagination>
+<!--    <v-pagination-->
+<!--        v-if="totalPages>1"-->
+<!--        v-model="currentPage"-->
+<!--        :length="totalPages"-->
+<!--        @update:model-value="search(false)"-->
+<!--    ></v-pagination>-->
+
     <EditModal  v-model:user-info="userInfo" v-model:visible="visibleEdit" v-model:list-role="listRole"/>
     <DeleteModal v-model:visible="visibleDelete" @success="searchAfter(textDeleteSuccess)"/>
     <LockModal v-model:visible="visibleLock" @success="searchAfter(textLockSuccess)"/>
     <Successful  v-model:visible="visibleSuccessful" v-model:text="textSuccessful"/>
+    <ErrorModal  v-model:visible="visibleError"/>
+
   </v-container>
 
 
@@ -153,14 +167,20 @@ import EditModal from "./component/edit.vue";
 import DeleteModal from "./component/delete-modal.vue";
 import Successful from "./component/successful-modal.vue";
 import LockModal from "./component/lock-modal.vue";
+import ErrorModal from "./component/error-modal.vue";
+
+// import Pagination from "../../components/Pagination.vue";
+import PaginationApi from "../../components/Pagination-api.vue";
 
 export default {
   components: {
+    ErrorModal,
     EditModal,
     AddModal,
     DeleteModal,
     Successful,
-    LockModal
+    LockModal,
+    PaginationApi
   },
   name: "index",
   data() {
@@ -184,6 +204,7 @@ export default {
       textAddSuccess: 'Thêm người dùng thành công',
 
       textSuccessful: '',
+      visibleError: false,
       visibleLock: false,
       visibleSuccessful: false,
       visibleDelete: false,
@@ -206,7 +227,7 @@ export default {
       searchValue: '',
       listUser: [],
       dialog: false,
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTcxNzA2OSwiZXhwIjoxNzA5ODAzNDY5fQ.tmS02wJrYvhmXKgss96NUj4rm_ue5Ez2UxsXCymoRRlcp6kV0w_yxa94h7uQUNR7r0VG6JRcyi7cNnOmlFTnLg',
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTgwNDI0NCwiZXhwIjoxNzA5ODkwNjQ0fQ.juYqwYdwcVMQP9r9Li0t6TSe9GmFHvTunWi9LDcLKVln5FYfztm05Gzve8hiX46zZxrS824gzW7uslbs4EGejg',
       loaded: false,
       loading: false,
       editedItem: {
@@ -215,6 +236,7 @@ export default {
         position: '',
         salary: '',
       },
+      totalRecord: 0,
       currentPage: 1,
       perPage: 10,
       totalPages: 0,
@@ -225,9 +247,13 @@ export default {
     this.init();
   },
   methods: {
+    returnTotalPage(total) {
+      return total;
+    },
     checkColorStatus(status) {
       if (status === 1) return 'green';
-      else return 'grey';
+      if (status === 2) return 'grey';
+      if (status === 3) return 'red';
     },
     validateDate(date) {
 
@@ -327,7 +353,7 @@ export default {
           'Authorization': `Bearer ${this.token}`,
         },
       })
-          .then(response => {
+          .then(async response => {
 
             setTimeout(() => {
               this.loading = false
@@ -335,11 +361,26 @@ export default {
             }, 2000)
             // Xử lý dữ liệu khi thành công
             this.listUser = response.data.content.items;
+            this.totalRecord = response.data.content.total;
+
             this.totalPages = Math.ceil(response.data.content.total / this.perPage)
+            // this.$refs.pagina.setTotalPage(this.totalPages)
+
+            // this.returnTotalPage(this.totalPages);
+            console.log('this.perPage',this.perPage)
+            console.log('this.totalPages',this.totalPages)
 
           })
           .catch(error => {
             // Xử lý lỗi
+            if(error.response.status !== 200){
+              setTimeout(() => {
+                this.loading = false
+                this.loaded = true
+              }, 2000)
+              this.visibleError = true;
+              return
+            }
           });
     },
 

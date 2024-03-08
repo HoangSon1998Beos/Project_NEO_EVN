@@ -27,7 +27,7 @@
         ></v-btn>
       </v-card-title>
       <v-card-text>
-        <v-form  ref="form">
+        <v-form  ref="form" v-model="valid" lazy-validation>
         <v-row>
           <v-col
               cols="6"
@@ -251,6 +251,7 @@ export default {
     }
   },
   methods: {
+
     validateForm() {
       this.$refs.form.validate((valid) => {
         console.log('valid',valid);
@@ -265,9 +266,10 @@ export default {
       });
     },
     addUser() {
-      // if(!this.validateForm()){
-      //   return;
-      // }
+      this.$refs.form.validate();
+      if (!this.valid) {
+        return;
+      }
       const formAddUser = {...this.formUser,...this.formMock};
       const now = new Date().getTime();
       formAddUser.createDate = now;

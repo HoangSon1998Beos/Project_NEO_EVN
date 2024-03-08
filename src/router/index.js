@@ -4,6 +4,7 @@ import HelloWorld from '../components/HelloWorld.vue'
 import BotManagement from "../views/bot-management/index.vue";
 import Home from '../components/Dashboard/Home.vue';
 import QuestionBank from '../views/question-bank/index.vue';
+import Person from '../views/person-management/index.vue';
 
 
 const routes = [
@@ -29,6 +30,11 @@ const routes = [
         path: '/question-bank',
         name: 'QuestionBank',
         component: QuestionBank,
+    },
+    {
+        path: '/person',
+        name: 'person-management',
+        component: Person,
     },
 
     // Thêm các route khác tại đây
