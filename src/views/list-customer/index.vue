@@ -9,11 +9,10 @@
           <SearchCustomer/>
         </div>
         <div class="file-custom" style="width: 40% ; height: 400px">
-          <SearchCustomer/>
+          <FileCustomer/>
         </div>
       </div>
       <div class="layout-bottom">
-        <SearchCustomer/>
       </div>
     </div>
   </div>
@@ -22,10 +21,12 @@
 
 <script>
 import SearchCustomer from "../../components/customer/SearchCustomer.vue";
+import FileCustomer from "../../components/customer/FileCustomer.vue";
+import ListCustomer from "../../components/customer/ListCustomer.vue";
 
 export default {
   name: "ListCustomer",
-  components: {SearchCustomer}
+  components: {FileCustomer, SearchCustomer, ListCustomer}
 }
 </script>
 
@@ -37,8 +38,5 @@ export default {
 }
 .layout-bottom {
   padding: 0 2rem 0 2rem;
-}
-.search-custom .v-application__wrap {
-  min-height: 0;
 }
 </style>
