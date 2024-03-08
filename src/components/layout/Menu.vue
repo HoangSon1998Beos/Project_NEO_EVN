@@ -21,9 +21,7 @@
             :key="index"
             :value="index"
           >
-            <router-link :to="item.to">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </router-link>
+            <v-list-item-title ><a :href="item.to">{{ item.title }}</a></v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
