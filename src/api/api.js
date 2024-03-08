@@ -1,4 +1,5 @@
 import BotRepository from "./bot/BotRepository.js";
+import LoginRepository from "./login/LoginRepository.js";
 import axios from "axios";
 import QuestionBankRepository from "./question-bank/QuestionBankRepository.js";
 import PersonRepository from "./persion/PersonRepository.js";
@@ -20,6 +21,7 @@ axios.interceptors.request.use(
 
 export default {
     bot: BotRepository(axios),
+    login: LoginRepository(axios),
     questionBank: QuestionBankRepository(axios),
     person: PersonRepository(axios),
     dashbroard: DashbroadRepository(axios)

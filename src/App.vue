@@ -1,9 +1,17 @@
 <script setup>
-import HelloWorld from "./components/HelloWorld.vue";
+import { useRoute } from "vue-router";
+import Header from "./components/layout/Header.vue";
+import Menu from "./components/layout/Menu.vue";
+import Footer from "./components/layout/Footer.vue";
+
+const route = useRoute();
 </script>
 
 <template>
+  <Header v-if="route.name !== 'Login'" />
+  <Menu v-if="route.name !== 'Login'" />
   <router-view></router-view>
+  <Footer v-if="route.name !== 'Login'" />
 </template>
 
 <style scoped>
