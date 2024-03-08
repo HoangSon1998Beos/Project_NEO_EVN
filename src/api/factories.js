@@ -4,6 +4,15 @@ export default (axios) => (resource) => ({
     },
     indexWidthPath(path, config = {}) {
         return axios.get(`${resource}/${path}`,config)
-    }
+    },
+    delete(id, config = {}) {
+        return axios.delete(`${resource}/${id}`, config)
+    },
+    update(body, id, config = {}) {
+        return axios.put(`${resource}/${id}`, body, config)
+    },
+    create(body, config = {}) {
+        return axios.post(`${resource}`, body, config)
+    },
     //Khai báo get, post, put,delete ở đây
 })
