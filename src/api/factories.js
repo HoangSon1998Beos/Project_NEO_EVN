@@ -3,7 +3,10 @@ export default (axios) => (resource) => ({
         return axios.get(`${resource}`, config)
     },
     indexWidthPath(path, config = {}) {
-        return axios.get(`${resource}/${path}`,config)
+        return axios.get(`${resource}/${path}`, config)
+    },
+    create(body, config = {}) {
+        return axios.post(`${resource}`, body, config)
     },
     delete(id, config = {}) {
         return axios.delete(`${resource}/${id}`, config)
@@ -11,8 +14,4 @@ export default (axios) => (resource) => ({
     update(body, id, config = {}) {
         return axios.put(`${resource}/${id}`, body, config)
     },
-    create(body, config = {}) {
-        return axios.post(`${resource}`, body, config)
-    },
-    //Khai báo get, post, put,delete ở đây
 })
