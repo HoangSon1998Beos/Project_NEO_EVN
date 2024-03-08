@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="container">
+  <v-card class="container">
     <v-img
       :width="400"
       aspect-ratio="16/9"
@@ -7,7 +7,7 @@
       src="https://neo.vn/uploads/plugin/custom_img/2021-07-29/1627529494-1931300689-custom.jpg"
     ></v-img>
     <v-sheet class="mx-auto" width="300">
-      <a href="/" target="_blank" class="logo">
+      <a target="_blank" class="logo">
         <img
           src="http://10.252.11.112:8080/assets/images/logo/logo-small.svg"
           class="logo vue"
@@ -39,7 +39,7 @@
         <v-btn class="mt-2" color="success" type="submit" block>Submit</v-btn>
       </v-form>
     </v-sheet>
-  </v-container>
+  </v-card>
 </template>
     
     <script>
@@ -87,7 +87,7 @@ export default {
     
     <style scoped>
 .logo {
-  padding: 30px 0px 30px 0px;
+  margin: 30px 0px 60px 30px;
 }
 .form {
   padding: 0px 10px 0px 10px;
