@@ -127,25 +127,86 @@
     </v-row>
     <v-row align="start" style="height: 400" no-gutters class="row1">
       <v-col cols="4" class="col1">
-        <v-card height="400px">
-          <a href="">10 kịch bản dùng nhiều nhất trong tháng</a>
+        <v-card height="300px">
+          <a href="" class="title">10 Khách hàng tương tương tác nhiều nhất</a>
+          <v-list :lines="false" density="compact" nav>
+            <v-list-item
+              v-for="(item, i) in listCustomer"
+              :key="i"
+              :value="item"
+              color="primary"
+            >
+              <v-row>
+                <v-col cols="2">
+                  <font-awesome-icon :icon="['fab', 'facebook']" />
+                </v-col>
+                <v-col
+                  ><v-list-item-title v-text="item.cusName"></v-list-item-title
+                ></v-col>
+                <v-col class="turn"
+                  ><v-list-item-title v-text="item.count"></v-list-item-title
+                ></v-col>
+              </v-row>
+            </v-list-item>
+          </v-list>
         </v-card>
       </v-col>
       <v-col class="col1">
-        <v-card height="400px">
-          <a href=""> 20 câu hỏi chưa được xử lý trong tháng </a>
+        <v-card height="300px">
+          <a href="" class="title">5 phiên chat mới nhất </a>
+          <v-data-table-virtual
+            :headers="chat"
+            height="400"
+            item-value="name"
+          ></v-data-table-virtual>
         </v-card>
       </v-col>
       <v-col>
-        <v-card height="400px">
-          <a href=""> 20 câu hỏi chưa được xử lý trong tháng </a>
+        <v-card height="300px">
+          <a href="" class="title"> Độ hài lòng của khách hàng </a>
+          <v-list
+            bg-color="transparent"
+            class="d-flex flex-column-reverse"
+            density="compact"
+          >
+            <v-list-item v-for="(rating, i) in 5" :key="i">
+              <v-progress-linear
+                :model-value="rating * 15"
+                class="mx-n5"
+                color="yellow-darken-3"
+                height="20"
+                rounded
+              ></v-progress-linear>
+
+              <template v-slot:prepend>
+                <span>{{ rating }}</span>
+                <v-icon class="mx-3" icon="mdi-star"></v-icon>
+              </template>
+
+              <template v-slot:append>
+                <div class="rating-values">
+                  <span class="d-flex justify-end">
+                    {{ rating }}
+                  </span>
+                </div>
+              </template>
+            </v-list-item>
+          </v-list>
         </v-card>
       </v-col>
     </v-row>
     <v-row align="start" style="height: 400" no-gutters>
       <v-col cols="8" class="col1">
         <v-card height="300px">
-          <a href="">10 kịch bản dùng nhiều nhất trong tháng</a>
+          <a href="" class="title"
+            >4 kịch bản được sử dụng nhiều nhất trong ngày</a
+          >
+          <v-data-table-virtual
+            :headers="kichban"
+            :items="listChat"
+            height="400"
+            item-value="name"
+          ></v-data-table-virtual>
         </v-card>
       </v-col>
       <v-col>
@@ -208,10 +269,28 @@ export default {
       { title: "KHÁCH HÀNG", align: "center", key: "cusName" },
       { title: "CHUYỂN XỬ LÝ", align: "center", key: "cusName" },
     ],
+    chat: [
+      { title: "KÊNH CHAT", align: "start", key: "chat" },
+      { title: "KHÁCH HÀNG", align: "end", key: "kh" },
+    ],
+    kichban: [
+      { title: "KÊNH CHAT", align: "start", key: "chat" },
+      { title: "SỐ LƯỢNG PHIÊN ĐÃ CHAT", align: "end", key: "kh" },
+      { title: "Ý ĐỊNH", align: "end", key: "yd" },
+    ],
     desserts: [],
+    listCustomer: [],
+    listRating: [],
+    ratinglive: {},
   }),
+  created() {
+    this.getListQuestion();
+    this.getCustomer();
+    this.getRating();
+    this.getScript();
+  },
   methods: {
-    GetListQuestion() {
+    getListQuestion() {
       axios
         .get(
           "http://10.252.10.112:3232/chatbot/dashboard/getQuestionsUnsolved",
@@ -241,9 +320,53 @@ export default {
         return colors[index % 5];
       }
     },
-  },
-  created() {
-    this.GetListQuestion();
+    async getCustomer() {
+      try {
+        const response = await axios.get(
+          import.meta.env.VITE_API_BASE_URL +
+            "/chatbot/dashboard/getCustomerMaxMonth",
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
+        this.listCustomer = response.data.content;
+      } catch (error) {}
+    },
+    async getRating() {
+      try {
+        const response = await axios.get(
+          import.meta.env.VITE_API_BASE_URL +
+            "/chatbot/dashboard/getCustomerRate",
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
+        this.listRating = response.data.content;
+        this.ratinglive = this.listRating.find((item) => item.rate);
+      } catch (error) {
+        console.error("API Error:", error);
+      }
+    },
+    async getScript() {
+      try {
+        const response = await axios.get(
+          import.meta.env.VITE_API_BASE_URL +
+            "/chatbot/dashboard/getSessionOnDay",
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
+        this.listChat = response.data.content;
+      } catch (error) {
+        console.error("API Error:", error);
+      }
+    },
   },
   computed: {},
 };
@@ -268,5 +391,14 @@ export default {
 }
 .dataQuestion {
   margin: 15px 15px 15px 15px;
+}
+.title {
+  margin-left: 10px;
+}
+.turn {
+  text-align: right;
+}
+.rating-values {
+  width: 25px;
 }
 </style>
