@@ -37,6 +37,7 @@
             v-for="(item, index) in dtcb"
             :key="index"
             :value="index"
+            @click="handleItemClick(index)"
           >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
@@ -102,8 +103,8 @@ export default {
       { title: "Quản lý các phiên bản sao lưu" },
     ],
     dtcb: [
-      { title: "Quản lý Bot" },
-      { title: "Ngân hàng câu hỏi và ý định" },
+      { title: "Quản lý Bot" ,path: '/bot'},
+      { title: "Ngân hàng câu hỏi và ý định" ,path: '/question-bank'},
       { title: "Quản lý ngữ cảnh" },
       { title: "Cấu hình chống spam" },
       { title: "Quản lý Minigame" },
@@ -127,6 +128,12 @@ export default {
       { title: "Quản lý các phiên bản sao lưu" },
     ],
   }),
+  methods: {
+    handleItemClick(index) {
+      const path = this.dtcb[index].path;
+      this.$router.push(path);
+    },
+  }
 };
 </script>
 <style scoped>
