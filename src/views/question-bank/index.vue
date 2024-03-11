@@ -31,34 +31,37 @@
             <label>Ngày tạo</label>
             <v-row style="justify-content: space-between">
               <v-col cols="5">
-                <v-menu v-model="showPicker" :close-on-content-click="false">
+                <v-menu
+                  v-model="showPickerStart"
+                  :close-on-content-click="false"
+                >
                   <template v-slot:activator="{ on }">
                     <v-text-field
-                      v-model="selectedDate"
+                      v-model="formattedDateStart"
                       prepend-icon="mdi-calendar-range"
                       v-on="on"
-                      @click="showPicker = !showPicker"
+                      @click="showPickerStart = !showPickerStart"
                     ></v-text-field>
                   </template>
                   <v-date-picker
-                    v-model="selectedDate"
+                    v-model="selectedDateStart"
                     @input="closeDateMenu"
                     show-adjacent-months
                   ></v-date-picker>
                 </v-menu>
               </v-col>
               <v-col cols="5">
-                <v-menu v-model="showPicker" :close-on-content-click="false">
+                <v-menu v-model="showPickerEnd" :close-on-content-click="false">
                   <template v-slot:activator="{ on }">
                     <v-text-field
-                      v-model="selectedDate"
+                      v-model="formattedDateEnd"
                       prepend-icon="mdi-calendar-range"
                       v-on="on"
-                      @click="showPicker = !showPicker"
+                      @click="showPickerEnd = !showPickerEnd"
                     ></v-text-field>
                   </template>
                   <v-date-picker
-                    v-model="selectedDate"
+                    v-model="selectedDateEnd"
                     @input="closeDateMenu"
                     show-adjacent-months
                   ></v-date-picker>
@@ -234,10 +237,18 @@
             {{ moment(item.createdDate).format("DD-MM-YYYY") }}
           </div>
         </template>
+        <template v-slot:[`item.stt`]="{ item, index }">
+          <div>
+            {{ indexRow(index) }}
+          </div>
+        </template>
         <template v-slot:[`item.updatedDate`]="{ item }">
           <div>
             {{ moment(item.updatedDate).format("DD-MM-YYYY") }}
           </div>
+        </template>
+        <template v-slot:[`item.intentName`]="{ item }">
+          <td>{{ truncateText(item.intentName) }}</td>
         </template>
         <template v-slot:[`item.intentType`]="{ item }">
           <div>
@@ -352,7 +363,7 @@ export default {
         {
           title: "Trang chủ",
           disabled: false,
-          href: "trang-chu",
+          href: "home",
         },
         {
           title: "Đào tạo chatbot",
@@ -363,8 +374,10 @@ export default {
           disabled: true,
         },
       ],
-      showPicker: false,
-      selectedDate: null,
+      showPickerStart: false,
+      selectedDateStart: null,
+      showPickerEnd: false,
+      selectedDateEnd: null,
       date: null,
       token: localStorage.getItem("token"),
 
@@ -390,6 +403,12 @@ export default {
   },
 
   methods: {
+    indexRow(index) {
+      return index + (this.pagination.page - 1) * this.pagination.pageSize + 1;
+    },
+    truncateText(text) {
+      return text.length > 50 ? text.substring(0, 50) + "..." : text;
+    },
     deleteBot(item) {
       this.isDelete = true;
       this.visibleModal = true;
@@ -401,7 +420,7 @@ export default {
       }, 200);
     },
     closeDateMenu() {
-      this.showPicker = false;
+      this.showPickerEnd = false;
     },
     getTextType(item) {
       return TYPE_INTENT.find((x) => x.key === item.intentType).value;
@@ -436,7 +455,11 @@ export default {
     async GetListIntent() {
       await Api.questionBank
         .indexWidthPath(
-          "Question-Bank-Intent/searchBotIntentDTOList?fromDate=&toDate=&intentName=" +
+          "Question-Bank-Intent/searchBotIntentDTOList?fromDate=" +
+            `${this.formattedDateStart}` +
+            "&toDate=" +
+            `${this.formattedDateEnd}` +
+            "&intentName=" +
             `${this.selectedIntent}` +
             "&createdBy=" +
             `${this.selectedCreator}` +
@@ -511,7 +534,23 @@ export default {
         });
     },
   },
+  filters: {
+    formatDate(date) {
+      return moment(date).format("DD-MM-YYYY");
+    },
+  },
+
   computed: {
+    formattedDateEnd() {
+      return this.selectedDateEnd
+        ? this.$options.filters.formatDate(this.selectedDateEnd)
+        : "";
+    },
+    formattedDateStart() {
+      return this.selectedDateStart
+        ? this.$options.filters.formatDate(this.selectedDateStart)
+        : "";
+    },
     moment() {
       return moment;
     },
@@ -521,7 +560,7 @@ export default {
   },
   created() {
     //this.init();
-    //this.GetListIntent();
+    this.GetListIntent();
     this.getIntent();
     this.getEntity();
     this.getCreator();
