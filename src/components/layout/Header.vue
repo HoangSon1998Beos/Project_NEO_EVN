@@ -1,6 +1,6 @@
 <template>
   <v-card class="container">
-    <a href="" target="_blank" class="logo">
+    <a target="_blank" class="logo">
       <img
         src="http://10.252.11.112:8080/assets/images/logo/logo-small.svg"
         class="logo-vue"
@@ -55,6 +55,7 @@ export default {
   display: flex;
   margin-bottom: 20px;
   justify-content: space-between;
+  cursor: pointer;
 }
 .text {
   color: red;

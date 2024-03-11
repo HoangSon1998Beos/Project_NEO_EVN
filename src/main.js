@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import '@fortawesome/fontawesome-free/css/all.css';
+import './utils/permission'
 
 library.add(faFacebook);
 
