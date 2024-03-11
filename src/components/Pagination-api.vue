@@ -13,28 +13,16 @@
     />
     <span class="ml-5"> bản ghi/trang</span>
     <span class="ml-16">Tổng số {{ getTotalRecord }} bản ghi</span>
-    <!--      <div>-->
-    <!--        <v-pagination-->
-    <!--            class="ml-16"-->
-    <!--            rounded="circle"-->
-    <!--            last-icon="mdi-arrow-down"-->
-    <!--            first-icon="mdi-arrow-down"-->
-    <!--            v-model="getCurrentPage"-->
-    <!--            :length="getTotalPages"-->
-    <!--            @update:model-value="changePage"-->
-    <!--        ></v-pagination>-->
-    <!--      </div>-->
   </div>
   <v-pagination
       v-if="getTotalPages > 1"
       style="margin-top: -80px"
       class="ml-16"
       rounded="circle"
-      last-icon="mdi-arrow-down"
-      first-icon="mdi-arrow-down"
       v-model="getCurrentPage"
       :length="getTotalPages"
       @update:model-value="changePage"
+      show-first-last-page
   ></v-pagination>
 </template>
 
@@ -110,6 +98,7 @@ export default {
   },
   watch: {
     perPage(val) {
+      this.getCurrentPage = 1;
       this.$emit('changePage', true)
     },
 
