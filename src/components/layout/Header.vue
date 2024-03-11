@@ -1,6 +1,6 @@
 <template>
   <v-card class="container">
-    <a href="" target="_blank" class="logo">
+    <a target="_blank" class="logo">
       <img
         src="http://10.252.11.112:8080/assets/images/logo/logo-small.svg"
         class="logo-vue"
@@ -22,9 +22,10 @@
           :key="index"
           :value="index"
         >
-          <v-list-item-title @click="handleLogOut">{{
-            item.title
-          }}</v-list-item-title>
+          <v-list-item-title @click="handleLogOut">
+            <i class="fas fa-sign-out-alt"></i>
+            {{ item.title }}
+          </v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -52,6 +53,7 @@ export default {
   background-color: white;
   display: flex;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 .text {
   color: red;
