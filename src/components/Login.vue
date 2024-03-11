@@ -14,18 +14,22 @@
           alt="Vue logo"
         />
       </a>
-      <h3 class="text-center mt-3 dangnhap">Login</h3>
+      <h3 class="text-center mt-3 dangnhap">Đăng nhập</h3>
+
       <v-form fast-fail @submit.prevent="handleSubmit" class="form">
+        <v-card v-show="error" color="red" class="errorMessage">
+          {{ errorMessage }}
+        </v-card>
         <v-text-field
           v-model="userName"
           :rules="userNameRules"
           type="email"
-          label="User Name"
+          label="Tên đăng nhập"
         ></v-text-field>
 
         <v-text-field
           v-model="password"
-          label="Password"
+          label="Mật khẩu"
           :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
           :type="showPassword ? 'password' : 'text'"
           :rules="passWordRules"
@@ -34,9 +38,11 @@
         <v-checkbox
           class="custom-checkbox"
           v-model="isChecked"
-          label="Forgot password"
+          label="Ghi nhớ đăng nhập"
         ></v-checkbox>
-        <v-btn class="mt-2" color="success" type="submit" block>Submit</v-btn>
+        <v-btn class="mt-2" color="success" type="submit" block
+          >Đăng nhập</v-btn
+        >
       </v-form>
     </v-sheet>
   </v-card>
@@ -44,6 +50,7 @@
     
     <script>
 import Api from "../api/api.js";
+import Helper from "../helper";
 
 export default {
   data() {
@@ -52,6 +59,8 @@ export default {
       password: "",
       showPassword: true,
       isChecked: true,
+      errorMes: false,
+      errorMessage: "",
       userNameRules: [
         (value) => {
           if (value?.length > 3) return true;
@@ -78,7 +87,9 @@ export default {
         localStorage.setItem("token", token);
         this.$router.push("/home");
       } catch (error) {
-        console.error("API Error:", error);
+        this.errorMessage = "Tên đăng nhập hoặc mật khẩu không đúng!";
+        this.errorMes = true;
+        console.error("API call error:", error);
       }
     },
   },
@@ -101,5 +112,9 @@ export default {
 }
 .form >>> .v-input__control {
   width: 280px;
+}
+.errorMessage {
+  padding: 2px 2px 2px 4px;
+  margin: 0px 0px 10px 0px;
 }
 </style>
