@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="visibleDialog" max-width="900px" persistent>
     <v-card>
-      <v-card-title class="title-modal">
+      <v-card-title class="!flex justify-between">
         {{ action === 'isView' ? 'Thông tin bot' : action === 'isCreate' ? 'Thêm mới bot' : 'Cập nhật bot'}}
         <span class="material-icons cursor-pointer" @click="closeModal">close</span>
       </v-card-title>
@@ -142,6 +142,7 @@
                             placeholder="Mô tả"
                             :disabled="action === 'isView'"
                             clearable
+                            :rows="2.5"
                 >
                   <template #prepend-inner>
                     <div :class="{ 'disabled-background': action === 'isView'}"></div>
@@ -152,7 +153,7 @@
           </v-form>
         </v-container>
       </v-card-text>
-      <div class="button-modal-create">
+      <div class="flex justify-end p-[20px]">
         <v-btn v-if="action === 'isCreate'"
                color="#2666de"
                @click="submitForm"
@@ -173,7 +174,7 @@
 
 <script>
 import Required from "./Required.vue";
-import {validateBot, validateServer} from "../../../validate-bot.js";
+import {validate, validateServer} from "../../../validate.js";
 
 export default {
   name: 'ModalCreate',
@@ -239,7 +240,7 @@ export default {
   },
   methods: {
     validateBot(data){
-      return validateBot(data)
+      return validate(data)
     },
     checkRuleServer(value) {
       return validateServer(value)
@@ -282,15 +283,6 @@ export default {
 };
 </script>
 <style lang="css" scoped>
-.title-modal {
-  display: flex;
-  justify-content: space-between;
-}
-.button-modal-create {
-  display: flex;
-  justify-content: flex-end;
-  padding: 20px;
-}
 .disabled-background {
   position: absolute;
   top: 0;
@@ -300,5 +292,8 @@ export default {
   background-color: gray;
   color: black;
   z-index: -1;
+}
+:deep(.v-row) {
+  height: 100px;
 }
 </style>

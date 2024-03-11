@@ -1,4 +1,4 @@
 import factory from '../factories.js'
-const resource ='/question-bank'
+const resource ='/chatbot'
 
 export default (axios) => factory(axios)(resource)

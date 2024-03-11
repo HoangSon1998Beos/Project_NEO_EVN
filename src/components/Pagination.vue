@@ -1,8 +1,6 @@
 <template>
   <div class="pagination-custom">
-    <span>
-    Xem
-    </span>
+    <span> Xem </span>
     <v-select
         v-model="selectItem"
         :items="items"
@@ -17,7 +15,7 @@
         v-model="currentPage"
         :length="totalPages"
         @input="changePage"
-        class="ml-16"
+        class="ml-16 pagination-right"
         rounded="circle"
         show-first-last-page
     >
@@ -27,7 +25,7 @@
 
 <script>
 export default {
-  name: 'Pagination',
+  name: "Pagination",
   props: {
     value: Number,
     totalPages: Number,
@@ -37,46 +35,46 @@ export default {
     return {
       currentPage: this.value, // Trang hiện tại được gán từ props
       selectItem: 10,
-      items : [
+      items: [
         {
           key: 10,
-          value: 10
+          value: 10,
         },
         {
           key: 20,
-          value: 20
+          value: 20,
         },
         {
           key: 30,
-          value: 30
+          value: 30,
         },
         {
           key: 40,
-          value: 40
+          value: 40,
         },
         {
           key: 50,
-          value: 50
+          value: 50,
         },
-      ]
+      ],
     };
   },
   watch: {
-    selectItem (val) {
-      this.currentPage = 1
-      this.updatePerPage(val)
+    selectItem(val) {
+      this.currentPage = 1;
+      this.updatePerPage(val);
     },
-    currentPage (val) {
-      this.changePage(val)
-    }
+    currentPage(val) {
+      this.changePage(val);
+    },
   },
   methods: {
     changePage(page) {
       this.currentPage = page;
-      this.$emit('input', page);
+      this.$emit("input", page);
     },
     updatePerPage(val) {
-      this.$emit('update', val)
+      this.$emit("update", val);
     },
   },
 };
@@ -91,5 +89,8 @@ export default {
   max-width: 80px;
   display: -webkit-box;
   margin-left: 20px;
+}
+.pagination-right {
+  width: 40%;
 }
 </style>

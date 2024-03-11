@@ -4,7 +4,7 @@
 
 <script>
 import { Bar } from "vue-chartjs";
-import axios from "axios";
+import Api from "../../api/api.js";
 import {
   Chart as ChartJS,
   Title,
@@ -66,15 +66,8 @@ export default {
   },
   methods: {
     GetBarChart() {
-      axios
-        .get(
-          "http://10.252.10.112:3232/chatbot/dashboard/getListStoryMaxMonth",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        )
+      Api.dashbroard
+        .indexWidthPath("getListStoryMaxMonth")
         .then((response) => {
           this.StoryMaxMonth = response.data.content;
           console.log(this.StoryMaxMonth);

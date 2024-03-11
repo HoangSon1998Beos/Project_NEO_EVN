@@ -22,6 +22,7 @@
               :headers="headers"
               :items="desserts"
               height="350"
+              :fixed-header="true"
             >
               <template v-slot:item="{ item, index }">
                 <tr :style="{ backgroundColor: getRowColor(index) }">
@@ -32,9 +33,25 @@
                       style="color: blueviolet; font-size: 20px"
                     />
                   </td>
-                  <td>{{ item.dateChat }}</td>
+                  <td>
+                    {{ moment(item.dateChat).format("DD-MM-YYYY HH:mm:ss") }}
+                  </td>
                   <td>{{ item.cusName }}</td>
-                  <td>{{ item.cusName }}</td>
+                  <td>
+                    <v-combobox
+                      placeholder="--Chọn xử lý--"
+                      :items="[
+                        'California',
+                        'Colorado',
+                        'Florida',
+                        'Georgia',
+                        'Texas',
+                        'Wyoming',
+                      ]"
+                      variant="outlined"
+                      class="mt-4"
+                    ></v-combobox>
+                  </td>
                 </tr>
               </template>
             </v-data-table-virtual>
@@ -86,34 +103,20 @@
       <v-col>
         <v-card height="300px">
           <a href="" class="title"> Độ hài lòng của khách hàng </a>
-          <v-list
-            bg-color="transparent"
-            class="d-flex flex-column-reverse"
-            density="compact"
-          >
-            <v-list-item v-for="(rating, i) in 5" :key="i">
-              <v-progress-linear
-                :model-value="rating * 15"
-                class="mx-n5"
-                color="yellow-darken-3"
-                height="20"
-                rounded
-              ></v-progress-linear>
-
-              <template v-slot:prepend>
-                <span>{{ rating }}</span>
-                <v-icon class="mx-3" icon="mdi-star"></v-icon>
-              </template>
-
-              <template v-slot:append>
-                <div class="rating-values">
-                  <span class="d-flex justify-end">
-                    {{ rating }}
-                  </span>
-                </div>
-              </template>
-            </v-list-item>
-          </v-list>
+          <div class="ml-12">
+            <div v-for="index in 5" :key="index" style="display: flex">
+              <div>
+                <v-rating
+                  style="color: #ff9f43"
+                  v-model="ratings[5 - index]"
+                  readonly
+                ></v-rating>
+              </div>
+              <div class="rating-count">
+                {{ ratingCounts[5 - index] }}
+              </div>
+            </div>
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -136,13 +139,13 @@
                 <td>{{ item.sessionCount }}</td>
                 <td>{{ item.intentName }}</td>
               </tr>
-            </template></v-data-table-virtual
-          >
+            </template>
+          </v-data-table-virtual>
         </v-card>
       </v-col>
       <v-col>
         <v-card height="300px">
-          <a href=""> Biểu đồ kênh tương tác trong tháng</a>
+          <a href="" class="title"> Biểu đồ kênh tương tác trong tháng</a>
           <div class="dataQuestion" style="margin-top: 30px">
             <BarChart />
           </div>
@@ -155,10 +158,15 @@
 import BarChart from "../chart/BarChart.vue";
 import HorizontalBar from "../chart/HorizontalBar.vue";
 import axios from "axios";
+import Api from "../../api/api.js";
+import moment from "moment";
+import { nextTick } from "vue";
 export default {
   components: { BarChart, HorizontalBar },
   data: () => ({
     token: localStorage.getItem("token"),
+    ratings: [1, 2, 3, 4, 5],
+    ratingCounts: [0, 0, 0, 0, 0],
     selected: [],
     chatModel: [],
     headers: [
@@ -178,6 +186,7 @@ export default {
       { title: "Ý ĐỊNH", align: "start", key: "intentName" },
     ],
     kichbanModel: [],
+    listKichban: [],
     desserts: [],
     listCustomer: [],
     listRating: [],
@@ -191,15 +200,8 @@ export default {
   },
   methods: {
     getListQuestion() {
-      axios
-        .get(
-          "http://10.252.10.112:3232/chatbot/dashboard/getQuestionsUnsolved",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        )
+      Api.dashbroard
+        .indexWidthPath("getQuestionsUnsolved")
         .then((response) => {
           this.desserts = response.data.content;
           console.log(this.desserts);
@@ -222,53 +224,40 @@ export default {
     },
     async getCustomer() {
       try {
-        const response = await axios.get(
-          import.meta.env.VITE_API_BASE_URL +
-            "/chatbot/dashboard/getCustomerMaxMonth",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
+        const response = await Api.dashbroard.indexWidthPath(
+          "getCustomerMaxMonth"
         );
+
         this.listCustomer = response.data.content;
       } catch (error) {}
     },
     async getRating() {
       try {
-        const response = await axios.get(
-          import.meta.env.VITE_API_BASE_URL +
-            "/chatbot/dashboard/getCustomerRate",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        );
+        const response = await Api.dashbroard.indexWidthPath("getCustomerRate");
         this.listRating = response.data.content;
-        this.ratinglive = this.listRating.find((item) => item.rate);
+        this.listRating.forEach((item) => {
+          // Gán số lượng lượt đánh giá vào mảng ratingsData theo số sao tương ứng
+          this.ratingCounts[item.rate - 1] = item.amount;
+        });
+        console.log(this.listRating, "than");
       } catch (error) {
         console.error("API Error:", error);
       }
     },
     async getScript() {
       try {
-        const response = await axios.get(
-          import.meta.env.VITE_API_BASE_URL +
-            "/chatbot/dashboard/getSessionOnDay",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        );
+        const response = await Api.dashbroard.indexWidthPath("getSessionOnDay");
         this.listKichban = response.data.content;
       } catch (error) {
         console.error("API Error:", error);
       }
     },
   },
-  computed: {},
+  computed: {
+    moment() {
+      return moment;
+    },
+  },
 };
 </script>
 <style scoped>
@@ -303,5 +292,15 @@ export default {
 }
 .rating-values {
   width: 25px;
+}
+.rating-count {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff9f43;
+  font-weight: 500;
+  padding-bottom: 2px;
+  margin-left: 100px;
 }
 </style>
