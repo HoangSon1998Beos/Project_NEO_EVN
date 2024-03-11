@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="visibleDialog" max-width="400px" persistent>
-    <v-card class="text-center body-modal">
-      <div class="">
+    <v-card class="text-center py-4">
+      <div class="self-center">
         <warning/>
       </div>
       <v-card-text>
@@ -9,7 +9,7 @@
           <slot name="description"></slot>
         </div>
       </v-card-text>
-      <div class="button-delete">
+      <div class="flex justify-center gap-4">
         <v-btn width="20%" color="#ed1c24" @click="ok">
           {{ buttonOkText }}
         </v-btn>
@@ -59,12 +59,5 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.button-delete {
-  display: flex;
-  column-gap: 1rem;
-  justify-content: center;
-}
-.body-modal {
-  padding: 1rem;
-}
+
 </style>

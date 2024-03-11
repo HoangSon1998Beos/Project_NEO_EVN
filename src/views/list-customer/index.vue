@@ -5,7 +5,7 @@
     </template>
   </v-breadcrumbs>
   <div class="layout">
-    <div class="layout-top">
+    <div class="flex gap-4 pr-8 pb-4 pl-8">
       <div class="search-custom" style="width: 65%">
         <SearchCustomer/>
       </div>
@@ -13,7 +13,7 @@
         <FileCustomer/>
       </div>
     </div>
-    <div class="layout-bottom">
+    <div class="px-8">
       <DataCustomer/>
     </div>
   </div>
@@ -48,14 +48,6 @@ export default {
 </script>
 
 <style scoped>
-.layout-top {
-  display: flex;
-  column-gap: 1rem;
-  padding: 0 2rem 1rem 2rem;
-}
-.layout-bottom {
-  padding: 0 2rem 0 2rem;
-}
 :deep(.v-application__wrap) {
   min-height: 0;
 }

@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="visibleDialog" max-width="900px" persistent>
     <v-card>
-      <v-card-title class="title-modal">
+      <v-card-title class="!flex justify-between">
         {{ action === 'isView' ? 'Thông tin bot' : action === 'isCreate' ? 'Thêm mới bot' : 'Cập nhật bot'}}
         <span class="material-icons cursor-pointer" @click="closeModal">close</span>
       </v-card-title>
@@ -153,7 +153,7 @@
           </v-form>
         </v-container>
       </v-card-text>
-      <div class="button-modal-create">
+      <div class="flex justify-end p-[20px]">
         <v-btn v-if="action === 'isCreate'"
                color="#2666de"
                @click="submitForm"
@@ -283,15 +283,6 @@ export default {
 };
 </script>
 <style lang="css" scoped>
-.title-modal {
-  display: flex;
-  justify-content: space-between;
-}
-.button-modal-create {
-  display: flex;
-  justify-content: flex-end;
-  padding: 20px;
-}
 .disabled-background {
   position: absolute;
   top: 0;

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <div class="button-upload">
+    <div class="grid gap-y-[1px]">
       <v-btn color="#4b4b4b"
              prepend-icon="mdi-file-upload"
              @click="handleUploadClick"
@@ -14,7 +14,7 @@
         Tải xuống file mẫu
       </v-btn>
     </div>
-    <div class="upload-file-custom">
+    <div class="p-[20px] self-center">
       <v-file-input
           v-model="file"
           type="file"
@@ -23,13 +23,13 @@
           @change="handleFileChange"
       />
       <v-btn v-if="!fileSelected" class="dashed-border" @click="handleUploadClick">
-        <div class="config">
+        <div class="grid justify-items-center">
           <span>KÉO THẢ FILE HOẶC TỆP TIN</span>
           <v-icon size="150">mdi-download</v-icon>
         </div>
       </v-btn>
       <span v-else>File đã chọn: {{ fileName }}</span>
-      <div class="button-upload-bottom">
+      <div class="flex justify-center mt-5 gap-2">
         <v-btn @click="uploadFile" color="#164397">Tải lên</v-btn>
         <v-btn @click="clearFile" color="#ea5455">Xoá</v-btn>
       </div>
@@ -67,41 +67,19 @@ export default {
     },
     downloadFile(){
       const fileUrl = '/duong-dan-den-file';
-      // Tạo một thẻ a ẩn
       const link = document.createElement('a');
-      // Gán thuộc tính href của thẻ a với đường link của file
       link.href = fileUrl;
-      // Đặt tên file khi tải xuống
       link.download = 'file-tai-ve';
-      // Kích hoạt sự kiện click cho thẻ a để bắt đầu quá trình tải xuống
       link.click();
     }
   }
 };
 </script>
 <style scoped lang="css">
-.button-upload {
-  display: grid;
-  row-gap: 1px;
-}
 .dashed-border {
   border: 2px dashed #000;
   height: 200px;
   width: 400px;
   cursor: pointer;
-}
-.upload-file-custom {
-  align-self: center;
-  padding: 20px;
-}
-.button-upload-bottom {
-  margin-top: 20px;
-  display: flex;
-  column-gap: 10px;
-  justify-content: center;
-}
-.config {
-  display: grid;
-  justify-items: center;
 }
 </style>

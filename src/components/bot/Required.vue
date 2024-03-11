@@ -5,12 +5,8 @@ export default {
 </script>
 
 <template>
-<span class="required">*</span>
+<span class="text-red ml-1">*</span>
 </template>
 
 <style scoped>
-.required {
-  color: red;
-  margin-left: 5px;
-}
 </style>

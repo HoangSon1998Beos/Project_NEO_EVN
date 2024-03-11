@@ -1,6 +1,6 @@
 <template>
   <v-app class="layout-search">
-    <span class="title-search">Tìm kiếm khách hàng</span>
+    <span class="pt-4 pl-10">Tìm kiếm khách hàng</span>
     <v-container>
       <v-row>
         <v-col cols="12">
@@ -41,7 +41,7 @@
                 ></v-text-field>
               </v-col>
             </v-row>
-            <div class="buttonSearchCustom">
+            <div class="flex justify-center mt-3 gap-x-2">
               <v-btn @click="resetForm" color="#164397">Tìm kiếm</v-btn>
               <v-btn @click="validateForm">Làm mới</v-btn>
               <v-btn @click="clearForm" color="#164397">Xuất dữ liệu</v-btn>
@@ -102,13 +102,5 @@ export default {
 </script>
 
 <style scoped>
-.buttonSearchCustom {
-  display: flex;
-  justify-content: center;
-  column-gap: 10px;
-  margin-top: 10px;
-}
-.title-search {
-  padding: 20px 0 0 30px;
-}
+
 </style>

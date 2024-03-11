@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-table">
+  <div class="bg-white p-[16px]">
     <span>Danh sách khách hàng</span>
     <v-data-table
       :headers="headers"
@@ -123,8 +123,5 @@ export default {
 </script>
 
 <style scoped lang="css">
- .layout-table {
-  background-color: white;
-   padding: 1rem;
- }
+
 </style>
