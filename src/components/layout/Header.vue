@@ -8,7 +8,7 @@
       />
     </a>
     <p class="text">CHATBOT - HỆ THỐNG CHĂM SÓC KHÁCH HÀNG TỰ ĐỘNG</p>
-    <div style="display: flex; margin-right: -147px">
+    <div style="display: flex">
       <i class="icbell fas fa-bell"></i>
       <p class="text1">admin</p>
       <v-menu offset-y open-on-hover class="logOut">
