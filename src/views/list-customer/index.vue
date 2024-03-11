@@ -5,14 +5,15 @@
     ></v-breadcrumbs>
     <div class="layout">
       <div class="layout-top">
-        <div class="search-custom" style="width: 60% ; height: 400px">
+        <div class="search-custom" style="width: 65% ; height: 400px">
           <SearchCustomer/>
         </div>
-        <div class="file-custom" style="width: 40% ; height: 400px">
+        <div class="file-custom" style="width: 35% ; height: 400px">
           <FileCustomer/>
         </div>
       </div>
       <div class="layout-bottom">
+        <SearchCustomer/>
       </div>
     </div>
   </div>
@@ -34,7 +35,7 @@ export default {
 .layout-top {
   display: flex;
   column-gap: 1rem;
-  padding: 2rem;
+  padding: 0 2rem 1rem 2rem;
 }
 .layout-bottom {
   padding: 0 2rem 0 2rem;
