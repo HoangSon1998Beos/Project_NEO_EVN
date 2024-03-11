@@ -8,31 +8,32 @@
       />
     </a>
     <p class="text">CHATBOT - HỆ THỐNG CHĂM SÓC KHÁCH HÀNG TỰ ĐỘNG</p>
-    <i class="icbell fas fa-bell"></i>
-    <p class="text1">admin</p>
-    <v-menu offset-y open-on-hover class="logOut">
-      <template v-slot:activator="{ props }">
-        <v-btn color="primary" v-bind="props" class="button"
-          ><i class="iclogo fas fa-user logo"></i>
-        </v-btn>
-      </template>
-      <v-list>
-        <v-list-item
-          v-for="(item, index) in logOut"
-          :key="index"
-          :value="index"
-        >
-          <v-list-item-title @click="handleLogOut">
-            <i class="fas fa-sign-out-alt"></i>
-            {{ item.title }}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+    <div style="display: flex; margin-right: -147px">
+      <i class="icbell fas fa-bell"></i>
+      <p class="text1">admin</p>
+      <v-menu offset-y open-on-hover class="logOut">
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props" class="button"
+            ><i class="iclogo fas fa-user logo"></i>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="(item, index) in logOut"
+            :key="index"
+            :value="index"
+          >
+            <v-list-item-title @click="handleLogOut">{{
+              item.title
+            }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
   </v-card>
 </template>
-      
-      <script>
+
+<script>
 export default {
   data() {
     return {
@@ -47,12 +48,13 @@ export default {
   },
 };
 </script>
-      
-      <style scoped>
+
+<style scoped>
 .container {
   background-color: white;
   display: flex;
   margin-bottom: 20px;
+  justify-content: space-between;
   cursor: pointer;
 }
 .text {

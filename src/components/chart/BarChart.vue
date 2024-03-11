@@ -5,6 +5,7 @@
 <script>
 import { Bar } from "vue-chartjs";
 import axios from "axios";
+import Api from "../../api/api.js";
 import {
   Chart as ChartJS,
   Title,
@@ -58,15 +59,8 @@ export default {
   },
   methods: {
     GetBarChart() {
-      axios
-        .get(
-          "http://10.252.10.112:3232/chatbot/dashboard/getChannelChartOnMonth",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        )
+      Api.dashbroard
+        .indexWidthPath("getChannelChartOnMonth")
         .then((response) => {
           this.ChartOnMonth = response.data.content;
           console.log(this.ChartOnMonth);
