@@ -1,33 +1,30 @@
 <template>
-  <div>
     <v-breadcrumbs :items="['Trang chủ', 'Quản trị hệ thống', 'Quản lý Khách hàng']"
                    class="mx-10"
     ></v-breadcrumbs>
-    <div class="layout">
+    <div class="layout" >
       <div class="layout-top">
-        <div class="search-custom" style="width: 65% ; height: 400px">
+        <div class="search-custom" style="width: 65%">
           <SearchCustomer/>
         </div>
-        <div class="file-custom" style="width: 35% ; height: 400px">
+        <div class="file-custom" style="width: 35%">
           <FileCustomer/>
         </div>
       </div>
       <div class="layout-bottom">
-        <SearchCustomer/>
+        <DataCustomer/>
       </div>
     </div>
-  </div>
-
 </template>
 
 <script>
 import SearchCustomer from "../../components/customer/SearchCustomer.vue";
 import FileCustomer from "../../components/customer/FileCustomer.vue";
-import ListCustomer from "../../components/customer/ListCustomer.vue";
+import DataCustomer from "../../components/customer/DataCustomer.vue";
 
 export default {
   name: "ListCustomer",
-  components: {FileCustomer, SearchCustomer, ListCustomer}
+  components: {DataCustomer, FileCustomer, SearchCustomer}
 }
 </script>
 
@@ -39,5 +36,8 @@ export default {
 }
 .layout-bottom {
   padding: 0 2rem 0 2rem;
+}
+:deep(.v-application__wrap) {
+  min-height: 0;
 }
 </style>
