@@ -205,7 +205,7 @@ export default {
       textAddSuccess: "Thêm người dùng thành công",
       textSuccessful: '',
       visibleInfo: false,
-      visibleChangePass: true,
+      visibleChangePass: false,
       visibleError: false,
       visibleLock: false,
       visibleSuccessful: false,
@@ -249,6 +249,7 @@ export default {
   },
   created() {
     this.init();
+    this.search(true);
   },
   methods: {
     indexRow(index) {
