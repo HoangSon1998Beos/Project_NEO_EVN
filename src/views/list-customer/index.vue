@@ -1,20 +1,22 @@
 <template>
-    <v-breadcrumbs :items="['Trang chủ', 'Quản trị hệ thống', 'Quản lý Khách hàng']"
-                   class="mx-10"
-    ></v-breadcrumbs>
-    <div class="layout" >
-      <div class="layout-top">
-        <div class="search-custom" style="width: 65%">
-          <SearchCustomer/>
-        </div>
-        <div class="file-custom" style="width: 35%">
-          <FileCustomer/>
-        </div>
+  <v-breadcrumbs :items="dataBreadCrumb" style="margin-left:40px; font-size: smaller">
+    <template v-slot:divider>
+      <v-icon icon="mdi-chevron-right"></v-icon>
+    </template>
+  </v-breadcrumbs>
+  <div class="layout">
+    <div class="layout-top">
+      <div class="search-custom" style="width: 65%">
+        <SearchCustomer/>
       </div>
-      <div class="layout-bottom">
-        <DataCustomer/>
+      <div class="file-custom" style="width: 35%">
+        <FileCustomer/>
       </div>
     </div>
+    <div class="layout-bottom">
+      <DataCustomer/>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -24,7 +26,24 @@ import DataCustomer from "../../components/customer/DataCustomer.vue";
 
 export default {
   name: "ListCustomer",
-  components: {DataCustomer, FileCustomer, SearchCustomer}
+  components: {DataCustomer, FileCustomer, SearchCustomer},
+  data() {
+    return {
+      dataBreadCrumb: [
+        {
+          title: "Trang chủ",
+          disabled: false,
+          href: "trang-chu",
+        },
+        {
+          title: "Quản trị hệ thống",
+        },
+        {
+          title: "Quản lý khách hàng",
+        },
+      ],
+    }
+  }
 }
 </script>
 

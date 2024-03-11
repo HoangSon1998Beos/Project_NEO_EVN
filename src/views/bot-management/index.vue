@@ -1,8 +1,10 @@
 <template>
   <div class="mx-10">
-    <v-breadcrumbs
-      :items="['Trang chủ', 'Đào tạo Bot', 'Quản lý Bot']"
-    ></v-breadcrumbs>
+    <v-breadcrumbs :items="dataBreadCrumb" style="font-size: smaller">
+      <template v-slot:divider>
+        <v-icon icon="mdi-chevron-right"></v-icon>
+      </template>
+    </v-breadcrumbs>
     <div class="layout">
       <div class="card-layout">
         <v-btn prepend-icon="mdi-plus" color="#2666de" @click="addBot"
@@ -235,6 +237,21 @@ export default {
   components: { Pagination, ModalCreate, ModalDelete },
   data() {
     return {
+      dataBreadCrumb: [
+        {
+          title: "Trang chủ",
+          disabled: false,
+          href: "trang-chu",
+        },
+        {
+          title: "Đào tạo chatbot",
+          disabled: false,
+        },
+        {
+          title: "Quản lý bot",
+          disabled: true,
+        },
+      ],
       headers: [
         { title: "STT", align: "start", sortable: false, key: "stt" },
         {
