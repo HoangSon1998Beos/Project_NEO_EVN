@@ -73,7 +73,7 @@ export default {
   padding: 5px 0px 0px 2px;
 }
 .icbell {
-  margin: 10px 0px 0px 190px;
+  margin: 10px 0px 0px 250px;
   padding: 5px 0px 0px 2px;
   color: gray;
 }
