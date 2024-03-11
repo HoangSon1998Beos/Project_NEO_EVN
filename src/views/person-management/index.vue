@@ -218,7 +218,7 @@ export default {
         {
           title: "Trang chủ",
           disabled: false,
-          href: "trang-chu",
+          href: "/home",
         },
         {
           title: "Quản trị hệ thống",
@@ -247,7 +247,7 @@ export default {
       listStatus,
       headers: [
         {title: 'Số thứ tự', key: 'index', align: 'center'},
-        {title: 'Thao tác', key: 'actions', sortable: false, align: 'center'},
+        {title: 'Thao tác', key: 'actions', sortable: false, align: 'center', width: 150},
         {title: 'Tài khoản', key: 'username', align: 'center'},
         {title: 'Vai Trò', key: 'roleId', align: 'center'},
         {title: 'Email', key: 'email', align: 'center'},
