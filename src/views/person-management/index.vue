@@ -6,6 +6,7 @@
           <v-icon icon="mdi-chevron-right"></v-icon>
         </template>
       </v-breadcrumbs>
+
     <v-card elevation="8" rounded="lg">
 
       <v-card-text style="width: 400px; text-align: left !important">
@@ -39,13 +40,12 @@
       />
     </v-card>
     <v-data-table
-        style="margin-top: 15px;border: black"
-        :headers="headers"
-        :items="listUser"
-        item-key="id"
-        v-model:items-per-page="perPage"
-        :pagination.sync="totalPages"
-
+      style="margin-top: 15px; border: black"
+      :headers="headers"
+      :items="listUser"
+      item-key="id"
+      v-model:items-per-page="perPage"
+      :pagination.sync="totalPages"
     >
       <template v-slot:item.index="{ item, index }">
         <div>
@@ -54,74 +54,70 @@
       </template>
 
       <template v-slot:item.actions="{ item }" style="margin: 5px">
-        <v-tooltip location="end" >
-          <template v-slot:activator="{ props }" >
-            <a icon @click="getUserInfoFormEdit(item.id)" size="x-small" v-bind="props" class="mr-2">
-              <v-icon
-                  style="color: #2666de"
-              >
-                mdi-pencil
-              </v-icon>
-
+        <v-tooltip location="end">
+          <template v-slot:activator="{ props }">
+            <a
+              icon
+              @click="getUserInfoFormEdit(item.id)"
+              size="x-small"
+              v-bind="props"
+              class="mr-2"
+            >
+              <v-icon style="color: #2666de"> mdi-pencil </v-icon>
             </a>
           </template>
           <span>Cập nhật</span>
         </v-tooltip>
 
-        <v-tooltip
-            v-if="item.status !== 3"
-            location="end">
+        <v-tooltip v-if="item.status !== 3" location="end">
           <template v-slot:activator="{ props }">
-            <a icon @click="lockUser(item.id)" size="x-small" v-bind="props" class="mr-2">
-
-              <v-icon
-                  style="color: #ff9f43"
-              >
-                mdi-lock-open
-              </v-icon>
-
+            <a
+              icon
+              @click="lockUser(item.id)"
+              size="x-small"
+              v-bind="props"
+              class="mr-2"
+            >
+              <v-icon style="color: #ff9f43"> mdi-lock-open </v-icon>
             </a>
           </template>
           <span>Khóa</span>
         </v-tooltip>
 
-        <v-tooltip
-            location="end"
-        >
+        <v-tooltip location="end">
           <template v-slot:activator="{ props }">
-            <a icon @click="deleteUser((item.id))" size="x-small" v-bind="props" class="mr-2">
-              <v-icon
-                  style="color: #ea5455">
-                mdi-delete
-              </v-icon>
-
+            <a
+              icon
+              @click="deleteUser(item.id)"
+              size="x-small"
+              v-bind="props"
+              class="mr-2"
+            >
+              <v-icon style="color: #ea5455"> mdi-delete </v-icon>
             </a>
           </template>
           <span>Xóa</span>
         </v-tooltip>
 
-        <v-tooltip
-            v-if="item.status === 3"
-            location="end"
-        >
-          <template v-slot:activator="{ props }" >
-            <a icon @click="refreshPass((item.id))" size="x-small" v-bind="props" class="mr-2">
-              <v-icon
-                  style="color: #ea5455">
-                mdi-refresh
-              </v-icon>
-
+        <v-tooltip v-if="item.status === 3" location="end">
+          <template v-slot:activator="{ props }">
+            <a
+              icon
+              @click="refreshPass(item.id)"
+              size="x-small"
+              v-bind="props"
+              class="mr-2"
+            >
+              <v-icon style="color: #ea5455"> mdi-refresh </v-icon>
             </a>
           </template>
           <span>Đổi mật khẩu</span>
         </v-tooltip>
-
       </template>
       <template v-slot:item.username="{ item }">
         <a @click="getUserInfoFormView(item.id)">
           {{ item.username }}
         </a>
-
       </template>
       <template v-slot:item.roleId="{ item }">
         <div>
@@ -138,7 +134,6 @@
             label
           ></v-chip>
         </div>
-
       </template>
 
       <template v-slot:item.createdDate="{ item }">
@@ -151,15 +146,14 @@
         <span>{{ validateDate(item.dateLogin) }}</span>
       </template>
 
-
       <template #bottom>
         <PaginationApi
-            ref="pagina"
-            @changePage="search"
-            v-model:total-pages="totalPages"
-            v-model:current-page="currentPage"
-            v-model:per-page="perPage"
-            v-model:total-record="totalRecord"
+          ref="pagina"
+          @changePage="search"
+          v-model:total-pages="totalPages"
+          v-model:current-page="currentPage"
+          v-model:per-page="perPage"
+          v-model:total-record="totalRecord"
         />
       </template>
     </v-data-table>
@@ -173,9 +167,6 @@
     <ChangePassModal v-model:visible="visibleChangePass" @success="searchAfter(textRefreshPass)" />
 
   </v-container>
-
-
-
 </template>
 
 <script>
@@ -188,7 +179,6 @@ import LockModal from "./modal-person/lock-modal.vue";
 import ErrorModal from "./modal-person/error-modal.vue";
 import InfoModal from "./modal-person/info-modal.vue";
 import Api from "../../api/api.js";
-
 
 // import Pagination from "../../components/Pagination.vue";
 import PaginationApi from "../../components/Pagination-api.vue";
@@ -204,25 +194,24 @@ export default {
     LockModal,
     PaginationApi,
     InfoModal,
-    ChangePassModal
-
+    ChangePassModal,
   },
   name: "index",
   data() {
     const listStatus = [
       {
         id: 1,
-        name: 'Hoạt động'
+        name: "Hoạt động",
       },
       {
         id: 2,
-        name: 'Khóa'
+        name: "Khóa",
       },
       {
         id: 3,
-        name: 'Hết hạn'
-      }
-    ]
+        name: "Hết hạn",
+      },
+    ];
 
     return {
       dataBreadCrumb: [
@@ -245,7 +234,7 @@ export default {
       textLockSuccess: "Khóa người dùng thành công",
       textDeleteSuccess: "Xóa người dùng thành công",
       textAddSuccess: "Thêm người dùng thành công",
-      textSuccessful: '',
+      textSuccessful: "",
       visibleInfo: false,
       visibleChangePass: false,
       visibleError: false,
@@ -268,11 +257,13 @@ export default {
         {title: 'Ngày cập nhật', key: 'updatedDate', align: 'center'},
         {title: 'Ngày đăng nhập', key: 'dateLogin', align: 'center'},
 
+
       ],
       searchValue: "",
       listUser: [],
       dialog: false,
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTgwNDI0NCwiZXhwIjoxNzA5ODkwNjQ0fQ.juYqwYdwcVMQP9r9Li0t6TSe9GmFHvTunWi9LDcLKVln5FYfztm05Gzve8hiX46zZxrS824gzW7uslbs4EGejg',
+      token:
+        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJBZG1pbiIsInR5cGUiOiJBRE1JTiIsImlkIjoxMTksImlhdCI6MTcwOTgwNDI0NCwiZXhwIjoxNzA5ODkwNjQ0fQ.juYqwYdwcVMQP9r9Li0t6TSe9GmFHvTunWi9LDcLKVln5FYfztm05Gzve8hiX46zZxrS824gzW7uslbs4EGejg",
       loaded: false,
       loading: false,
       editedItem: {
@@ -295,27 +286,26 @@ export default {
   },
   methods: {
     changePassSuccess() {
-      this.textSuccessful = "Thay đổi mật khẩu thành công"
-      this.visibleSuccessful = true
+      this.textSuccessful = "Thay đổi mật khẩu thành công";
+      this.visibleSuccessful = true;
     },
     refreshPass() {
       this.visibleChangePass = true;
     },
     indexRow(index) {
-      return index + ((this.currentPage - 1) * this.perPage) + 1;
+      return index + (this.currentPage - 1) * this.perPage + 1;
     },
     returnTotalPage(total) {
       return total;
     },
     checkColorStatus(status) {
-      if (status === 1) return 'green';
-      if (status === 3) return 'grey';
-      if (status === 2) return 'red';
+      if (status === 1) return "green";
+      if (status === 3) return "grey";
+      if (status === 2) return "red";
     },
     validateDate(date) {
-
-      if (!date || date === null || date === '') {
-        return '';
+      if (!date || date === null || date === "") {
+        return "";
       } else {
         return new Date(date).toLocaleString();
       }
@@ -327,13 +317,11 @@ export default {
       await this.search(false);
     },
     getUser(id) {
-      const userInfor = this.listUser.filter(item => item.id === id);
+      const userInfor = this.listUser.filter((item) => item.id === id);
       if (userInfor.length === 1) {
-
-
         this.userInfo = userInfor[0];
-        this.userInfo.roleLabel = this.filterRole(this.userInfo.roleId)
-        this.userInfo.statusLabel = this.filterStatus(this.userInfo.status)
+        this.userInfo.roleLabel = this.filterRole(this.userInfo.roleId);
+        this.userInfo.statusLabel = this.filterStatus(this.userInfo.status);
 
         // return userInfor[0];
       } else {
@@ -349,7 +337,7 @@ export default {
       this.visibleInfo = true;
     },
     async init() {
-      const dataResponse = await Api.person.indexWidthPath(`roles/get-role`)
+      const dataResponse = await Api.person.indexWidthPath(`roles/get-role`);
       this.listRole = dataResponse.data.content;
     },
     lockUser(id) {
@@ -359,22 +347,20 @@ export default {
       this.visibleDelete = true;
     },
     filterStatus(status) {
-      const statusInfo = this.listStatus.filter(item => item.id === status)
+      const statusInfo = this.listStatus.filter((item) => item.id === status);
       if (statusInfo.length === 1) {
         return statusInfo[0].name;
       } else {
-        return '';
+        return "";
       }
     },
     filterRole(statusId) {
-      const roleInfo = this.listRole.filter(item => item.id === statusId)
-
+      const roleInfo = this.listRole.filter((item) => item.id === statusId);
 
       if (roleInfo.length === 1) {
         return roleInfo[0].roleName;
       } else {
-        return '';
-
+        return "";
       }
     },
 
@@ -383,34 +369,39 @@ export default {
       if (!checkSearch) {
         currentPage = this.currentPage - 1;
       }
-      this.loading = true
+      this.loading = true;
 
-      try{
+      try {
         this.config = {
           params: {
             keyword: this.searchValue,
             currentPage: currentPage,
-            perPage: this.perPage
-          }
-        }
-        const dataResponse = await Api.person.indexWidthPath(`user-info`,this.config)
+            perPage: this.perPage,
+          },
+        };
+        const dataResponse = await Api.person.indexWidthPath(
+          `user-info`,
+          this.config
+        );
         setTimeout(() => {
-          this.loading = false
-          this.loaded = true
-        }, 2000)
+          this.loading = false;
+          this.loaded = true;
+        }, 2000);
         // Xử lý dữ liệu khi thành công
         this.listUser = dataResponse.data.content.items;
         this.totalRecord = dataResponse.data.content.total;
 
-        this.totalPages = Math.ceil(dataResponse.data.content.total / this.perPage)
-      }catch (e){
+        this.totalPages = Math.ceil(
+          dataResponse.data.content.total / this.perPage
+        );
+      } catch (e) {
         if (error.response.status !== 200) {
           setTimeout(() => {
-            this.loading = false
-            this.loaded = true
-          }, 2000)
+            this.loading = false;
+            this.loaded = true;
+          }, 2000);
           this.visibleError = true;
-          return
+          return;
         }
       }
     },

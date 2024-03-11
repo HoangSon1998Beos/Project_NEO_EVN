@@ -16,6 +16,7 @@
                       v-bind="props"
                       class="material-icons cursor-pointer"
                       @click="updateCustomer(item)"
+                      style="color: #ff9f43"
                   >
                     edit
                   </span>
@@ -26,6 +27,7 @@
                   <span
                       v-bind="props"
                       class="material-icons cursor-pointer"
+                      style="color: #ea5455"
                   >
                     delete
                   </span>
@@ -36,6 +38,7 @@
                   <span
                       v-bind="props"
                       class="material-icons cursor-pointer"
+                      style="color: #28c76f"
                   >
                     visibility
                   </span>
