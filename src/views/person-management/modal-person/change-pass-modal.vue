@@ -3,7 +3,7 @@
       transition="dialog-bottom-transition"
       style="width: 500px"
       v-model="isVisible"
-
+      persistent
   >
     <!--    persistent-->
     <v-card
@@ -21,6 +21,8 @@
         ></v-btn>
       </v-card-title>
       <v-card-text>
+        <v-form ref="form" v-model="valid" lazy-validation>
+
         <div class="text-subtitle-1 text-medium-emphasis">Mật khẩu mới</div>
         <v-text-field
             v-model="newPassword"
@@ -47,10 +49,16 @@
             :rules="confirmPassRule"
         ></v-text-field>
         <div class="d-flex justify-center">
-          <v-btn type="primary" text="Cập nhật" variant="tonal" style="margin-right: 15px" class="button-primary"></v-btn>
+          <v-btn type="primary" text="Cập nhật"
+                 variant="tonal"
+                 style="margin-right: 15px"
+                 class="button-primary"
+                 @click="success"
+          ></v-btn>
           <v-btn text="Nhập lại" variant="tonal" @click="clearForm"></v-btn>
 
         </div>
+        </v-form>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -77,6 +85,8 @@ export default {
         (v) =>
             /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(v) ||
             "Mật khẩu chưa đúng định dạng",
+        (value) => value === this.newPassword || 'Không trùng với password',
+
       ];
     },
   },
@@ -86,8 +96,11 @@ export default {
     },
     clearForm() {
       this.newPassword = ''
-      this.newPassword = ''
-
+      this.confirmPassword = ''
+    },
+    success (){
+      this.isVisible = false;
+      this.$emit('success')
     }
   },
   props: {

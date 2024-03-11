@@ -1,5 +1,6 @@
 <template>
-  <v-container style="max-width: 100% !important">
+
+  <v-container style="max-width: 98% !important">
     <v-card elevation="8" rounded="lg">
       <v-card-text style="width: 400px; text-align: left !important">
         <div class="text-subtitle-1 text-medium-emphasis">
@@ -46,40 +47,26 @@
         </div>
       </template>
 
-      <template v-slot:item.actions="{ item }">
-        <v-tooltip location="end">
-          <template v-slot:activator="{ props }">
-
-            <v-btn icon @click="getUserInfoFormEdit(item.id)" size="x-small" v-bind="props">
+      <template v-slot:item.actions="{ item }" style="margin: 5px">
+        <v-tooltip location="end" >
+          <template v-slot:activator="{ props }" >
+            <a icon @click="getUserInfoFormEdit(item.id)" size="x-small" v-bind="props" class="mr-2">
               <v-icon
                   style="color: #2666de"
               >
                 mdi-pencil
               </v-icon>
 
-            </v-btn>
+            </a>
           </template>
           <span>Cập nhật</span>
         </v-tooltip>
 
         <v-tooltip
-            location="end"
-        >
+            v-if="item.status !== 3"
+            location="end">
           <template v-slot:activator="{ props }">
-            <v-btn icon @click="deleteUser((item.id))" size="x-small" v-bind="props">
-              <v-icon
-                  style="color: #ea5455">
-                mdi-delete
-              </v-icon>
-
-            </v-btn>
-          </template>
-          <span>Xóa</span>
-        </v-tooltip>
-
-        <v-tooltip location="end">
-          <template v-slot:activator="{ props }">
-            <v-btn icon @click="lockUser(item.id)" size="x-small" v-bind="props">
+            <a icon @click="lockUser(item.id)" size="x-small" v-bind="props" class="mr-2">
 
               <v-icon
                   style="color: #ff9f43"
@@ -87,10 +74,42 @@
                 mdi-lock-open
               </v-icon>
 
-            </v-btn>
+            </a>
           </template>
           <span>Khóa</span>
         </v-tooltip>
+
+        <v-tooltip
+            location="end"
+        >
+          <template v-slot:activator="{ props }">
+            <a icon @click="deleteUser((item.id))" size="x-small" v-bind="props" class="mr-2">
+              <v-icon
+                  style="color: #ea5455">
+                mdi-delete
+              </v-icon>
+
+            </a>
+          </template>
+          <span>Xóa</span>
+        </v-tooltip>
+
+        <v-tooltip
+            v-if="item.status === 3"
+            location="end"
+        >
+          <template v-slot:activator="{ props }" >
+            <a icon @click="refreshPass((item.id))" size="x-small" v-bind="props" class="mr-2">
+              <v-icon
+                  style="color: #ea5455">
+                mdi-refresh
+              </v-icon>
+
+            </a>
+          </template>
+          <span>Đổi mật khẩu</span>
+        </v-tooltip>
+
       </template>
       <template v-slot:item.username="{ item }">
         <a @click="getUserInfoFormView(item.id)">
@@ -139,13 +158,13 @@
       </template>
     </v-data-table>
 
-    <EditModal v-model:user-info="userInfo" v-model:visible="visibleEdit" v-model:list-role="listRole"/>
+    <EditModal v-model:user-info="userInfo" v-model:visible="visibleEdit" v-model:list-role="listRole" @success="searchAfter(textEditSuccess)"/>
     <DeleteModal v-model:visible="visibleDelete" @success="searchAfter(textDeleteSuccess)"/>
     <LockModal v-model:visible="visibleLock" @success="searchAfter(textLockSuccess)"/>
     <Successful v-model:visible="visibleSuccessful" v-model:text="textSuccessful"/>
     <ErrorModal v-model:visible="visibleError"/>
     <InfoModal v-model:user-info="userInfo" v-model:visible="visibleInfo"/>
-    <ChangePassModal v-model:visible="visibleChangePass" />
+    <ChangePassModal v-model:visible="visibleChangePass" @success="searchAfter(textRefreshPass)" />
   </v-container>
 
 
@@ -161,6 +180,7 @@ import Successful from "./modal-person/successful-modal.vue";
 import LockModal from "./modal-person/lock-modal.vue";
 import ErrorModal from "./modal-person/error-modal.vue";
 import InfoModal from "./modal-person/info-modal.vue";
+import Api from "../../api/api.js";
 
 
 // import Pagination from "../../components/Pagination.vue";
@@ -198,6 +218,8 @@ export default {
     ]
 
     return {
+      textEditSuccess: "Thay đổi người dùng thành công",
+      textRefreshPass: "Thay đổi mật khẩu thành công",
       textLockSuccess: "Khóa người dùng thành công",
       textDeleteSuccess: "Xóa người dùng thành công",
       textAddSuccess: "Thêm người dùng thành công",
@@ -242,12 +264,21 @@ export default {
       perPage: 10,
       totalPages: 0,
       listRole: [],
+      config: {},
     };
   },
   created() {
     this.init();
+    this.search(true);
   },
   methods: {
+    changePassSuccess() {
+      this.textSuccessful = "Thay đổi mật khẩu thành công"
+      this.visibleSuccessful = true
+    },
+    refreshPass() {
+      this.visibleChangePass = true;
+    },
     indexRow(index) {
       return index + ((this.currentPage - 1) * this.perPage) + 1;
     },
@@ -271,7 +302,7 @@ export default {
       this.textSuccessful = text;
       this.visibleSuccessful = true;
       this.searchValue = "";
-      await this.search(true);
+      await this.search(false);
     },
     getUser(id) {
       const userInfor = this.listUser.filter(item => item.id === id);
@@ -295,36 +326,11 @@ export default {
       this.getUser(id);
       this.visibleInfo = true;
     },
-    init() {
-      axios.get('http://10.252.10.112:3232/chatbot/roles/get-role', {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-        },
-      })
-          .then(response => {
-            // Xử lý dữ liệu khi thành công
-            this.listRole = response.data.content;
-
-          })
-          .catch(error => {
-            // Xử lý lỗi
-          });
-
+    async init() {
+      const dataResponse = await Api.person.indexWidthPath(`roles/get-role`)
+      this.listRole = dataResponse.data.content;
     },
     lockUser(id) {
-      // axios.put('http://10.252.10.112:3232/chatbot/user-info/lock/' + id, {
-      //   headers: {
-      //     'Authorization': `Bearer ${this.token}`,
-      //   },
-      // })
-      //     .then(async response => {
-      //       console.log('response', response);
-      //       // Xử lý dữ liệu khi thành công
-      //       await this.search(true);
-      //     })
-      //     .catch(error => {
-      //       // Xử lý lỗi
-      //     });
       this.visibleLock = true;
     },
     deleteUser(id) {
@@ -356,51 +362,34 @@ export default {
         currentPage = this.currentPage - 1;
       }
       this.loading = true
-      await axios.get('http://10.252.10.112:3232/chatbot/user-info?keyword=' + `${this.searchValue}`
-          + '&currentPage=' + currentPage + '&perPage=' + `${this.perPage} `, {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-        },
-      })
-          .then(async response => {
 
-            setTimeout(() => {
-              this.loading = false
-              this.loaded = true
-            }, 2000)
-            // Xử lý dữ liệu khi thành công
-            this.listUser = response.data.content.items;
-            this.totalRecord = response.data.content.total;
+      try{
+        this.config = {
+          params: {
+            keyword: this.searchValue,
+            currentPage: currentPage,
+            perPage: this.perPage
+          }
+        }
+        const dataResponse = await Api.person.indexWidthPath(`user-info`,this.config)
+        setTimeout(() => {
+          this.loading = false
+          this.loaded = true
+        }, 2000)
+        // Xử lý dữ liệu khi thành công
+        this.listUser = dataResponse.data.content.items;
+        this.totalRecord = dataResponse.data.content.total;
 
-            this.totalPages = Math.ceil(response.data.content.total / this.perPage)
-            // this.$refs.pagina.setTotalPage(this.totalPages)
-
-            // this.returnTotalPage(this.totalPages);
-            console.log('this.perPage', this.perPage)
-            console.log('this.totalPages', this.totalPages)
-
-          })
-          .catch(error => {
-            // Xử lý lỗi
-            if (error.response.status !== 200) {
-              setTimeout(() => {
-                this.loading = false
-                this.loaded = true
-              }, 2000)
-              this.visibleError = true;
-              return
-            }
-          });
-
-    },
-
-    openDialog(action, item = null) {
-      this.dialog = true;
-      if (action === 'edit') {
-        this.editedItem = {...item};
-      } else {
-        this.editedItem = {id: null, name: '', position: '', salary: ''};
-
+        this.totalPages = Math.ceil(dataResponse.data.content.total / this.perPage)
+      }catch (e){
+        if (error.response.status !== 200) {
+          setTimeout(() => {
+            this.loading = false
+            this.loaded = true
+          }, 2000)
+          this.visibleError = true;
+          return
+        }
       }
     },
   },

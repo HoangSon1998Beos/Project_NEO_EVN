@@ -23,7 +23,7 @@
             <v-col cols="4" class="text-center">
               <v-avatar  color="rgba(40,199,111,.12)"  size="250">
                 <h1 style="color:#28c76f;">
-                  A
+                  {{ this.getInitials(this.getUserInfo.username) }}
                 </h1>
               </v-avatar>
             </v-col>
@@ -163,6 +163,16 @@ export default {
     },
   },
   methods: {
+    getInitials(name) {
+      // Chia chuỗi thành các từ
+      const words = name.split(' ');
+
+      // Lặp qua mỗi từ và lấy chữ cái đầu
+      const initials = words.map(word => word[0]);
+
+      // Kết hợp các chữ cái đầu thành một chuỗi
+      return initials.join('');
+    },
     checkColorStatus(status) {
       if (status === 1) return 'green';
       if (status === 3) return 'grey';

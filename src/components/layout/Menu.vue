@@ -21,9 +21,7 @@
             :key="index"
             :value="index"
           >
-            <v-list-item-title
-              ><a :href="item.to">{{ item.title }}</a></v-list-item-title
-            >
+            <v-list-item-title ><a :href="item.to" style="color: #213547">{{ item.title }}</a></v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -101,7 +99,7 @@
 export default {
   data: () => ({
     qtht: [
-      { title: "Quản lý người dùng", to: "/person" },
+      { title: "Quản lý người dùng" , to:'/person'},
       { title: "Quản lý Menu" },
       { title: "Quản lý khách hàng", to:'/list-customer' },
       { title: "Quản lý các phiên bản sao lưu" },
