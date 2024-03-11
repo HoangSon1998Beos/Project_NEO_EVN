@@ -1,5 +1,6 @@
 <template>
-  <v-container style="max-width: 100% !important">
+
+  <v-container style="max-width: 98% !important">
     <v-card elevation="8" rounded="lg">
       <v-card-text style="width: 400px; text-align: left !important">
         <div class="text-subtitle-1 text-medium-emphasis">
@@ -161,6 +162,7 @@ import Successful from "./modal-person/successful-modal.vue";
 import LockModal from "./modal-person/lock-modal.vue";
 import ErrorModal from "./modal-person/error-modal.vue";
 import InfoModal from "./modal-person/info-modal.vue";
+import Api from "../../api/api.js";
 
 
 // import Pagination from "../../components/Pagination.vue";
@@ -203,7 +205,7 @@ export default {
       textAddSuccess: "Thêm người dùng thành công",
       textSuccessful: '',
       visibleInfo: false,
-      visibleChangePass: false,
+      visibleChangePass: true,
       visibleError: false,
       visibleLock: false,
       visibleSuccessful: false,
@@ -242,6 +244,7 @@ export default {
       perPage: 10,
       totalPages: 0,
       listRole: [],
+      config: {},
     };
   },
   created() {
@@ -356,41 +359,73 @@ export default {
         currentPage = this.currentPage - 1;
       }
       this.loading = true
-      await axios.get('http://10.252.10.112:3232/chatbot/user-info?keyword=' + `${this.searchValue}`
-          + '&currentPage=' + currentPage + '&perPage=' + `${this.perPage} `, {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-        },
-      })
-          .then(async response => {
 
-            setTimeout(() => {
-              this.loading = false
-              this.loaded = true
-            }, 2000)
-            // Xử lý dữ liệu khi thành công
-            this.listUser = response.data.content.items;
-            this.totalRecord = response.data.content.total;
+      try{
+        this.config = {
+          params: {
+            keyword: this.searchValue,
+            currentPage: currentPage,
+            perPage: this.perPage
+          }
+        }
+        const dataResponse = await Api.person.indexWidthPath(`user-info`,this.config)
+        setTimeout(() => {
+          this.loading = false
+          this.loaded = true
+        }, 2000)
+        // Xử lý dữ liệu khi thành công
+        this.listUser = dataResponse.data.content.items;
+        this.totalRecord = dataResponse.data.content.total;
 
-            this.totalPages = Math.ceil(response.data.content.total / this.perPage)
-            // this.$refs.pagina.setTotalPage(this.totalPages)
+        this.totalPages = Math.ceil(dataResponse.data.content.total / this.perPage)
+      }catch (e){
+        if (error.response.status !== 200) {
+          setTimeout(() => {
+            this.loading = false
+            this.loaded = true
+          }, 2000)
+          this.visibleError = true;
+          return
+        }
+      }
 
-            // this.returnTotalPage(this.totalPages);
-            console.log('this.perPage', this.perPage)
-            console.log('this.totalPages', this.totalPages)
 
-          })
-          .catch(error => {
-            // Xử lý lỗi
-            if (error.response.status !== 200) {
-              setTimeout(() => {
-                this.loading = false
-                this.loaded = true
-              }, 2000)
-              this.visibleError = true;
-              return
-            }
-          });
+
+      // await axios.get('http://10.252.10.112:3232/chatbot/user-info?keyword=' + `${this.searchValue}`
+      //     + '&currentPage=' + currentPage + '&perPage=' + `${this.perPage} `, {
+      //   headers: {
+      //     'Authorization': `Bearer ${this.token}`,
+      //   },
+      // })
+      //     .then(async response => {
+      //
+      //       setTimeout(() => {
+      //         this.loading = false
+      //         this.loaded = true
+      //       }, 2000)
+      //       // Xử lý dữ liệu khi thành công
+      //       this.listUser = response.data.content.items;
+      //       this.totalRecord = response.data.content.total;
+      //
+      //       this.totalPages = Math.ceil(response.data.content.total / this.perPage)
+      //       // this.$refs.pagina.setTotalPage(this.totalPages)
+      //
+      //       // this.returnTotalPage(this.totalPages);
+      //       console.log('this.perPage', this.perPage)
+      //       console.log('this.totalPages', this.totalPages)
+      //
+      //     })
+      //     .catch(error => {
+      //       // Xử lý lỗi
+      //       if (error.response.status !== 200) {
+      //         setTimeout(() => {
+      //           this.loading = false
+      //           this.loaded = true
+      //         }, 2000)
+      //         this.visibleError = true;
+      //         return
+      //       }
+      //     });
 
     },
 
