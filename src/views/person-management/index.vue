@@ -1,7 +1,13 @@
 <template>
-  <v-container style="max-width: 97.2% !important">
-    <v-card>
+  <v-container style="max-width: 97.2% !important;">
+
+      <v-breadcrumbs :items="dataBreadCrumb" style="font-size: smaller;margin-top: -20px;">
+        <template v-slot:divider>
+          <v-icon icon="mdi-chevron-right"></v-icon>
+        </template>
+      </v-breadcrumbs>
     <v-card elevation="8" rounded="lg">
+
       <v-card-text style="width: 400px; text-align: left !important">
         <div class="text-subtitle-1 text-medium-emphasis">
           Nhập tài khoản họ tên và email
@@ -165,7 +171,6 @@
     <ErrorModal v-model:visible="visibleError"/>
     <InfoModal v-model:user-info="userInfo" v-model:visible="visibleInfo"/>
     <ChangePassModal v-model:visible="visibleChangePass" @success="searchAfter(textRefreshPass)" />
-    </v-card>
 
   </v-container>
 
@@ -220,6 +225,21 @@ export default {
     ]
 
     return {
+      dataBreadCrumb: [
+        {
+          title: "Trang chủ",
+          disabled: false,
+          href: "trang-chu",
+        },
+        {
+          title: "Quản trị hệ thống",
+          disabled: false,
+        },
+        {
+          title: "Quản lý người dùng",
+          disabled: true,
+        },
+      ],
       textEditSuccess: "Thay đổi người dùng thành công",
       textRefreshPass: "Thay đổi mật khẩu thành công",
       textLockSuccess: "Khóa người dùng thành công",
@@ -237,16 +257,16 @@ export default {
       userInfo: {},
       listStatus,
       headers: [
-        {title: 'Số thứ tự', key: 'index', width: 120, align: 'center'},
-        {title: 'Thao tác', key: 'actions', sortable: false, width: 500, align: 'center'},
-        {title: 'Tài khoản', key: 'username', align: 'center', width: 140},
-        {title: 'Vai Trò', key: 'roleId', align: 'center', width: 140},
-        {title: 'Email', key: 'email', align: 'center', width: 140},
-        {title: 'Số điện thoại', key: 'phoneNumber', align: 'center', width: 200},
-        {title: 'Trạng thái', key: 'status', align: 'center', width: 200},
-        {title: 'Ngày tạo', key: 'createdDate', align: 'center', width: 200},
-        {title: 'Ngày cập nhật', key: 'updatedDate', align: 'center', width: 200},
-        {title: 'Ngày đăng nhập', key: 'dateLogin', align: 'center', width: 200},
+        {title: 'Số thứ tự', key: 'index', align: 'center'},
+        {title: 'Thao tác', key: 'actions', sortable: false, align: 'center'},
+        {title: 'Tài khoản', key: 'username', align: 'center'},
+        {title: 'Vai Trò', key: 'roleId', align: 'center'},
+        {title: 'Email', key: 'email', align: 'center'},
+        {title: 'Số điện thoại', key: 'phoneNumber', align: 'center'},
+        {title: 'Trạng thái', key: 'status', align: 'center'},
+        {title: 'Ngày tạo', key: 'createdDate', align: 'center'},
+        {title: 'Ngày cập nhật', key: 'updatedDate', align: 'center'},
+        {title: 'Ngày đăng nhập', key: 'dateLogin', align: 'center'},
 
       ],
       searchValue: "",
