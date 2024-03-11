@@ -1,6 +1,6 @@
 <template>
-
-  <v-container style="max-width: 98% !important">
+  <v-container style="max-width: 97.2% !important">
+    <v-card>
     <v-card elevation="8" rounded="lg">
       <v-card-text style="width: 400px; text-align: left !important">
         <div class="text-subtitle-1 text-medium-emphasis">
@@ -165,6 +165,8 @@
     <ErrorModal v-model:visible="visibleError"/>
     <InfoModal v-model:user-info="userInfo" v-model:visible="visibleInfo"/>
     <ChangePassModal v-model:visible="visibleChangePass" @success="searchAfter(textRefreshPass)" />
+    </v-card>
+
   </v-container>
 
 
