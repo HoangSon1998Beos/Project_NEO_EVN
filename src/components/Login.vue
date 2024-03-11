@@ -17,7 +17,7 @@
       <h3 class="text-center mt-3 dangnhap">Đăng nhập</h3>
 
       <v-form fast-fail @submit.prevent="handleSubmit" class="form">
-        <v-card v-show="error" color="red" class="errorMessage">
+        <v-card v-show="errorMes" color="red" class="errorMessage">
           {{ errorMessage }}
         </v-card>
         <v-text-field
