@@ -241,7 +241,7 @@ export default {
         {
           title: "Trang chủ",
           disabled: false,
-          href: "trang-chu",
+          href: "home",
         },
         {
           title: "Đào tạo chatbot",
