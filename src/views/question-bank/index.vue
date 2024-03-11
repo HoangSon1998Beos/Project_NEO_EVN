@@ -324,6 +324,7 @@ import ModalDelete from "../../components/bot/ModalDelete.vue";
 import moment from "moment";
 import { TYPE_INTENT } from "../../utils/constants.js";
 import Pagination from "../../components/Pagination.vue";
+import Api from "../../api/api.js";
 export default {
   components: {
     ModalDelete,
@@ -433,9 +434,9 @@ export default {
     },
 
     async GetListIntent() {
-      await axios
-        .get(
-          "http://10.252.10.112:3232/chatbot/Question-Bank-Intent/searchBotIntentDTOList?fromDate=&toDate=&intentName=" +
+      await Api.questionBank
+        .indexWidthPath(
+          "Question-Bank-Intent/searchBotIntentDTOList?fromDate=&toDate=&intentName=" +
             `${this.selectedIntent}` +
             "&createdBy=" +
             `${this.selectedCreator}` +
@@ -444,12 +445,7 @@ export default {
             "&intentGroup=&synonymContent=&currentPage=" +
             `${this.pagination.page - 1}` +
             "&perPage=" +
-            `${this.pagination.pageSize}`,
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
+            `${this.pagination.pageSize}`
         )
         .then((response) => {
           this.desserts = response.data.content;
@@ -460,13 +456,10 @@ export default {
           console.error("There was an error!", error);
         });
     },
-    GetIntent() {
-      axios
-        .get("http://10.252.10.112:3232/chatbot/bot-intent/get-all-not-spam", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
+
+    getIntent() {
+      Api.questionBank
+        .indexWidthPath(`bot-intent/get-all-not-spam`)
         .then((response) => {
           this.intent = response.data.content;
         })
@@ -474,16 +467,9 @@ export default {
           console.error("There was an error!", error);
         });
     },
-    GetEntity() {
-      axios
-        .get(
-          "http://10.252.10.112:3232/chatbot/Question-Bank-Intent/getListEntityName",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        )
+    getEntity() {
+      Api.questionBank
+        .indexWidthPath("Question-Bank-Intent/getListEntityName")
         .then((response) => {
           this.entity = response.data.content;
           // console.log(this.entity);
@@ -492,13 +478,9 @@ export default {
           console.error("There was an error!", error);
         });
     },
-    Getcreator() {
-      axios
-        .get("http://10.252.10.112:3232/chatbot/user-info/get-all-user", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
+    getCreator() {
+      Api.questionBank
+        .indexWidthPath("user-info/get-all-user")
         .then((response) => {
           this.creator = response.data.content;
         })
@@ -506,13 +488,9 @@ export default {
           console.error("There was an error!", error);
         });
     },
-    GetSynonym() {
-      axios
-        .get("http://10.252.10.112:3232/chatbot/synonym/get-all", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
+    getSynonym() {
+      Api.questionBank
+        .indexWidthPath("synonym/get-all")
         .then((response) => {
           this.synonym = response.data.content;
           // console.log(this.synonym);
@@ -521,16 +499,9 @@ export default {
           console.error("There was an error!", error);
         });
     },
-    GetServiceGroup() {
-      axios
-        .get(
-          "http://10.252.10.112:3232/chatbot/Question-Bank-Intent/get-list-bot-intent-group",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        )
+    getServiceGroup() {
+      Api.questionBank
+        .indexWidthPath("Question-Bank-Intent/get-list-bot-intent-group")
         .then((response) => {
           this.serviceGroup = response.data.content;
           // console.log(this.serviceGroup);
@@ -549,13 +520,13 @@ export default {
     },
   },
   created() {
-    this.init();
+    //this.init();
     //this.GetListIntent();
-    this.GetIntent();
-    this.GetEntity();
-    this.Getcreator();
-    this.GetSynonym();
-    this.GetServiceGroup();
+    this.getIntent();
+    this.getEntity();
+    this.getCreator();
+    this.getSynonym();
+    this.getServiceGroup();
   },
 };
 </script>
