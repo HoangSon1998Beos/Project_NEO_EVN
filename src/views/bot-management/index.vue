@@ -28,6 +28,7 @@
                     v-bind="props"
                     class="material-icons cursor-pointer"
                     @click="viewBot(item)"
+                    style="color: #28c76f"
                   >
                     visibility
                   </span>
@@ -39,6 +40,7 @@
                     v-bind="props"
                     class="material-icons cursor-pointer"
                     @click="editBot(item)"
+                    style="color: #ff9f43"
                   >
                     edit
                   </span>
@@ -50,6 +52,7 @@
                     v-bind="props"
                     class="material-icons cursor-pointer"
                     @click="startBot(item)"
+                    style="color: #28c76f"
                   >
                     play_arrow
                   </span>
@@ -64,6 +67,7 @@
                     v-bind="props"
                     class="material-icons cursor-pointer"
                     @click="stopBot(item)"
+                    style="color: rgb(77, 117, 248)"
                   >
                     stop
                   </span>
@@ -86,6 +90,7 @@
                     v-bind="props"
                     class="material-icons cursor-pointer"
                     @click="deleteBot(item)"
+                    style="color: #ea5455"
                   >
                     delete
                   </span>
