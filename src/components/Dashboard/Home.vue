@@ -103,7 +103,7 @@
       <v-col>
         <v-card height="300px">
           <a href="" class="title"> Độ hài lòng của khách hàng </a>
-          <div class="ml-12">
+          <div class="ml-2">
             <div v-for="index in 5" :key="index" style="display: flex">
               <div>
                 <v-rating
