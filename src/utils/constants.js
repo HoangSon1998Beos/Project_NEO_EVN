@@ -153,3 +153,14 @@ export const COLOR_STATUS_BOT_TRAIN = [
         value: '#28c76f'
     },
 ]
+export const TYPE_INTENT = [
+    {
+        key: 0,
+        value: 'Loại thông thường'
+    },
+    
+    {
+        key: 3,
+        value: 'Loại ẩn'
+    }
+]

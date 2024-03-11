@@ -32,9 +32,25 @@
                       style="color: blueviolet; font-size: 20px"
                     />
                   </td>
-                  <td>{{ item.dateChat }}</td>
+                  <td>
+                    {{ moment(item.dateChat).format("DD-MM-YYYY HH:mm:ss") }}
+                  </td>
                   <td>{{ item.cusName }}</td>
-                  <td>{{ item.cusName }}</td>
+                  <td>
+                    <v-combobox
+                      placeholder="--Chọn xử lý--"
+                      :items="[
+                        'California',
+                        'Colorado',
+                        'Florida',
+                        'Georgia',
+                        'Texas',
+                        'Wyoming',
+                      ]"
+                      variant="outlined"
+                      class="mt-4"
+                    ></v-combobox>
+                  </td>
                 </tr>
               </template>
             </v-data-table-virtual>
@@ -155,6 +171,8 @@
 import BarChart from "../chart/BarChart.vue";
 import HorizontalBar from "../chart/HorizontalBar.vue";
 import axios from "axios";
+import Api from "../../api/api.js";
+import moment from "moment";
 export default {
   components: { BarChart, HorizontalBar },
   data: () => ({
@@ -191,15 +209,8 @@ export default {
   },
   methods: {
     getListQuestion() {
-      axios
-        .get(
-          "http://10.252.10.112:3232/chatbot/dashboard/getQuestionsUnsolved",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        )
+      Api.dashbroard
+        .indexWidthPath("getQuestionsUnsolved")
         .then((response) => {
           this.desserts = response.data.content;
           console.log(this.desserts);
@@ -222,29 +233,16 @@ export default {
     },
     async getCustomer() {
       try {
-        const response = await axios.get(
-          import.meta.env.VITE_API_BASE_URL +
-            "/chatbot/dashboard/getCustomerMaxMonth",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
+        const response = await Api.dashbroard.indexWidthPath(
+          "getCustomerMaxMonth"
         );
+
         this.listCustomer = response.data.content;
       } catch (error) {}
     },
     async getRating() {
       try {
-        const response = await axios.get(
-          import.meta.env.VITE_API_BASE_URL +
-            "/chatbot/dashboard/getCustomerRate",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        );
+        const response = await Api.dashbroard.indexWidthPath("getCustomerRate");
         this.listRating = response.data.content;
         this.ratinglive = this.listRating.find((item) => item.rate);
       } catch (error) {
@@ -253,22 +251,18 @@ export default {
     },
     async getScript() {
       try {
-        const response = await axios.get(
-          import.meta.env.VITE_API_BASE_URL +
-            "/chatbot/dashboard/getSessionOnDay",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        );
+        const response = await Api.dashbroard.indexWidthPath("getSessionOnDay");
         this.listKichban = response.data.content;
       } catch (error) {
         console.error("API Error:", error);
       }
     },
   },
-  computed: {},
+  computed: {
+    moment() {
+      return moment;
+    },
+  },
 };
 </script>
 <style scoped>

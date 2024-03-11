@@ -1,6 +1,6 @@
 <template>
   <v-container style="max-width: 100% !important">
-    <v-card elevation="8" rounded="lg" style="margin-top: 25vh">
+    <v-card elevation="8" rounded="lg">
       <v-card-text style="width: 400px; text-align: left !important">
         <div class="text-subtitle-1 text-medium-emphasis">
           Nhập tài khoản họ tên và email
@@ -145,11 +145,10 @@
     <Successful v-model:visible="visibleSuccessful" v-model:text="textSuccessful"/>
     <ErrorModal v-model:visible="visibleError"/>
     <InfoModal v-model:user-info="userInfo" v-model:visible="visibleInfo"/>
-
+    <ChangePassModal v-model:visible="visibleChangePass" />
   </v-container>
 
 
-  <!--  v-model:visible="visibleInfo"-->
 
 </template>
 
@@ -166,6 +165,7 @@ import InfoModal from "./modal-person/info-modal.vue";
 
 // import Pagination from "../../components/Pagination.vue";
 import PaginationApi from "../../components/Pagination-api.vue";
+import ChangePassModal from "./modal-person/change-pass-modal.vue";
 
 export default {
   components: {
@@ -176,7 +176,8 @@ export default {
     Successful,
     LockModal,
     PaginationApi,
-    InfoModal
+    InfoModal,
+    ChangePassModal
 
   },
   name: "index",
@@ -202,6 +203,7 @@ export default {
       textAddSuccess: "Thêm người dùng thành công",
       textSuccessful: '',
       visibleInfo: false,
+      visibleChangePass: false,
       visibleError: false,
       visibleLock: false,
       visibleSuccessful: false,

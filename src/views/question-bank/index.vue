@@ -31,20 +31,11 @@
             <label>Ngày tạo</label>
             <v-row style="justify-content: space-between">
               <v-col cols="5">
-                <v-menu
-                  v-model="showPicker"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="50px"
-                  max-width="50px"
-                >
+                <v-menu v-model="showPicker" :close-on-content-click="false">
                   <template v-slot:activator="{ on }">
                     <v-text-field
                       v-model="selectedDate"
                       prepend-icon="mdi-calendar-range"
-                      readonly
                       v-on="on"
                       @click="showPicker = !showPicker"
                     ></v-text-field>
@@ -57,20 +48,11 @@
                 </v-menu>
               </v-col>
               <v-col cols="5">
-                <v-menu
-                  v-model="showPicker"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="50px"
-                  max-width="50px"
-                >
+                <v-menu v-model="showPicker" :close-on-content-click="false">
                   <template v-slot:activator="{ on }">
                     <v-text-field
                       v-model="selectedDate"
                       prepend-icon="mdi-calendar-range"
-                      readonly
                       v-on="on"
                       @click="showPicker = !showPicker"
                     ></v-text-field>
@@ -131,6 +113,7 @@
               <v-btn
                 class="mr-2"
                 style="background-color: #164397; color: aliceblue"
+                @click="GetListIntent()"
               >
                 Tìm kiếm
               </v-btn>
@@ -144,7 +127,7 @@
     </v-card>
     <br />
     <v-card class="mx-auto">
-      <div>Danh sách câu hỏi ý định</div>
+      <div class="pa-4">Danh sách câu hỏi - ý định</div>
       <div style="display: flex; flex-direction: row-reverse">
         <div class="pa-4">
           <v-btn
@@ -243,13 +226,23 @@
         :items="desserts.content"
         show-select
         class="elevation-1 pa-4"
+        item-key="id"
+        :items-per-page="pagination.pageSize"
       >
-        <template v-slot:[`item.stt`]="{ item, index }">
-          <td>{{ index + 1 }}</td>
+        <template v-slot:[`item.createdDate`]="{ item }">
+          <div>
+            {{ moment(item.createdDate).format("DD-MM-YYYY") }}
+          </div>
+        </template>
+        <template v-slot:[`item.updatedDate`]="{ item }">
+          <div>
+            {{ moment(item.updatedDate).format("DD-MM-YYYY") }}
+          </div>
         </template>
         <template v-slot:[`item.intentType`]="{ item }">
-          <td v-if="item.intentType === 0">Loại thông thường</td>
-          <td v-else-if="item.intentType === 3">Loại ẩn</td>
+          <div>
+            <td>{{ getTextType(item) }}</td>
+          </div>
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <v-tooltip text="Cập nhật">
@@ -301,6 +294,15 @@
             </template>
           </v-tooltip>
         </template>
+        <template #bottom>
+          <Pagination
+            :value="pagination.page"
+            :total-record="totalItems"
+            @input="updatePage"
+            @update="updatePerPage"
+            :total-pages="totalPage"
+          />
+        </template>
       </v-data-table>
     </v-card>
     <ModalDelete
@@ -319,9 +321,14 @@
 <script>
 import axios from "axios";
 import ModalDelete from "../../components/bot/ModalDelete.vue";
+import moment from "moment";
+import { TYPE_INTENT } from "../../utils/constants.js";
+import Pagination from "../../components/Pagination.vue";
+import Api from "../../api/api.js";
 export default {
   components: {
     ModalDelete,
+    Pagination,
   },
   data() {
     return {
@@ -360,6 +367,7 @@ export default {
       selectedDate: null,
       date: null,
       token: localStorage.getItem("token"),
+
       questionInput: "",
       intent: [],
       entity: [],
@@ -373,6 +381,11 @@ export default {
       selectedCreator: "",
       selectedSynonym: "",
       selectedServiceGroup: "",
+      pagination: {
+        page: 1, // Trang hiện tại
+        pageSize: 10, // Số mục trên mỗi trang
+      },
+      totalItems: 0,
     };
   },
 
@@ -390,6 +403,20 @@ export default {
     closeDateMenu() {
       this.showPicker = false;
     },
+    getTextType(item) {
+      return TYPE_INTENT.find((x) => x.key === item.intentType).value;
+    },
+    updatePage(page) {
+      this.pagination.page = page;
+      this.GetListIntent();
+    },
+    updatePerPage(item) {
+      this.pagination.pageSize = item;
+      this.pagination.page = 1;
+      this.$nextTick(() => {
+        this.GetListIntent();
+      });
+    },
     init() {
       axios
         .get("http://10.252.10.112:3232/chatbot/roles/get-role", {
@@ -406,30 +433,33 @@ export default {
         });
     },
 
-    GetListIntent() {
-      axios
-        .get(
-          "http://10.252.10.112:3232/chatbot/Question-Bank-Intent/searchBotIntentDTOList?fromDate=&toDate=&intentName=&createdBy=&entityName=&questionSearch=&intentType=&intentGroup=&synonymContent=&currentPage=0&perPage=10&",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
+    async GetListIntent() {
+      await Api.questionBank
+        .indexWidthPath(
+          "Question-Bank-Intent/searchBotIntentDTOList?fromDate=&toDate=&intentName=" +
+            `${this.selectedIntent}` +
+            "&createdBy=" +
+            `${this.selectedCreator}` +
+            "&entityName=&questionSearch=&intentType=" +
+            `${this.selectedTypeIntent}` +
+            "&intentGroup=&synonymContent=&currentPage=" +
+            `${this.pagination.page - 1}` +
+            "&perPage=" +
+            `${this.pagination.pageSize}`
         )
         .then((response) => {
           this.desserts = response.data.content;
+          this.totalItems = this.desserts.totalElements;
+          console.log(this.desserts);
         })
         .catch((error) => {
           console.error("There was an error!", error);
         });
     },
-    GetIntent() {
-      axios
-        .get("http://10.252.10.112:3232/chatbot/bot-intent/get-all-not-spam", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
+
+    getIntent() {
+      Api.questionBank
+        .indexWidthPath(`bot-intent/get-all-not-spam`)
         .then((response) => {
           this.intent = response.data.content;
         })
@@ -437,31 +467,20 @@ export default {
           console.error("There was an error!", error);
         });
     },
-    GetEntity() {
-      axios
-        .get(
-          "http://10.252.10.112:3232/chatbot/Question-Bank-Intent/getListEntityName",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        )
+    getEntity() {
+      Api.questionBank
+        .indexWidthPath("Question-Bank-Intent/getListEntityName")
         .then((response) => {
           this.entity = response.data.content;
-          console.log(this.entity);
+          // console.log(this.entity);
         })
         .catch((error) => {
           console.error("There was an error!", error);
         });
     },
-    Getcreator() {
-      axios
-        .get("http://10.252.10.112:3232/chatbot/user-info/get-all-user", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
+    getCreator() {
+      Api.questionBank
+        .indexWidthPath("user-info/get-all-user")
         .then((response) => {
           this.creator = response.data.content;
         })
@@ -469,49 +488,45 @@ export default {
           console.error("There was an error!", error);
         });
     },
-    GetSynonym() {
-      axios
-        .get("http://10.252.10.112:3232/chatbot/synonym/get-all", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
+    getSynonym() {
+      Api.questionBank
+        .indexWidthPath("synonym/get-all")
         .then((response) => {
           this.synonym = response.data.content;
-          console.log(this.synonym);
+          // console.log(this.synonym);
         })
         .catch((error) => {
           console.error("There was an error!", error);
         });
     },
-    GetServiceGroup() {
-      axios
-        .get(
-          "http://10.252.10.112:3232/chatbot/Question-Bank-Intent/get-list-bot-intent-group",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        )
+    getServiceGroup() {
+      Api.questionBank
+        .indexWidthPath("Question-Bank-Intent/get-list-bot-intent-group")
         .then((response) => {
           this.serviceGroup = response.data.content;
-          console.log(this.serviceGroup);
+          // console.log(this.serviceGroup);
         })
         .catch((error) => {
           console.error("There was an error!", error);
         });
     },
   },
-  mounted() {},
+  computed: {
+    moment() {
+      return moment;
+    },
+    totalPage() {
+      return Math.ceil(this.totalItems / this.pagination.pageSize);
+    },
+  },
   created() {
-    this.init();
-    this.GetListIntent();
-    this.GetIntent();
-    this.GetEntity();
-    this.Getcreator();
-    this.GetSynonym();
-    this.GetServiceGroup();
+    //this.init();
+    //this.GetListIntent();
+    this.getIntent();
+    this.getEntity();
+    this.getCreator();
+    this.getSynonym();
+    this.getServiceGroup();
   },
 };
 </script>
