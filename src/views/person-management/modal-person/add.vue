@@ -13,6 +13,7 @@
           color: white;
           border-color: #2666de;
         "
+        prepend-icon="mdi-account"
         v-bind="activatorProps"
         text="Thêm mới"
       ></v-btn>
