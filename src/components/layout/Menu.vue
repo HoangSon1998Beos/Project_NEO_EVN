@@ -103,7 +103,7 @@ export default {
     qtht: [
       { title: "Quản lý người dùng", to: "/person" },
       { title: "Quản lý Menu" },
-      { title: "Quản lý khách hàng" },
+      { title: "Quản lý khách hàng", to:'/list-customer' },
       { title: "Quản lý các phiên bản sao lưu" },
     ],
     dtcb: [

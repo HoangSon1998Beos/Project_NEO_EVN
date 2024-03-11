@@ -2,22 +2,22 @@
   <div class="pagination-custom">
     <span> Xem </span>
     <v-select
-      v-model="selectItem"
-      :items="items"
-      item-title="value"
-      item-value="key"
-      class="select-pagination"
-      variant="outlined"
+        v-model="selectItem"
+        :items="items"
+        item-title="value"
+        item-value="key"
+        class="select-pagination"
+        variant="outlined"
     />
     <span class="ml-5"> bản ghi/trang</span>
     <span class="ml-16">Tổng số {{ totalRecord }} bản ghi</span>
     <v-pagination
-      v-model="currentPage"
-      :length="totalPages"
-      @input="changePage"
-      class="ml-16"
-      rounded="circle"
-      show-first-last-page
+        v-model="currentPage"
+        :length="totalPages"
+        @input="changePage"
+        class="ml-16 pagination-right"
+        rounded="circle"
+        show-first-last-page
     >
     </v-pagination>
   </div>
@@ -89,5 +89,8 @@ export default {
   max-width: 80px;
   display: -webkit-box;
   margin-left: 20px;
+}
+.pagination-right {
+  width: 40%;
 }
 </style>
