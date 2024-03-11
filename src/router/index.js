@@ -13,6 +13,9 @@ const routes = [
         path: '/home',
         name: 'Home',
         component: Home,
+        meta: {
+            requiresAuth: true,
+        },
     },
     {
         path: '/login',
@@ -26,21 +29,33 @@ const routes = [
         path: '/bot',
         name: 'bot-management',
         component: BotManagement,
+        meta: {
+            requiresAuth: true,
+        },
     },
     {
         path: '/question-bank',
         name: 'QuestionBank',
         component: QuestionBank,
+        meta: {
+            requiresAuth: true,
+        },
     },
     {
         path: '/person',
         name: 'person-management',
         component: Person,
+        meta: {
+            requiresAuth: true,
+        },
     },
     {
         path: '/list-customer',
         name: 'ListCustomer',
         component: ListCustomer,
+        meta: {
+            requiresAuth: true,
+        },
     },
 
     // Thêm các route khác tại đây
