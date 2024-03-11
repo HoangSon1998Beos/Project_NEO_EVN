@@ -299,36 +299,11 @@ export default {
       this.getUser(id);
       this.visibleInfo = true;
     },
-    init() {
-      axios.get('http://10.252.10.112:3232/chatbot/roles/get-role', {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-        },
-      })
-          .then(response => {
-            // Xử lý dữ liệu khi thành công
-            this.listRole = response.data.content;
-
-          })
-          .catch(error => {
-            // Xử lý lỗi
-          });
-
+    async init() {
+      const dataResponse = await Api.person.indexWidthPath(`roles/get-role`)
+      this.listRole = dataResponse.data.content;
     },
     lockUser(id) {
-      // axios.put('http://10.252.10.112:3232/chatbot/user-info/lock/' + id, {
-      //   headers: {
-      //     'Authorization': `Bearer ${this.token}`,
-      //   },
-      // })
-      //     .then(async response => {
-      //       console.log('response', response);
-      //       // Xử lý dữ liệu khi thành công
-      //       await this.search(true);
-      //     })
-      //     .catch(error => {
-      //       // Xử lý lỗi
-      //     });
       this.visibleLock = true;
     },
     deleteUser(id) {
@@ -392,41 +367,7 @@ export default {
 
 
 
-      // await axios.get('http://10.252.10.112:3232/chatbot/user-info?keyword=' + `${this.searchValue}`
-      //     + '&currentPage=' + currentPage + '&perPage=' + `${this.perPage} `, {
-      //   headers: {
-      //     'Authorization': `Bearer ${this.token}`,
-      //   },
-      // })
-      //     .then(async response => {
-      //
-      //       setTimeout(() => {
-      //         this.loading = false
-      //         this.loaded = true
-      //       }, 2000)
-      //       // Xử lý dữ liệu khi thành công
-      //       this.listUser = response.data.content.items;
-      //       this.totalRecord = response.data.content.total;
-      //
-      //       this.totalPages = Math.ceil(response.data.content.total / this.perPage)
-      //       // this.$refs.pagina.setTotalPage(this.totalPages)
-      //
-      //       // this.returnTotalPage(this.totalPages);
-      //       console.log('this.perPage', this.perPage)
-      //       console.log('this.totalPages', this.totalPages)
-      //
-      //     })
-      //     .catch(error => {
-      //       // Xử lý lỗi
-      //       if (error.response.status !== 200) {
-      //         setTimeout(() => {
-      //           this.loading = false
-      //           this.loaded = true
-      //         }, 2000)
-      //         this.visibleError = true;
-      //         return
-      //       }
-      //     });
+
 
     },
 
