@@ -89,7 +89,7 @@
                   </span>
                 </template>
               </v-tooltip>
-              <v-tooltip text="Kết quả">
+              <v-tooltip v-if="false" text="Kết quả">
                 <template v-slot:activator="{ props }">
                   <span
                     v-bind="props"

@@ -142,6 +142,7 @@
                             placeholder="Mô tả"
                             :disabled="action === 'isView'"
                             clearable
+                            :rows="2.5"
                 >
                   <template #prepend-inner>
                     <div :class="{ 'disabled-background': action === 'isView'}"></div>
@@ -300,5 +301,8 @@ export default {
   background-color: gray;
   color: black;
   z-index: -1;
+}
+:deep(.v-row) {
+  height: 100px;
 }
 </style>
