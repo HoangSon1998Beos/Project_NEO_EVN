@@ -104,9 +104,9 @@ export default {
   data: () => ({
     qtht: [
       { title: "Quản lý người dùng", to: "/person" },
-      { title: "Quản lý Menu", to: "" },
-      { title: "Quản lý khách hàng", to: "" },
-      { title: "Quản lý các phiên bản sao lưu", to: "" },
+      { title: "Quản lý Menu" },
+      { title: "Quản lý khách hàng" },
+      { title: "Quản lý các phiên bản sao lưu" },
     ],
     dtcb: [
       { title: "Quản lý Bot", path: "/bot" },
