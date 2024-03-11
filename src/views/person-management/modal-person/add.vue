@@ -193,7 +193,7 @@ export default {
         (v) => !!v || "Chưa nhập số điện thoại",
         (v) => /^\d+$/.test(v) || "thông tin nhập vào không hợp lệ",
         (v) => v.length <= 10 || "Số điện thoại nhập không được quá 10 kí tự",
-        (v) => /^[1-9]/.test(v) || "Số điện thoại không đúng định dạng",
+        (v) => /^0\d+/.test(v) || "Số điện thoại không đúng định dạng",
       ];
     },
 

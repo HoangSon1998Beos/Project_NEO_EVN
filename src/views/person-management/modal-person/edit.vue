@@ -143,6 +143,7 @@
             color="primary"
             text="Cập nhật"
             variant="tonal"
+            @click="editUser"
         ></v-btn>
 
         <v-btn
@@ -204,6 +205,10 @@ export default {
     closeForm() {
       this.isVisible = false;
     },
+    editUser(){
+      this.isVisible = false;
+      this.$emit('success')
+    }
 
   }
 }

@@ -47,40 +47,26 @@
         </div>
       </template>
 
-      <template v-slot:item.actions="{ item }">
-        <v-tooltip location="end">
-          <template v-slot:activator="{ props }">
-
-            <v-btn icon @click="getUserInfoFormEdit(item.id)" size="x-small" v-bind="props">
+      <template v-slot:item.actions="{ item }" style="margin: 5px">
+        <v-tooltip location="end" >
+          <template v-slot:activator="{ props }" >
+            <a icon @click="getUserInfoFormEdit(item.id)" size="x-small" v-bind="props" class="mr-2">
               <v-icon
                   style="color: #2666de"
               >
                 mdi-pencil
               </v-icon>
 
-            </v-btn>
+            </a>
           </template>
           <span>Cập nhật</span>
         </v-tooltip>
 
         <v-tooltip
-            location="end"
-        >
+            v-if="item.status !== 3"
+            location="end">
           <template v-slot:activator="{ props }">
-            <v-btn icon @click="deleteUser((item.id))" size="x-small" v-bind="props">
-              <v-icon
-                  style="color: #ea5455">
-                mdi-delete
-              </v-icon>
-
-            </v-btn>
-          </template>
-          <span>Xóa</span>
-        </v-tooltip>
-
-        <v-tooltip location="end">
-          <template v-slot:activator="{ props }">
-            <v-btn icon @click="lockUser(item.id)" size="x-small" v-bind="props">
+            <a icon @click="lockUser(item.id)" size="x-small" v-bind="props" class="mr-2">
 
               <v-icon
                   style="color: #ff9f43"
@@ -88,10 +74,42 @@
                 mdi-lock-open
               </v-icon>
 
-            </v-btn>
+            </a>
           </template>
           <span>Khóa</span>
         </v-tooltip>
+
+        <v-tooltip
+            location="end"
+        >
+          <template v-slot:activator="{ props }">
+            <a icon @click="deleteUser((item.id))" size="x-small" v-bind="props" class="mr-2">
+              <v-icon
+                  style="color: #ea5455">
+                mdi-delete
+              </v-icon>
+
+            </a>
+          </template>
+          <span>Xóa</span>
+        </v-tooltip>
+
+        <v-tooltip
+            v-if="item.status === 3"
+            location="end"
+        >
+          <template v-slot:activator="{ props }" >
+            <a icon @click="refreshPass((item.id))" size="x-small" v-bind="props" class="mr-2">
+              <v-icon
+                  style="color: #ea5455">
+                mdi-refresh
+              </v-icon>
+
+            </a>
+          </template>
+          <span>Đổi mật khẩu</span>
+        </v-tooltip>
+
       </template>
       <template v-slot:item.username="{ item }">
         <a @click="getUserInfoFormView(item.id)">
@@ -140,13 +158,13 @@
       </template>
     </v-data-table>
 
-    <EditModal v-model:user-info="userInfo" v-model:visible="visibleEdit" v-model:list-role="listRole"/>
+    <EditModal v-model:user-info="userInfo" v-model:visible="visibleEdit" v-model:list-role="listRole" @success="searchAfter(textEditSuccess)"/>
     <DeleteModal v-model:visible="visibleDelete" @success="searchAfter(textDeleteSuccess)"/>
     <LockModal v-model:visible="visibleLock" @success="searchAfter(textLockSuccess)"/>
     <Successful v-model:visible="visibleSuccessful" v-model:text="textSuccessful"/>
     <ErrorModal v-model:visible="visibleError"/>
     <InfoModal v-model:user-info="userInfo" v-model:visible="visibleInfo"/>
-    <ChangePassModal v-model:visible="visibleChangePass" />
+    <ChangePassModal v-model:visible="visibleChangePass" @success="searchAfter(textRefreshPass)" />
   </v-container>
 
 
@@ -200,6 +218,8 @@ export default {
     ]
 
     return {
+      textEditSuccess: "Thay đổi người dùng thành công",
+      textRefreshPass: "Thay đổi mật khẩu thành công",
       textLockSuccess: "Khóa người dùng thành công",
       textDeleteSuccess: "Xóa người dùng thành công",
       textAddSuccess: "Thêm người dùng thành công",
@@ -252,6 +272,13 @@ export default {
     this.search(true);
   },
   methods: {
+    changePassSuccess() {
+      this.textSuccessful = "Thay đổi mật khẩu thành công"
+      this.visibleSuccessful = true
+    },
+    refreshPass() {
+      this.visibleChangePass = true;
+    },
     indexRow(index) {
       return index + ((this.currentPage - 1) * this.perPage) + 1;
     },
@@ -275,7 +302,7 @@ export default {
       this.textSuccessful = text;
       this.visibleSuccessful = true;
       this.searchValue = "";
-      await this.search(true);
+      await this.search(false);
     },
     getUser(id) {
       const userInfor = this.listUser.filter(item => item.id === id);
@@ -363,21 +390,6 @@ export default {
           this.visibleError = true;
           return
         }
-      }
-
-
-
-
-
-    },
-
-    openDialog(action, item = null) {
-      this.dialog = true;
-      if (action === 'edit') {
-        this.editedItem = {...item};
-      } else {
-        this.editedItem = {id: null, name: '', position: '', salary: ''};
-
       }
     },
   },
