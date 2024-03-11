@@ -407,7 +407,7 @@ export default {
       return index + (this.pagination.page - 1) * this.pagination.pageSize + 1;
     },
     truncateText(text) {
-      return text.length > 50 ? text.substring(0, 50) + "..." : text;
+      return text.length > 30 ? text.substring(0, 30) + "..." : text;
     },
     deleteBot(item) {
       this.isDelete = true;
