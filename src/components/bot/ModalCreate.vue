@@ -174,7 +174,7 @@
 
 <script>
 import Required from "./Required.vue";
-import {validate, validateServer} from "../../../validate.js";
+import {validate} from "../../../validate.js";
 
 export default {
   name: 'ModalCreate',
@@ -243,7 +243,7 @@ export default {
       return validate(data)
     },
     checkRuleServer(value) {
-      return validateServer(value)
+      console.log("=>(ModalCreate.vue:246) value", value);
     },
     submitForm(){
       this.$refs.form.validate().then(valid => {
