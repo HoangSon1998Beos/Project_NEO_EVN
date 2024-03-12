@@ -22,7 +22,7 @@
         </v-card>
         <v-text-field
           v-model="userName"
-          :rules="userNameRules"
+          :rules="[userNameRules]"
           type="email"
           label="Tên đăng nhập"
         ></v-text-field>
@@ -32,7 +32,7 @@
           label="Mật khẩu"
           :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
           :type="showPassword ? 'password' : 'text'"
-          :rules="passWordRules"
+          :rules="[passWordRules]"
           @click:append="showPassword = !showPassword"
         ></v-text-field>
         <v-checkbox
@@ -50,7 +50,7 @@
     
     <script>
 import Api from "../api/api.js";
-import Helper from "../helper";
+import { validateLogUsername, validateLogPassword } from "../../validate.js";
 
 export default {
   data() {
@@ -61,18 +61,6 @@ export default {
       isChecked: true,
       errorMes: false,
       errorMessage: "",
-      userNameRules: [
-        (value) => {
-          if (value?.length > 3) return true;
-          return "User name must be at least 3 characters";
-        },
-      ],
-      passWordRules: [
-        (value) => {
-          if (/[^0-9]/.test(value)) return true;
-          return "Password can not contain digits.";
-        },
-      ],
     };
   },
   methods: {
@@ -91,6 +79,12 @@ export default {
         this.errorMes = true;
         console.error("API call error:", error);
       }
+    },
+    userNameRules(value) {
+      return validateLogUsername(value);
+    },
+    passWordRules(value) {
+      return validateLogPassword(value);
     },
   },
 };
