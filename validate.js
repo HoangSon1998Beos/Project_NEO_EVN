@@ -13,7 +13,7 @@ export const convertDateTime = (item) => {
 export const convertDate = (item) => {
     return moment(item).format('DD/MM/YYYY')
 }
-//format date time
+//format time
 export const convertTime = (item) => {
     return moment(item).format('HH:MM:ss')
 }

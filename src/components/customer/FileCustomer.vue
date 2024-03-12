@@ -93,7 +93,7 @@ export default {
           cusIDMess: "FB001",
         },
       ];
-      let cusTypes = customTag.map((c) => c.typeName);
+      let cusTypes = this.customTag.map((c) => c.typeName);
       let notifiedByChannel = ["Không", "Có"];
 
       let workbook = new ExcelJS.Workbook();
@@ -186,7 +186,7 @@ export default {
           wrapText: true,
         };
       });
-      workbook.xlsx.writeBuffet().then((data) => {
+      workbook.xlsx.writeBuffer().then((data) => {
         let blob = new Blob([data], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
