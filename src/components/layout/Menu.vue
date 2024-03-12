@@ -21,7 +21,11 @@
             :key="index"
             :value="index"
           >
-            <v-list-item-title ><a :href="item.to" style="color: #213547">{{ item.title }}</a></v-list-item-title>
+            <v-list-item-title
+              ><a :href="item.to" style="color: #213547">{{
+                item.title
+              }}</a></v-list-item-title
+            >
           </v-list-item>
         </v-list>
       </v-menu>
@@ -95,13 +99,13 @@
     </div>
   </v-container>
 </template>
-<script>
+  <script>
 export default {
   data: () => ({
     qtht: [
-      { title: "Quản lý người dùng" , to:'/person'},
+      { title: "Quản lý người dùng", to: "/person" },
       { title: "Quản lý Menu" },
-      { title: "Quản lý khách hàng", to:'/list-customer' },
+      { title: "Quản lý khách hàng", to: "/list-customer" },
       { title: "Quản lý các phiên bản sao lưu" },
     ],
     dtcb: [
@@ -138,7 +142,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+  <style scoped>
 .container-bar {
   background-color: #1976d2;
 }
