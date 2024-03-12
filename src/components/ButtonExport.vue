@@ -37,53 +37,7 @@ export default {
     },
   },
   methods: {
-    // headerExcel(myArray,indexArray){
-    //   let filteredObjects =[]
-    //   for (let x = 0; x < indexArray.length; x++) {
-    //     for (let y = 0; y < myArray.length; y++){
-    //       if(myArray[y].key === indexArray[x]){
-    //         filteredObjects.push(myArray[y].title)
-    //       }
-    //
-    //     }
-    //   }
-    //   return filteredObjects;
-    // },
-    // async downloadExcel() {
-    //   // if (items.length >= 1) {
-    //   // Tạo workbook và worksheet
-    //   const workbook = new ExcelJS.Workbook();
-    //   const worksheet = workbook.addWorksheet('Selected Items');
-    //   //Tên từng cột và key trong bảng
-    //
-    //
-    //   // Thêm tiêu đề cột
-    //   worksheet.addRow(thís.header);
-    //
-    //   // Thêm dữ liệu đã chọn vào worksheet
-    //   this.items.forEach(item => {
-    //     const values = Object.values(item);
-    //     worksheet.addRow(values);
-    //   });
-    //
-    //   // Tạo một Blob từ workbook
-    //   const blob = await workbook.xlsx.writeBuffer();
-    //
-    //   // Tạo đường dẫn URL từ Blob và tạo một đối tượng link để tải xuống
-    //   const url = window.URL.createObjectURL(new Blob([blob]));
-    //   const link = document.createElement('a');
-    //   link.href = url;
-    //   link.setAttribute('download', 'selected_items.xlsx');
-    //
-    //   // Thêm link vào trang và kích hoạt click để bắt đầu tải xuống
-    //   document.body.appendChild(link);
-    //   link.click();
-    //
-    //   // Loại bỏ link sau khi tải xuống
-    //   document.body.removeChild(link);
-    //   // }
-    //
-    // },
+
     async exportData() {
       console.log('ite=m', this.items)
       const workbook = new ExcelJS.Workbook();
