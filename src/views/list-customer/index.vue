@@ -7,14 +7,14 @@
   <div class="layout">
     <div class="flex gap-4 pr-8 pb-4 pl-8">
       <div class="search-custom" style="width: 65%">
-        <SearchCustomer/>
+        <SearchCustomer :items="items"/>
       </div>
       <div class="file-custom" style="width: 35%">
         <FileCustomer/>
       </div>
     </div>
     <div class="px-8">
-      <DataCustomer/>
+      <DataCustomer v-model:items="items"/>
     </div>
   </div>
 </template>
@@ -42,8 +42,9 @@ export default {
           title: "Quản lý khách hàng",
         },
       ],
+      items: [],
     }
-  }
+  },
 }
 </script>
 
