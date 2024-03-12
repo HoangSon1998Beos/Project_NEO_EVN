@@ -158,7 +158,7 @@ export const TYPE_INTENT = [
         key: 0,
         value: 'Loại thông thường'
     },
-    
+
     {
         key: 3,
         value: 'Loại ẩn'

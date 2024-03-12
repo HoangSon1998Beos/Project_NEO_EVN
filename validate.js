@@ -1,29 +1,20 @@
-import {tr} from "vuetify/locale";
-import moment from "moment";
+import { tr } from "vuetify/locale";
 
-//format tiền tệ
-export const formatCurrency = (amount) => {
-    return parseFloat(amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replace("₫", "VND").replaceAll(".",",");
-}
-//format date time
-export const convertDateTime = (item) => {
-    return moment(item).format('DD/MM/YYYY HH:MM:ss')
-}
-//format date
-export const convertDate = (item) => {
-    return moment(item).format('DD/MM/YYYY')
-}
-//format time
-export const convertTime = (item) => {
-    return moment(item).format('HH:MM:ss')
-}
-
-//check trống
 export const validate = (value) => {
     if (!value) {
         return 'Trường không được để trống';
     }
+    if (value.length < 3 || value.length > 10) {
+        return 'Độ dài tên bot từ 3-10 kí tự';
+    }
     return true;
+}
+
+export const validateServer = (value) => {
+    if (!value) {
+        return 'Trường không được để trống'
+    }
+    return true
 }
 
 export const validateEmail = (value) => {
@@ -62,40 +53,22 @@ export const validatePhoneNumber = (phoneNumber) => {
     return true;
 };
 
-//không nhập tiếng việt
-export const validateInputNotVNS = (event) => {
-    const inputText = event.target.value;
-    const containsVietnameseChars = /[àáảãạăắằẳẵặâấầẩẫậèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵđÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬÈÉẺẼẸÊẾỀỂỄỆÌÍỈĨỊÒÓỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÙÚỦŨỤƯỨỪỬỮỰỲÝỶỸỴĐ]/;
-    if (containsVietnameseChars.test(inputText)) {
-        event.target.value = inputText.replace(containsVietnameseChars, '');
+export const validateLogUsername = (value) => {
+    if (!value) {
+        return 'Bắt buộc nhập Tên đăng nhập';
     }
+    if (value.length < 3 || value.length > 10) {
+        return 'Độ dài tên Tên đăng nhập từ 3-10 kí tự';
+    }
+    return true;
 }
 
-//chặn kí tự đặc biệt
-export const blockSpecialCharacters = (event) => {
-    const regex = /[A-Za-z0-9]/;
-    const charCode = event.key.charCodeAt(0);
-    if (!regex.test(event.key) && charCode !== 32) {
-        event.preventDefault();
+export const validateLogPassword = (value) => {
+    if (!value) {
+        return 'Bắt buộc nhập Mật khẩu.';
     }
-}
-
-// chặn khi vượt quá max length
-export const validateInputMaxLength = (event, maxLength) => {
-    if (event.target.value.length > maxLength) {
-        event.target.value = event.target.value.substring(0, maxLength);
+    if (value.length < 3 || value.length > 10) {
+        return 'Độ dài tên mật khẩu từ 3-10 kí tự';
     }
-}
-
-//không cho nhập
-export const validateTransactionStatus = (event) => {
-    const regex = /[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>]/;
-    if (regex.test(event.target.value)) {
-        event.target.value = event.target.value.replace(regex, '');
-    }
-}
-
-//Không cho phép thực hiện 1 hành dộng
-export const handleEventDefault = (event) => {
-    event.preventDefault()
+    return true;
 }
