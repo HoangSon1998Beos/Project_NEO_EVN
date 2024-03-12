@@ -1,9 +1,9 @@
-import {tr} from "vuetify/locale";
+import { tr } from "vuetify/locale";
 import moment from "moment";
 
 //format tiền tệ
 export const formatCurrency = (amount) => {
-    return parseFloat(amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replace("₫", "VND").replaceAll(".",",");
+    return parseFloat(amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replace("₫", "VND").replaceAll(".", ",");
 }
 //format date time
 export const convertDateTime = (item) => {
@@ -98,4 +98,23 @@ export const validateTransactionStatus = (event) => {
 //Không cho phép thực hiện 1 hành dộng
 export const handleEventDefault = (event) => {
     event.preventDefault()
+}
+export const validateLogUsername = (value) => {
+    if (!value) {
+        return 'Bắt buộc nhập Tên đăng nhập';
+    }
+    if (value.length < 3 || value.length > 10) {
+        return 'Độ dài tên Tên đăng nhập từ 3-10 kí tự';
+    }
+    return true;
+}
+
+export const validateLogPassword = (value) => {
+    if (!value) {
+        return 'Bắt buộc nhập Mật khẩu.';
+    }
+    if (value.length < 3 || value.length > 10) {
+        return 'Độ dài tên mật khẩu từ 3-10 kí tự';
+    }
+    return true;
 }
