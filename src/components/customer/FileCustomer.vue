@@ -38,8 +38,6 @@
 </template>
 
 <script>
-import ExcelJS from 'exceljs';
-import saveAs from 'file-saver';
 import {exportFile} from "../../utils/export.js";
 
 export default {
@@ -72,6 +70,24 @@ export default {
       ],
       sheetName: 'Sheet 1',
       objs : [
+        {
+          cusCode: "KH000",
+          cusName: "Khách Hàng 1",
+          cusPhoneNumber: "0123456789",
+          cusEmail: "kh01@gmail.com",
+          cusAddress: "Cầu giấy, HN",
+          cusIDZalo: "ZL001",
+          cusIDMess: "FB001",
+        },
+        {
+          cusCode: "KH000",
+          cusName: "Khách Hàng 1",
+          cusPhoneNumber: "0123456789",
+          cusEmail: "kh01@gmail.com",
+          cusAddress: "Cầu giấy, HN",
+          cusIDZalo: "ZL001",
+          cusIDMess: "FB001",
+        },
         {
           cusCode: "KH000",
           cusName: "Khách Hàng 1",
