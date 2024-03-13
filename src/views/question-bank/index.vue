@@ -128,7 +128,10 @@
               >
                 Tìm kiếm
               </v-btn>
-              <v-btn style="background-color: #28c76f; color: aliceblue">
+              <v-btn
+                @click="exportData"
+                style="background-color: #28c76f; color: aliceblue"
+              >
                 Tải xuống
               </v-btn>
             </div>
@@ -465,12 +468,12 @@
 </template>
 
 <script>
-import axios from "axios";
 import ModalDelete from "../../components/bot/ModalDelete.vue";
 import moment from "moment";
 import { TYPE_INTENT } from "../../utils/constants.js";
 import Pagination from "../../components/Pagination.vue";
 import Api from "../../api/api.js";
+import ExcelJS from "exceljs";
 export default {
   components: {
     ModalDelete,
@@ -485,14 +488,20 @@ export default {
       isDelete: false,
       selected: [],
       headers: [
-        { title: "STT", align: "start", key: "stt" },
-        { title: "THAO TÁC", align: "center", key: "action", sortable: false },
-        { title: "TÊN Ý ĐỊNH", key: "intentName" },
-        { title: "LOẠI Ý ĐỊNH", key: "intentType" },
-        { title: "NGÀY TẠO", key: "createdDate" },
-        { title: "NGƯỜI TẠO", key: "createdBy" },
-        { title: "NGÀY CẬP NHẬT", key: "updatedDate" },
-        { title: "NGƯỜI CẬP NHẬT", key: "updatedBy" },
+        { title: "STT", align: "start", key: "stt", value: "stt" },
+        {
+          title: "THAO TÁC",
+          align: "center",
+          key: "action",
+          value: "action",
+          sortable: false,
+        },
+        { title: "TÊN Ý ĐỊNH", key: "intentName", value: "intentName" },
+        { title: "LOẠI Ý ĐỊNH", key: "intentType", value: "intentType" },
+        { title: "NGÀY TẠO", key: "createdDate", value: "createdDate" },
+        { title: "NGƯỜI TẠO", key: "createdBy", value: "createdBy" },
+        { title: "NGÀY CẬP NHẬT", key: "updatedDate", value: "updatedDate" },
+        { title: "NGƯỜI CẬP NHẬT", key: "updatedBy", value: "updatedBy" },
       ],
       desserts: [],
 
@@ -669,6 +678,46 @@ export default {
           console.error("There was an error!", error);
         });
     },
+
+    async exportData() {
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("Data");
+
+      const headerRow = worksheet.addRow(
+        this.headers.map((headers) => headers.title)
+      );
+      headerRow.font = { bold: true };
+
+      const items =
+        this.getItems && Object.keys(this.getItems).length > 0
+          ? this.getItems
+          : this.desserts.content;
+
+      // Thêm dữ liệu từ mảng items vào worksheet
+      items.forEach((item) => {
+        const rowData = Object.values(item);
+        worksheet.addRow(rowData);
+      });
+
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const filename = "danh_sach_cauhoi.xlsx";
+
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    },
+  },
+  watch: {
+    selected(val) {
+      this.getItems = this.desserts.content.filter((item) =>
+        val.includes(item["id"])
+      );
+      console.log("this.getItems", this.getItems);
+    },
   },
   filters: {
     formatDate(date) {
@@ -695,7 +744,6 @@ export default {
     },
   },
   created() {
-    //this.init();
     this.GetListIntent();
     this.getIntent();
     this.getEntity();
