@@ -44,7 +44,7 @@
             <div class="flex justify-center mt-3 gap-x-2">
               <v-btn @click="resetForm" color="#164397">Tìm kiếm</v-btn>
               <v-btn @click="validateForm">Làm mới</v-btn>
-              <ButtonExport :items="items" :headers="headers"/>
+              <v-btn @click="exportData" color="#164397">Xuất dữ liệu</v-btn>
             </div>
           </v-form>
         </v-col>
@@ -56,13 +56,9 @@
 
 <script>
 import {validateEmail, validatePhoneNumber} from "../../../validate.js";
-import ButtonExport from "../ButtonExport.vue";
 
 export default {
   name: "SearchCustomer",
-  components: {
-    ButtonExport
-  },
   data() {
     return {
       form: {
@@ -84,6 +80,9 @@ export default {
     }
   },
   methods: {
+    exportData() {
+      this.$emit('exportData')
+    },
     validateEmail(value) {
       if(value){
         return validateEmail(value)

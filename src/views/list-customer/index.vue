@@ -7,7 +7,7 @@
   <div class="layout">
     <div class="flex gap-4 pr-8 pb-4 pl-8">
       <div class="search-custom" style="width: 65%">
-        <SearchCustomer :items="items"/>
+        <SearchCustomer :items="items" @exportData="exportData"/>
       </div>
       <div class="file-custom" style="width: 35%">
         <FileCustomer/>
@@ -23,12 +23,14 @@
 import SearchCustomer from "../../components/customer/SearchCustomer.vue";
 import FileCustomer from "../../components/customer/FileCustomer.vue";
 import DataCustomer from "../../components/customer/DataCustomer.vue";
+import { exportDataExcel } from '../../ExportExcel.js';
 
 export default {
   name: "ListCustomer",
   components: {DataCustomer, FileCustomer, SearchCustomer},
   data() {
     return {
+      exportDataExcel,
       dataBreadCrumb: [
         {
           title: "Trang chủ",
@@ -43,8 +45,22 @@ export default {
         },
       ],
       items: [],
+      header: [
+        { text: 'STT', value: 'id' },
+        { text: 'Mã khách hàng', value: 'cusCode' },
+        { text: 'Họ và tên', value: 'cusName' },
+        { text: 'Số điện thoại', value: 'cusPhoneNumber' },
+        { text: 'Email', value: 'cusEmail' },
+        { text: 'Địa chỉ sử dụng dịch vụ', value: 'cusAddress' },
+      ]
     }
+
   },
+  methods: {
+    exportData() {
+      this.exportDataExcel(this.items, this.header);
+    }
+  }
 }
 </script>
 
