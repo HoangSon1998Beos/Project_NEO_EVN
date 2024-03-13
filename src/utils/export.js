@@ -29,6 +29,33 @@ export const exportFile = (objs, rowTable, headers,fileName,sheetName) => {
         });
     });
 
+    // Tính toán tổng và thêm hàng tổng vào cuối cùng
+    // const totalsRow = worksheet.addRow([]);
+    // headers.forEach((header, index) => {
+    //     const cell = totalsRow.getCell(index + 1);
+    //     if (index === 0) {
+    //         cell.value = "Tổng";
+    //         cell.font = {
+    //             bold: true,
+    //             name: "Times New Roman",
+    //         };
+    //     } else {
+    //         if (header === "Số điện thoại (*)") {
+    //             const columnLetter = String.fromCharCode(65 + index); // Chuyển đổi số thành chữ (A, B, C, ...)
+    //             const totalFormula = `SUM(${columnLetter}2:${columnLetter}${objs.length + 1})`; // objs.length + 1 để bỏ qua hàng header
+    //             cell.value = {
+    //                 formula: totalFormula
+    //             };
+    //             cell.font = {
+    //                 bold: true,
+    //                 name: "Times New Roman",
+    //             };
+    //         } else {
+    //             cell.value = ""; // Đặt giá trị của ô thành rỗng nếu không phải là cột bạn muốn tính tổng
+    //         }
+    //     }
+    // });
+
     // fix width tự động
     worksheet.columns.forEach((column) => {
         const lengths = column.values.map((v) => v.toString().length);
