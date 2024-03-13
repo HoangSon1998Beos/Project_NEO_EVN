@@ -98,15 +98,15 @@ export default {
   },
   methods: {
     async handleFileChange(event) {
-      this.file = event.target.files[0];
-      console.log("=>(FileCustomer.vue:43) this.file", this.file);
-      if (this.file) {
-        this.fileSelected = true;
-        this.fileName = this.file.name;
-      }
-      this.importedList = await this.importDataExcel(this.file, this.header);
-      console.log('importedList', this.importedList)
 
+      const file = event.target.files[0];
+      console.log("=>(FileCustomer.vue:43) this.file", file);
+      if (file) {
+        this.fileSelected = true;
+        this.fileName = file.name;
+        this.importedList = await this.importDataExcel(this.file, this.header);
+        console.log('importedList', this.importedList)
+      }
     },
     clearFile() {
       this.fileSelected = false
