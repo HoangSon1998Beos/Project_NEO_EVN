@@ -19,6 +19,9 @@
               label="Chọn ý định"
               item-title="intentName"
               item-value="id"
+              clearable
+              multiple
+              chips
             ></v-combobox>
             <label>Thực thể</label>
             <v-combobox
@@ -64,6 +67,8 @@
                     v-model="selectedDateEnd"
                     @input="closeDateMenu"
                     show-adjacent-months
+                    no-title
+                    scrollable
                   ></v-date-picker>
                 </v-menu>
               </v-col>
@@ -86,6 +91,9 @@
               item-title="username"
               item-value="id"
               label="Chọn người tạo"
+              clearable
+              multiple
+              chips
             ></v-combobox>
             <label>Câu hỏi</label>
             <v-text-field
@@ -149,7 +157,13 @@
 
           <v-dialog v-model="dialog" max-width="800">
             <v-card>
-              <v-toolbar title="Thêm mới câu hỏi ý định"></v-toolbar>
+              <v-toolbar title="Thêm mới câu hỏi ý định"
+                ><span
+                  class="material-icons cursor-pointer pa-4"
+                  @click="dialog = false"
+                  >close</span
+                ></v-toolbar
+              >
               <v-card-text class="text-h2 pa-12">
                 <v-row style="justify-content: space-between">
                   <v-col cols="4">
@@ -211,18 +225,139 @@
                   </v-col>
                 </v-row>
               </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  text="Close"
-                  variant="text"
-                  @click="dialog = false"
-                ></v-btn>
-              </v-card-actions>
             </v-card>
           </v-dialog>
         </div>
       </div>
+      <v-dialog v-model="visibleModalDetal" max-width="800">
+        <v-card>
+          <v-toolbar title="Chi tiết câu hỏi ý định">
+            <span
+              class="material-icons cursor-pointer pa-4"
+              @click="visibleModalDetal = false"
+              >close</span
+            >
+          </v-toolbar>
+          <v-card-text class="text-h2 pa-12">
+            <v-row style="justify-content: space-between">
+              <v-col cols="4">
+                <v-text-field
+                  label="Tên ý định"
+                  v-model="dataForm.intentName"
+                  variant="outlined"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="4">
+                <v-text-field
+                  label="Mã ý định"
+                  v-model="dataForm.intentCode"
+                  variant="outlined"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="4">
+                <v-combobox
+                  label="Loại ý định"
+                  :items="[0, 3]"
+                  v-model="dataForm.intentType"
+                  variant="outlined"
+                ></v-combobox>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-combobox
+                  label="Nhóm dịch vụ"
+                  :items="[
+                    'California',
+                    'Colorado',
+                    'Florida',
+                    'Georgia',
+                    'Texas',
+                    'Wyoming',
+                  ]"
+                  variant="outlined"
+                ></v-combobox>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-card class="mx-auto">
+                  <div class="pa-4">
+                    <div class="title">Danh sách câu hỏi ý định</div>
+                  </div>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="visibleModalUpdate" max-width="800">
+        <v-card>
+          <v-toolbar title="Cập nhật câu hỏi ý định">
+            <span
+              class="material-icons cursor-pointer pa-4"
+              @click="visibleModalUpdate = false"
+              >close</span
+            >
+          </v-toolbar>
+
+          <v-card-text class="text-h2 pa-12">
+            <v-row style="justify-content: space-between">
+              <v-col cols="4">
+                <v-text-field
+                  label="Tên ý định"
+                  v-model="dataForm.intentName"
+                  variant="outlined"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="4">
+                <v-text-field
+                  label="Mã ý định"
+                  v-model="dataForm.intentCode"
+                  variant="outlined"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="4">
+                <v-combobox
+                  label="Loại ý định"
+                  :items="[0, 3]"
+                  v-model="dataForm.intentType"
+                  variant="outlined"
+                ></v-combobox>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-combobox
+                  label="Nhóm dịch vụ"
+                  :items="[
+                    'California',
+                    'Colorado',
+                    'Florida',
+                    'Georgia',
+                    'Texas',
+                    'Wyoming',
+                  ]"
+                  variant="outlined"
+                ></v-combobox>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-card class="mx-auto">
+                  <div class="pa-4">
+                    <v-text-field
+                      v-model="questionInput"
+                      placeholder="Nhập câu hỏi"
+                      variant="outlined"
+                    ></v-text-field>
+                  </div>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
       <v-data-table
         v-model="selected"
         :headers="headers"
@@ -261,7 +396,7 @@
               <span
                 v-bind="props"
                 class="material-icons cursor-pointer"
-                @click="editBot(item)"
+                @click="updateQuestion(item)"
                 style="color: #ff9f43"
               >
                 edit
@@ -273,7 +408,7 @@
               <span
                 v-bind="props"
                 class="material-icons cursor-pointer"
-                @click="resultBot(item)"
+                @click="viewQuestion(item)"
                 style="color: #00cfe8"
               >
                 error_outline
@@ -344,6 +479,8 @@ export default {
   data() {
     return {
       dialog: false,
+      visibleModalDetal: false,
+      visibleModalUpdate: false,
       visibleModal: false,
       isDelete: false,
       selected: [],
@@ -388,17 +525,19 @@ export default {
       creator: [],
       synonym: [],
       serviceGroup: [],
-      selectedIntent: "",
-      selectedEntity: "",
-      selectedTypeIntent: "",
-      selectedCreator: "",
-      selectedSynonym: "",
-      selectedServiceGroup: "",
+      selectedIntent: null,
+      selectedEntity: [],
+      selectedTypeIntent: [],
+      selectedCreator: null,
+      selectedSynonym: [],
+      selectedServiceGroup: [],
       pagination: {
         page: 1, // Trang hiện tại
         pageSize: 10, // Số mục trên mỗi trang
       },
       totalItems: 0,
+
+      dataForm: [],
     };
   },
 
@@ -408,6 +547,16 @@ export default {
     },
     truncateText(text) {
       return text.length > 30 ? text.substring(0, 30) + "..." : text;
+    },
+    viewQuestion(item) {
+      console.log("=>(index.vue:295) item", item);
+      this.dataForm = item;
+      this.visibleModalDetal = true;
+    },
+    updateQuestion(item) {
+      console.log("=>(index.vue:295) item", item);
+      this.dataForm = item;
+      this.visibleModalUpdate = true;
     },
     deleteBot(item) {
       this.isDelete = true;
@@ -436,40 +585,27 @@ export default {
         this.GetListIntent();
       });
     },
-    init() {
-      axios
-        .get("http://10.252.10.112:3232/chatbot/roles/get-role", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-        .then((response) => {
-          // Xử lý dữ liệu khi thành công
-          this.listRole = response.data.content;
-        })
-        .catch((error) => {
-          // Xử lý lỗi
-        });
-    },
 
     async GetListIntent() {
+      const config = {
+        params: {
+          fromDate: this.formattedDateStart ? this.formattedDateStart : "",
+          toDate: this.formattedDateEnd ? this.formattedDateEnd : "",
+          intentName: this.selectedIntent
+            ? this.selectedIntent.map((item) => item.intentName).join(",")
+            : "",
+          createdBy: this.selectedCreator
+            ? this.selectedCreator.map((creator) => creator.username).join(",")
+            : "",
+          entityName: this.selectedEntity ? this.selectedEntity : "",
+          intentType:
+            this.selectedTypeIntent !== "" ? this.selectedTypeIntent : "",
+          currentPage: this.pagination.page - 1,
+          perPage: this.pagination.pageSize,
+        },
+      };
       await Api.questionBank
-        .indexWidthPath(
-          "Question-Bank-Intent/searchBotIntentDTOList?fromDate=" +
-            `${this.formattedDateStart}` +
-            "&toDate=" +
-            `${this.formattedDateEnd}` +
-            "&intentName=" +
-            `${this.selectedIntent}` +
-            "&createdBy=" +
-            `${this.selectedCreator}` +
-            "&entityName=&questionSearch=&intentType=" +
-            `${this.selectedTypeIntent}` +
-            "&intentGroup=&synonymContent=&currentPage=" +
-            `${this.pagination.page - 1}` +
-            "&perPage=" +
-            `${this.pagination.pageSize}`
-        )
+        .indexWidthPath(`Question-Bank-Intent/searchBotIntentDTOList`, config)
         .then((response) => {
           this.desserts = response.data.content;
           this.totalItems = this.desserts.totalElements;
