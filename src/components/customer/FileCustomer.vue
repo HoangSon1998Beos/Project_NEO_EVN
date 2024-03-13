@@ -41,12 +41,24 @@
 import ExcelJS from 'exceljs';
 import saveAs from 'file-saver';
 import {exportFile} from "../../utils/export.js";
-
+import {importDataExcel, changeObjectNames} from '../../ImportExcel.js'
+import Api from "../../api/api.js";
 export default {
   name: 'FileCustomer',
   data() {
     return {
-      file: '',
+      importDataExcel,
+      changeObjectNames,
+      header: [
+        { text: 'STT', value: 'cusCode' },
+        { text: 'Mã khách hàng', value: 'cusCode' },
+        { text: 'Họ và tên', value: 'cusName' },
+        { text: 'Số điện thoại', value: 'cusPhoneNumber' },
+        { text: 'Email', value: 'cusEmail' },
+        { text: 'Địa chỉ sử dụng dịch vụ', value: 'cusAddress' },
+      ],
+      file: [],
+      importedList: [],
       fileSelected: false,
       fileName: 'data-table',
       headers: [
@@ -85,20 +97,37 @@ export default {
     };
   },
   methods: {
-    handleFileChange(event) {
-      console.log("=>(FileCustomer.vue:89) event", event);
-      console.log("=>(FileCustomer.vue:91) event.target.files[0]", event.target.files[0]);
-      this.file = event.target.files[0];
-      if (this.file) {
+    indexRow(index) {
+      return index + (this.currentPage - 1) * this.perPage + 1;
+    },
+    async handleFileChange(event) {
+
+      const file = event.target.files[0];
+      console.log("=>(FileCustomer.vue:43) this.file", file);
+      if (file) {
         this.fileSelected = true;
-        this.fileName = this.file.name;
-        this.uploadFile(this.file);
+        this.fileName = file.name;
+        this.importedList = await this.importDataExcel(this.file, this.header);
+        console.log('importedList', this.importedList)
       }
     },
     clearFile() {
       this.fileSelected = false
     },
-    uploadFile(file) {
+    async uploadFile(file) {
+      const data = {
+        action: 'insert',
+        currentMenuURL: 'customer/list-customer',
+        importedList: this.importedList,
+        tableName: 'CUSTOMER_INFO',
+        traceCall: 'list-customer.component.ts -> import() -> CustomerInfoController.uploadFile()'
+      };
+      try {
+        const response = await Api.person.createPath('customer/import', data, null);
+        console.log('response', response)
+      } catch (e) {
+
+      }
     },
     handleUploadClick() {
       this.$refs.fileInput.click()

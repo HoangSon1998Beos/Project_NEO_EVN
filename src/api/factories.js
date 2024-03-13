@@ -8,6 +8,9 @@ export default (axios) => (resource) => ({
     create(body, config = {}) {
         return axios.post(`${resource}`, body, config)
     },
+    createPath(path,body, config = {}) {
+        return axios.post(`${resource}/${path}`, body, config)
+    },
     delete(id, config = {}) {
         return axios.delete(`${resource}/${id}`, config)
     },
