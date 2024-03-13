@@ -10,7 +10,11 @@
         v-model="dataCheckBox"
         item-key="cusCode"
     >
-
+      <template v-slot:item.index="{ item, index }">
+        <div>
+          {{ indexRow(index) }}
+        </div>
+      </template>
       <template v-slot:item.action = "{ item }" >
         <v-tooltip text="Cập nhật">
           <template v-slot:activator="{ props }">
@@ -48,9 +52,13 @@
         </v-tooltip>
       </template>
       <template #bottom>
-        <Pagination
-            :total-record="5"
-            :total-pages="1"
+        <PaginationApi
+            ref="pagina"
+            @changePage="search"
+            v-model:total-pages="totalPages"
+            v-model:current-page="currentPage"
+            v-model:per-page="perPage"
+            v-model:total-record="totalRecord"
         />
       </template>
     </v-data-table>
@@ -58,6 +66,8 @@
 </template>
 
 <script>
+import PaginationApi from "../../components/Pagination-api.vue";
+
 import Pagination from "../Pagination.vue";
 import Api from "../../api/api.js";
 import {nextTick} from "vue";
@@ -81,9 +91,13 @@ export default {
 
   data() {
     return {
+      totalRecord: 0,
+      currentPage: 1,
+      perPage: 10,
+      totalPages: 0,
       dataCheckBox: [],
       headers: [
-        { title: "STT", align: "start", sortable: false, key: "id",value: 'id', },
+        { title: "STT", align: "start", key: "index",value: 'index', },
         { title: "Thao tác", align: "center", key: "action", sortable: false },
         { title: "Mã khách hàng", align: "start", key: "cusCode",value: "cusCode" },
         { title: "Họ và tên", align: "start", key: "cusName" },
@@ -132,6 +146,9 @@ export default {
     }
   },
   methods: {
+    indexRow(index) {
+      return index + (this.currentPage - 1) * this.perPage + 1;
+    },
     handleClick(value){
       console.log('value',value)
     },

@@ -97,6 +97,9 @@ export default {
     };
   },
   methods: {
+    indexRow(index) {
+      return index + (this.currentPage - 1) * this.perPage + 1;
+    },
     async handleFileChange(event) {
 
       const file = event.target.files[0];
@@ -120,7 +123,7 @@ export default {
         traceCall: 'list-customer.component.ts -> import() -> CustomerInfoController.uploadFile()'
       };
       try {
-        const response = await Api.person.create('customer/import', data, null);
+        const response = await Api.person.createPath('customer/import', data, null);
         console.log('response', response)
       } catch (e) {
 
