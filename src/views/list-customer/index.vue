@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     exportData() {
-      this.exportDataExcel(this.items, this.header);
+      this.exportDataExcel(this.items, this.header, 'export-file');
     }
   }
 }

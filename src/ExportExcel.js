@@ -1,6 +1,6 @@
 import ExcelJS from 'exceljs';
 
-export async function exportDataExcel(items, headerColumnName) {
+export async function exportDataExcel(items, headerColumnName, exportName) {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Data');
 
@@ -17,7 +17,7 @@ export async function exportDataExcel(items, headerColumnName) {
     // Export Excel file
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-    const filename = 'exported_data.xlsx';
+    const filename = exportName;
 
     // Create and trigger download link
     const link = document.createElement('a');
