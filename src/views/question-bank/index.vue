@@ -30,6 +30,9 @@
               label="Chọn thực thể"
               item-title="entityName"
               item-value="id"
+              clearable
+              multiple
+              chips
             ></v-combobox>
             <label>Ngày tạo</label>
             <v-row style="justify-content: space-between">
@@ -129,7 +132,7 @@
                 Tìm kiếm
               </v-btn>
               <v-btn
-                @click="exportData"
+                @click="exportExcel"
                 style="background-color: #28c76f; color: aliceblue"
               >
                 Tải xuống
@@ -473,7 +476,8 @@ import moment from "moment";
 import { TYPE_INTENT } from "../../utils/constants.js";
 import Pagination from "../../components/Pagination.vue";
 import Api from "../../api/api.js";
-import ExcelJS from "exceljs";
+import { exportFile } from "../../utils/export.js";
+import { convertDateTime } from "../../../validate";
 export default {
   components: {
     ModalDelete,
@@ -502,6 +506,16 @@ export default {
         { title: "NGƯỜI TẠO", key: "createdBy", value: "createdBy" },
         { title: "NGÀY CẬP NHẬT", key: "updatedDate", value: "updatedDate" },
         { title: "NGƯỜI CẬP NHẬT", key: "updatedBy", value: "updatedBy" },
+      ],
+      headerExport: [
+        "STT",
+        "TÊN Ý ĐỊNH",
+        "CÂU HỎI Ý ĐỊNH",
+        "LOẠI Ý ĐỊNH",
+        "NGÀY TẠO",
+        "NGƯỜI TẠO",
+        "NGÀY CẬP NHẬT",
+        "NGƯỜI CẬP NHẬT",
       ],
       desserts: [],
 
@@ -535,7 +549,7 @@ export default {
       synonym: [],
       serviceGroup: [],
       selectedIntent: null,
-      selectedEntity: [],
+      selectedEntity: null,
       selectedTypeIntent: [],
       selectedCreator: null,
       selectedSynonym: [],
@@ -547,6 +561,10 @@ export default {
       totalItems: 0,
 
       dataForm: [],
+      objs: [],
+      fileName: "DS",
+      sheetName: "Sheet 1",
+      getItems: 0,
     };
   },
 
@@ -596,6 +614,7 @@ export default {
     },
 
     async GetListIntent() {
+      console.log(this.selectedEntity, "abs");
       const config = {
         params: {
           fromDate: this.formattedDateStart ? this.formattedDateStart : "",
@@ -606,7 +625,10 @@ export default {
           createdBy: this.selectedCreator
             ? this.selectedCreator.map((creator) => creator.username).join(",")
             : "",
-          entityName: this.selectedEntity ? this.selectedEntity : "",
+          entityName: this.selectedEntity
+            ? this.selectedEntity.map((entity) => entity.entityName).join(",")
+            : "",
+          questionSearch: this.questionInput ? this.questionInput : "",
           intentType:
             this.selectedTypeIntent !== "" ? this.selectedTypeIntent : "",
           currentPage: this.pagination.page - 1,
@@ -678,37 +700,56 @@ export default {
           console.error("There was an error!", error);
         });
     },
+    generateRow(d, i) {
+      return [
+        i + 1,
+        d.intentName,
+        d.listQuestions,
+        d.intentType,
+        convertDateTime(d.createdDate),
+        d.createdBy,
+        convertDateTime(d.updatedDate),
+        d.updatedBy,
+      ];
+    },
+    exportExcel() {
+      let listID = [];
 
-    async exportData() {
-      const workbook = new ExcelJS.Workbook();
-      const worksheet = workbook.addWorksheet("Data");
+      if (this.getItems.length > 0) {
+        listID = this.getItems.map((e) => e.id);
+      }
+      console.log(listID, "list");
+      const config = {
+        params: {
+          fromDate: this.formattedDateStart ? this.formattedDateStart : "",
+          toDate: this.formattedDateEnd ? this.formattedDateEnd : "",
+          intentName: this.selectedIntent
+            ? this.selectedIntent.map((item) => item.intentName).join(",")
+            : "",
+          createdBy: this.selectedCreator
+            ? this.selectedCreator.map((creator) => creator.username).join(",")
+            : "",
+          entityName: this.selectedEntity ? this.selectedEntity : "",
+          intentType:
+            this.selectedTypeIntent !== "" ? this.selectedTypeIntent : "",
+          listID: listID !== "" ? listID.join(",") : "",
+        },
+      };
+      Api.questionBank
+        .indexWidthPath(`Question-Bank-Intent/search-export`, config)
+        .then((response) => {
+          console.log("thanhcong");
+          console.log("this", response.data.content);
+          this.objs = response.data.content;
 
-      const headerRow = worksheet.addRow(
-        this.headers.map((headers) => headers.title)
-      );
-      headerRow.font = { bold: true };
-
-      const items =
-        this.getItems && Object.keys(this.getItems).length > 0
-          ? this.getItems
-          : this.desserts.content;
-
-      // Thêm dữ liệu từ mảng items vào worksheet
-      items.forEach((item) => {
-        const rowData = Object.values(item);
-        worksheet.addRow(rowData);
-      });
-
-      const buffer = await workbook.xlsx.writeBuffer();
-      const blob = new Blob([buffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      const filename = "danh_sach_cauhoi.xlsx";
-
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      link.click();
+          exportFile(
+            this.objs,
+            this.generateRow,
+            this.headerExport,
+            this.fileName,
+            this.sheetName
+          );
+        });
     },
   },
   watch: {
@@ -744,6 +785,7 @@ export default {
     },
   },
   created() {
+    console.log("this0", this.getItems);
     this.GetListIntent();
     this.getIntent();
     this.getEntity();
