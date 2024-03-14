@@ -1,4 +1,5 @@
 import ExcelJS from "exceljs";
+import saveAs from 'file-saver'
 
 export const exportFile = (objs, rowTable, headers,fileName,sheetName) => {
     const workbook = new ExcelJS.Workbook();

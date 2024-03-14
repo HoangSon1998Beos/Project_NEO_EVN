@@ -19,7 +19,6 @@
             :sort-desc-icon="'mdi-arrow-up'"
             :items-per-page="pagination.pageSize"
             item-key="name"
-            class="custom-table"
           >
             <template v-slot:item.action="{ item }">
               <v-tooltip text="Xem thông tin">
@@ -267,22 +266,22 @@ export default {
           width: "140px",
         },
         { title: "Mã bot", align: "start", key: "botCode" },
-        { title: "Tên Bot", align: "start", key: "botName" },
-        { title: "Loại bot", align: "start", key: "botType" },
-        { title: "Trạng thái hoạt động", align: "start", key: "status" },
-        { title: "Trạng thái đào tạo", align: "start", key: "trainStatus" },
+        { title: "Tên Bot", align: "start", key: "botName", width: '140px' },
+        { title: "Loại bot", align: "start", key: "botType", width: '140px' },
+        { title: "Trạng thái hoạt động", align: "start", key: "status", width: '210px' },
+        { title: "Trạng thái đào tạo", align: "start", key: "trainStatus",width: '210px' },
         {
           title: "Ngày đào tạo",
           align: "start",
           key: "trainingDate",
-          width: "150px",
+          width: "200px",
         },
-        { title: "Phiên bản", align: "start", key: "nameModel" },
+        { title: "Phiên bản", align: "center", key: "nameModel" ,width: "250px",},
         {
           title: "Máy chủ lưu trữ",
           align: "start",
           key: "hostName",
-          width: "150px",
+          width: "180px",
         },
       ],
       data: [],
