@@ -41,6 +41,8 @@ export default {
   },
   methods: {
     handleLogOut() {
+      const currentRoute = { path: this.$router.currentRoute.value.path };
+      localStorage.setItem("currentRoute", JSON.stringify(currentRoute));
       localStorage.removeItem("token");
       this.$router.push("/login");
     },

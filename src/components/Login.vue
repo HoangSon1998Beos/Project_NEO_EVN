@@ -73,7 +73,10 @@ export default {
         const response = await Api.login.create(data);
         const token = response.data.content.Bearer.substring(7);
         localStorage.setItem("token", token);
-        this.$router.push("/home");
+        const savedCurrentRoute = JSON.parse(
+          localStorage.getItem("currentRoute")
+        );
+        this.$router.push(savedCurrentRoute);
       } catch (error) {
         this.errorMessage = "Tên đăng nhập hoặc mật khẩu không đúng!";
         this.errorMes = true;
