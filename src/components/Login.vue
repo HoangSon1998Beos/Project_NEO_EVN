@@ -76,7 +76,12 @@ export default {
         const savedCurrentRoute = JSON.parse(
           localStorage.getItem("currentRoute")
         );
-        this.$router.push(savedCurrentRoute);
+        console.log(savedCurrentRoute);
+        if (savedCurrentRoute === null) {
+          this.$router.push("/home");
+        } else {
+          this.$router.push(savedCurrentRoute);
+        }
       } catch (error) {
         this.errorMessage = "Tên đăng nhập hoặc mật khẩu không đúng!";
         this.errorMes = true;

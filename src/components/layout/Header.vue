@@ -44,7 +44,11 @@ export default {
       const currentRoute = { path: this.$router.currentRoute.value.path };
       localStorage.setItem("currentRoute", JSON.stringify(currentRoute));
       localStorage.removeItem("token");
+
       this.$router.push("/login");
+      setTimeout(() => {
+        localStorage.removeItem("currentRoute");
+      }, 5000);
     },
   },
 };
