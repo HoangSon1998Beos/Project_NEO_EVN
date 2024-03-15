@@ -39,8 +39,9 @@
 
 <script>
 import {exportFile} from "../../utils/export.js";
-import {importDataExcel, changeObjectNames} from '../../ImportExcel.js'
+import {importDataExcel, changeObjectNames} from '../../utils/ImportExcel.js'
 import Api from "../../api/api.js";
+
 export default {
   name: 'FileCustomer',
   data() {
@@ -48,12 +49,12 @@ export default {
       importDataExcel,
       changeObjectNames,
       header: [
-        { text: 'STT', value: 'cusCode' },
-        { text: 'Mã khách hàng', value: 'cusCode' },
-        { text: 'Họ và tên', value: 'cusName' },
-        { text: 'Số điện thoại', value: 'cusPhoneNumber' },
-        { text: 'Email', value: 'cusEmail' },
-        { text: 'Địa chỉ sử dụng dịch vụ', value: 'cusAddress' },
+        {text: 'STT', value: 'cusCode'},
+        {text: 'Mã khách hàng', value: 'cusCode'},
+        {text: 'Họ và tên', value: 'cusName'},
+        {text: 'Số điện thoại', value: 'cusPhoneNumber'},
+        {text: 'Email', value: 'cusEmail'},
+        {text: 'Địa chỉ sử dụng dịch vụ', value: 'cusAddress'},
       ],
       file: [],
       importedList: [],
@@ -72,16 +73,16 @@ export default {
         "Đăng ký nhận thông tin qua Facebook",
         "Loại khách hàng",
       ],
-      notifiedByApp : [
+      notifiedByApp: [
         "Không",
         "Có"
       ],
       customTag: [
-         'Type 1' ,
-         'Type 2',
+        'Type 1',
+        'Type 2',
       ],
       sheetName: 'Sheet 1',
-      objs : [
+      objs: [
         {
           cusCode: "KH000",
           cusName: "Khách Hàng 1",
@@ -148,7 +149,7 @@ export default {
     handleUploadClick() {
       this.$refs.fileInput.click()
     },
-    generateRow(d,i){
+    generateRow(d, i) {
       return [
         i + 1,
         d.cusCode,
@@ -164,7 +165,7 @@ export default {
       ]
     },
     downloadFile() {
-      exportFile(this.objs,this.generateRow,this.headers,this.fileName,this.sheetName)
+      exportFile(this.objs, this.generateRow, this.headers, this.fileName, this.sheetName)
     }
   }
 };

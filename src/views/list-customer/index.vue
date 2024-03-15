@@ -23,7 +23,7 @@
 import SearchCustomer from "../../components/customer/SearchCustomer.vue";
 import FileCustomer from "../../components/customer/FileCustomer.vue";
 import DataCustomer from "../../components/customer/DataCustomer.vue";
-import { exportDataExcel } from '../../ExportExcel.js';
+import {exportDataExcel} from '../../utils/ExportExcel.js';
 import Api from "../../api/api.js";
 
 export default {
@@ -48,17 +48,17 @@ export default {
       ],
       items: [],
       header: [
-        { text: 'STT', value: 'id' },
-        { text: 'Mã khách hàng', value: 'cusCode' },
-        { text: 'Họ và tên', value: 'cusName' },
-        { text: 'Số điện thoại', value: 'cusPhoneNumber' },
-        { text: 'Email', value: 'cusEmail' },
-        { text: 'Địa chỉ sử dụng dịch vụ', value: 'cusAddress' },
-        { text: 'ID Zalo', value: 'idChannelChatZalo' },
-        { text: 'Đăng ký nhận thông báo Zalo', value: 'cusNotiChannelChatZalo' },
-        { text: 'ID Facebook', value: 'idChannelChatMess' },
-        { text: 'Đăng ký nhận thông báo Facebook', value: 'cusNotiChannelChatMess' },
-        { text: 'Loại khách hàng', value: 'cusTypesName' },
+        {text: 'STT', value: 'id'},
+        {text: 'Mã khách hàng', value: 'cusCode'},
+        {text: 'Họ và tên', value: 'cusName'},
+        {text: 'Số điện thoại', value: 'cusPhoneNumber'},
+        {text: 'Email', value: 'cusEmail'},
+        {text: 'Địa chỉ sử dụng dịch vụ', value: 'cusAddress'},
+        {text: 'ID Zalo', value: 'idChannelChatZalo'},
+        {text: 'Đăng ký nhận thông báo Zalo', value: 'cusNotiChannelChatZalo'},
+        {text: 'ID Facebook', value: 'idChannelChatMess'},
+        {text: 'Đăng ký nhận thông báo Facebook', value: 'cusNotiChannelChatMess'},
+        {text: 'Loại khách hàng', value: 'cusTypesName'},
       ],
       data: []
     }
@@ -69,39 +69,39 @@ export default {
   },
   methods: {
     async getInfoUser() {
-      return  await Api.person.indexWidthPath(`customer/export`);
+      return await Api.person.indexWidthPath(`customer/export`);
     },
 
     exportData() {
-      console.log('this.data',this.data);
+      console.log('this.data', this.data);
       const data = this.data.data.content.filter(item => this.idArray.includes(item['id']));
       console.log('data', data);
       let dataExport = data.map(item => {
         let cusNotiChannelChatZalo = '';
         let cusNotiChannelChatMess = '';
         console.log('item.zaloInfos', item);
-        if(item.zaloInfos[0].cusNotiChannel === '1'){
+        if (item.zaloInfos[0].cusNotiChannel === '1') {
           cusNotiChannelChatZalo = 'Có';
         } else {
           cusNotiChannelChatZalo = 'Không';
         }
 
-        if(item.messInfos[0].cusNotiChannel === '1'){
+        if (item.messInfos[0].cusNotiChannel === '1') {
           cusNotiChannelChatMess = 'Có';
         } else {
           cusNotiChannelChatMess = 'Không';
         }
         return {
           ...item,
-          cusNotiChannelChatZalo : cusNotiChannelChatZalo,
-          cusNotiChannelChatMess : cusNotiChannelChatMess,
-          idChannelChatZalo : item.zaloInfos[0].idChannelChat,
-          idChannelChatMess : item.messInfos[0].idChannelChat,
+          cusNotiChannelChatZalo: cusNotiChannelChatZalo,
+          cusNotiChannelChatMess: cusNotiChannelChatMess,
+          idChannelChatZalo: item.zaloInfos[0].idChannelChat,
+          idChannelChatMess: item.messInfos[0].idChannelChat,
           cusTypesName: item.cusTypes[0].typeName
         };
       });
 
-      console.log('dataExport',dataExport);
+      console.log('dataExport', dataExport);
       this.exportDataExcel(dataExport, this.header);
     }
   }
