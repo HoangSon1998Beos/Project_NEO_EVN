@@ -34,7 +34,7 @@
                     />
                   </td>
                   <td>
-                    {{ moment(item.dateChat).format("DD-MM-YYYY HH:mm:ss") }}
+                    {{ moment(item.dateChat).format('DD-MM-YYYY HH:mm:ss') }}
                   </td>
                   <td>{{ item.cusName }}</td>
                   <td>
@@ -155,35 +155,35 @@
   </div>
 </template>
 <script>
-import BarChart from "../chart/BarChart.vue";
-import HorizontalBar from "../chart/HorizontalBar.vue";
-import axios from "axios";
-import Api from "../../api/api.js";
-import moment from "moment";
-import { nextTick } from "vue";
+import BarChart from '../chart/BarChart.vue'
+import HorizontalBar from '../chart/HorizontalBar.vue'
+import axios from 'axios'
+import Api from '../../api/api.js'
+import moment from 'moment'
+import { nextTick } from 'vue'
 export default {
   components: { BarChart, HorizontalBar },
   data: () => ({
-    token: localStorage.getItem("token"),
+    token: localStorage.getItem('token'),
     ratings: [1, 2, 3, 4, 5],
     ratingCounts: [0, 0, 0, 0, 0],
     selected: [],
     chatModel: [],
     headers: [
-      { title: "CÂU HỎI", align: "start", key: "questions" },
-      { title: "KÊNH CHAT", align: "start", key: "chanelCode" },
-      { title: "THỜI GIAN", align: "start", key: "dateChat" },
-      { title: "KHÁCH HÀNG", align: "start", key: "cusName" },
-      { title: "CHUYỂN XỬ LÝ", align: "start", key: "cusName" },
+      { title: 'CÂU HỎI', align: 'start', key: 'questions' },
+      { title: 'KÊNH CHAT', align: 'start', key: 'chanelCode' },
+      { title: 'THỜI GIAN', align: 'start', key: 'dateChat' },
+      { title: 'KHÁCH HÀNG', align: 'start', key: 'cusName' },
+      { title: 'CHUYỂN XỬ LÝ', align: 'start', key: 'cusName' },
     ],
     chat: [
-      { title: "KÊNH CHAT", align: "center", key: "channelName" },
-      { title: "KHÁCH HÀNG", align: "center", key: "cusName" },
+      { title: 'KÊNH CHAT', align: 'center', key: 'channelName' },
+      { title: 'KHÁCH HÀNG', align: 'center', key: 'cusName' },
     ],
     kichban: [
-      { title: "KÊNH CHAT", align: "start", key: "channelName" },
-      { title: "SỐ LƯỢNG PHIÊN ĐÃ CHAT", align: "start", key: "sessionCount" },
-      { title: "Ý ĐỊNH", align: "start", key: "intentName" },
+      { title: 'KÊNH CHAT', align: 'start', key: 'channelName' },
+      { title: 'SỐ LƯỢNG PHIÊN ĐÃ CHAT', align: 'start', key: 'sessionCount' },
+      { title: 'Ý ĐỊNH', align: 'start', key: 'intentName' },
     ],
     kichbanModel: [],
     listKichban: [],
@@ -193,72 +193,72 @@ export default {
     ratinglive: {},
   }),
   created() {
-    this.getListQuestion();
-    this.getCustomer();
-    this.getRating();
-    this.getScript();
+    this.getListQuestion()
+    this.getCustomer()
+    this.getRating()
+    this.getScript()
   },
   methods: {
     getListQuestion() {
       Api.dashbroard
-        .indexWidthPath("getQuestionsUnsolved")
+        .indexWidthPath('getQuestionsUnsolved')
         .then((response) => {
-          this.desserts = response.data.content;
-          console.log(this.desserts);
+          this.desserts = response.data.content
+          console.log(this.desserts)
         })
         .catch((error) => {
-          console.error("There was an error!", error);
-        });
+          console.error('There was an error!', error)
+        })
     },
 
     getRowColor(index) {
       if (index < 5) {
         // Mỗi hàng trong 5 hàng đầu sẽ có một màu khác nhau
-        const colors = ["#c2d4f6", "#c3efd7", "#ffe4ca", "#f9cfcf", "#b8f2f9"];
-        return colors[index];
+        const colors = ['#c2d4f6', '#c3efd7', '#ffe4ca', '#f9cfcf', '#b8f2f9']
+        return colors[index]
       } else {
         // Các hàng tiếp theo lặp lại màu của 5 hàng đầu
-        const colors = ["#c2d4f6", "#c3efd7", "#ffe4ca", "#f9cfcf", "#b8f2f9"];
-        return colors[index % 5];
+        const colors = ['#c2d4f6', '#c3efd7', '#ffe4ca', '#f9cfcf', '#b8f2f9']
+        return colors[index % 5]
       }
     },
     async getCustomer() {
       try {
         const response = await Api.dashbroard.indexWidthPath(
-          "getCustomerMaxMonth"
-        );
+          'getCustomerMaxMonth',
+        )
 
-        this.listCustomer = response.data.content;
+        this.listCustomer = response.data.content
       } catch (error) {}
     },
     async getRating() {
       try {
-        const response = await Api.dashbroard.indexWidthPath("getCustomerRate");
-        this.listRating = response.data.content;
+        const response = await Api.dashbroard.indexWidthPath('getCustomerRate')
+        this.listRating = response.data.content
         this.listRating.forEach((item) => {
           // Gán số lượng lượt đánh giá vào mảng ratingsData theo số sao tương ứng
-          this.ratingCounts[item.rate - 1] = item.amount;
-        });
-        console.log(this.listRating, "than");
+          this.ratingCounts[item.rate - 1] = item.amount
+        })
+        console.log(this.listRating, 'than')
       } catch (error) {
-        console.error("API Error:", error);
+        console.error('API Error:', error)
       }
     },
     async getScript() {
       try {
-        const response = await Api.dashbroard.indexWidthPath("getSessionOnDay");
-        this.listKichban = response.data.content;
+        const response = await Api.dashbroard.indexWidthPath('getSessionOnDay')
+        this.listKichban = response.data.content
       } catch (error) {
-        console.error("API Error:", error);
+        console.error('API Error:', error)
       }
     },
   },
   computed: {
     moment() {
-      return moment;
+      return moment
     },
   },
-};
+}
 </script>
 <style scoped>
 .container-bar {

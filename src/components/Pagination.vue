@@ -2,22 +2,22 @@
   <div class="pagination-custom">
     <span> Xem </span>
     <v-select
-        v-model="selectItem"
-        :items="items"
-        item-title="value"
-        item-value="key"
-        class="select-pagination"
-        variant="outlined"
+      v-model="selectItem"
+      :items="items"
+      item-title="value"
+      item-value="key"
+      class="select-pagination"
+      variant="outlined"
     />
     <span class="ml-5"> bản ghi/trang</span>
     <span class="ml-16">Tổng số {{ totalRecord }} bản ghi</span>
     <v-pagination
-        v-model="currentPage"
-        :length="totalPages"
-        @input="changePage"
-        class="ml-16 pagination-right"
-        rounded="circle"
-        show-first-last-page
+      v-model="currentPage"
+      :length="totalPages"
+      @input="changePage"
+      class="ml-16 pagination-right"
+      rounded="circle"
+      show-first-last-page
     >
     </v-pagination>
   </div>
@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  name: "Pagination",
+  name: 'Pagination',
   props: {
     value: Number,
     totalPages: Number,
@@ -57,27 +57,27 @@ export default {
           value: 50,
         },
       ],
-    };
+    }
   },
   watch: {
     selectItem(val) {
-      this.currentPage = 1;
-      this.updatePerPage(val);
+      this.currentPage = 1
+      this.updatePerPage(val)
     },
     currentPage(val) {
-      this.changePage(val);
+      this.changePage(val)
     },
   },
   methods: {
     changePage(page) {
-      this.currentPage = page;
-      this.$emit("input", page);
+      this.currentPage = page
+      this.$emit('input', page)
     },
     updatePerPage(val) {
-      this.$emit("update", val);
+      this.$emit('update', val)
     },
   },
-};
+}
 </script>
 <style lang="css" scoped>
 .pagination-custom {

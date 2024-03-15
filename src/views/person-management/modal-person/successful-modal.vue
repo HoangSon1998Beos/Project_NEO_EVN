@@ -5,9 +5,9 @@
         <div class="margin-15">
           <div style="margin-top: 10px">
             <v-icon
-                color="success"
-                icon="mdi-check-circle"
-                style="font-size: 100px;"
+              color="success"
+              icon="mdi-check-circle"
+              style="font-size: 100px"
             ></v-icon>
           </div>
           <v-card-text>
@@ -16,20 +16,27 @@
             </div>
           </v-card-text>
           <v-card-actions class="button">
-            <v-btn style="color: white;background-color: #164397;border-color: #164397" @click="confirm">Đồng ý</v-btn>
+            <v-btn
+              style="
+                color: white;
+                background-color: #164397;
+                border-color: #164397;
+              "
+              @click="confirm"
+              >Đồng ý</v-btn
+            >
           </v-card-actions>
         </div>
       </v-card>
-
     </v-dialog>
   </v-container>
 </template>
 
 <script>
-import appUtils from "../utils.js";
+import appUtils from '../utils.js'
 
 export default {
-  name: "successful-modal",
+  name: 'successful-modal',
   props: {
     visible: {
       type: Boolean,
@@ -38,7 +45,7 @@ export default {
     text: {
       type: String,
       default: '',
-    }
+    },
   },
   computed: {
     getText: appUtils.mapComputed('text'),
@@ -47,9 +54,9 @@ export default {
   methods: {
     confirm() {
       // Xử lý khi người dùng đồng ý
-      this.isVisible = false;
+      this.isVisible = false
     },
-  }
+  },
 }
 </script>
 

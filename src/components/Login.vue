@@ -47,58 +47,58 @@
     </v-sheet>
   </v-card>
 </template>
-    
-    <script>
-import Api from "../api/api.js";
-import { validateLogUsername, validateLogPassword } from "../../validate.js";
+
+<script>
+import Api from '../api/api.js'
+import { validateLogUsername, validateLogPassword } from '../../validate.js'
 
 export default {
   data() {
     return {
-      userName: "",
-      password: "",
+      userName: '',
+      password: '',
       showPassword: true,
       isChecked: true,
       errorMes: false,
-      errorMessage: "",
-    };
+      errorMessage: '',
+    }
   },
   methods: {
     async handleSubmit() {
       const data = {
         username: this.userName,
         password: this.password,
-      };
+      }
       try {
-        const response = await Api.login.create(data);
-        const token = response.data.content.Bearer.substring(7);
-        localStorage.setItem("token", token);
+        const response = await Api.login.create(data)
+        const token = response.data.content.Bearer.substring(7)
+        localStorage.setItem('token', token)
         const savedCurrentRoute = JSON.parse(
-          localStorage.getItem("currentRoute")
-        );
-        console.log(savedCurrentRoute);
+          localStorage.getItem('currentRoute'),
+        )
+        console.log(savedCurrentRoute)
         if (savedCurrentRoute === null) {
-          this.$router.push("/home");
+          this.$router.push('/home')
         } else {
-          this.$router.push(savedCurrentRoute);
+          this.$router.push(savedCurrentRoute)
         }
       } catch (error) {
-        this.errorMessage = "Tên đăng nhập hoặc mật khẩu không đúng!";
-        this.errorMes = true;
-        console.error("API call error:", error);
+        this.errorMessage = 'Tên đăng nhập hoặc mật khẩu không đúng!'
+        this.errorMes = true
+        console.error('API call error:', error)
       }
     },
     userNameRules(value) {
-      return validateLogUsername(value);
+      return validateLogUsername(value)
     },
     passWordRules(value) {
-      return validateLogPassword(value);
+      return validateLogPassword(value)
     },
   },
-};
+}
 </script>
-    
-    <style scoped>
+
+<style scoped>
 .logo {
   margin: 30px 0px 60px 30px;
 }

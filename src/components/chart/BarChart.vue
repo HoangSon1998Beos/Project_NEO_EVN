@@ -3,9 +3,9 @@
 </template>
 
 <script>
-import { Bar } from "vue-chartjs";
-import axios from "axios";
-import Api from "../../api/api.js";
+import { Bar } from 'vue-chartjs'
+import axios from 'axios'
+import Api from '../../api/api.js'
 import {
   Chart as ChartJS,
   Title,
@@ -14,22 +14,15 @@ import {
   BarElement,
   CategoryScale,
   LinearScale,
-} from "chart.js";
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-);
+} from 'chart.js'
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 export default {
-  name: "BarChart",
+  name: 'BarChart',
   components: { Bar },
   data() {
     return {
       ChartOnMonth: [],
-      token: localStorage.getItem("token"),
+      token: localStorage.getItem('token'),
       chartData: {
         labels: [],
         datasets: [{ data: [] }],
@@ -55,34 +48,34 @@ export default {
           },
         },
       },
-    };
+    }
   },
   methods: {
     GetBarChart() {
       Api.dashbroard
-        .indexWidthPath("getChannelChartOnMonth")
+        .indexWidthPath('getChannelChartOnMonth')
         .then((response) => {
-          this.ChartOnMonth = response.data.content;
-          console.log(this.ChartOnMonth);
+          this.ChartOnMonth = response.data.content
+          console.log(this.ChartOnMonth)
           this.chartData = {
             labels: this.ChartOnMonth.map((item) => item.chanelCode),
             datasets: [
               {
-                label: "",
+                label: '',
                 data: this.ChartOnMonth.map((item) => item.amount),
-                backgroundColor: ["#00cfe6"],
+                backgroundColor: ['#00cfe6'],
               },
             ],
-          };
-          console.log(this.chartData);
+          }
+          console.log(this.chartData)
         })
         .catch((error) => {
-          console.error("There was an error!", error);
-        });
+          console.error('There was an error!', error)
+        })
     },
   },
   created() {
-    this.GetBarChart();
+    this.GetBarChart()
   },
-};
+}
 </script>

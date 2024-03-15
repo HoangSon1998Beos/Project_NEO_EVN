@@ -2,8 +2,16 @@
   <v-dialog v-model="visibleDialog" max-width="900px" persistent>
     <v-card>
       <v-card-title class="!flex justify-between">
-        {{ action === 'isView' ? 'Thông tin bot' : action === 'isCreate' ? 'Thêm mới bot' : 'Cập nhật bot'}}
-        <span class="material-icons cursor-pointer" @click="closeModal">close</span>
+        {{
+          action === 'isView'
+            ? 'Thông tin bot'
+            : action === 'isCreate'
+              ? 'Thêm mới bot'
+              : 'Cập nhật bot'
+        }}
+        <span class="material-icons cursor-pointer" @click="closeModal"
+          >close</span
+        >
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -11,26 +19,30 @@
             <v-row>
               <v-col cols="6">
                 <span>Tên bot</span>
-                <Required/>
-                <v-text-field v-model.trim="form.botName"
-                              :rules="[validateBot]"
-                              variant="outlined"
-                              placeholder="Nhập tên bot"
-                              clearable
-                              :disabled="action === 'isView'"
-                              class="custom-tt"
+                <Required />
+                <v-text-field
+                  v-model.trim="form.botName"
+                  :rules="[validateBot]"
+                  variant="outlined"
+                  placeholder="Nhập tên bot"
+                  clearable
+                  :disabled="action === 'isView'"
+                  class="custom-tt"
                 >
                   <template #prepend-inner>
-                    <div :class="{ 'disabled-background': action === 'isView' }"></div>
+                    <div
+                      :class="{ 'disabled-background': action === 'isView' }"
+                    ></div>
                   </template>
                 </v-text-field>
               </v-col>
               <v-col cols="6">
                 <span>Mã bot</span>
-                <Required/>
-                <v-text-field v-model="form.botCode"
-                              variant="outlined"
-                              disabled
+                <Required />
+                <v-text-field
+                  v-model="form.botCode"
+                  variant="outlined"
+                  disabled
                 >
                   <template #prepend-inner>
                     <div class="disabled-background"></div>
@@ -41,42 +53,46 @@
             <v-row>
               <v-col cols="6">
                 <span>Loại bot</span>
-                <Required/>
-                <v-select v-model="form.botType"
-                          :rules="[checkRuleServer]"
-                          :items="itemsBot"
-                          item-title="value"
-                          item-value="key"
-                          variant="outlined"
-                          placeholder="Chọn Loại bot"
-                          :disabled="action === 'isView' || action === 'isEdit'"
-                          clearable
+                <Required />
+                <v-select
+                  v-model="form.botType"
+                  :rules="[checkRuleServer]"
+                  :items="itemsBot"
+                  item-title="value"
+                  item-value="key"
+                  variant="outlined"
+                  placeholder="Chọn Loại bot"
+                  :disabled="action === 'isView' || action === 'isEdit'"
+                  clearable
                 >
                   <template #prepend-inner>
-                    <div :class="{ 'disabled-background': action === 'isView' || action === 'isEdit'}"></div>
+                    <div
+                      :class="{
+                        'disabled-background':
+                          action === 'isView' || action === 'isEdit',
+                      }"
+                    ></div>
                   </template>
                 </v-select>
               </v-col>
               <v-col v-if="action === 'isCreate'" cols="6">
                 <span>Máy chủ lưu trữ 1</span>
-                <Required/>
-                <v-select v-model="form.server1"
-                          :rules="[checkRuleServer]"
-                          item-title="value"
-                          item-value="key"
-                          :items="dataServerFake"
-                          variant="outlined"
-                          placeholder="Máy chủ lưu trữ"
-                          clearable
+                <Required />
+                <v-select
+                  v-model="form.server1"
+                  :rules="[checkRuleServer]"
+                  item-title="value"
+                  item-value="key"
+                  :items="dataServerFake"
+                  variant="outlined"
+                  placeholder="Máy chủ lưu trữ"
+                  clearable
                 ></v-select>
               </v-col>
               <v-col v-else cols="6">
                 <span>Bot đào tạo</span>
-                <Required/>
-                <v-select v-model="form.botTrain"
-                          variant="outlined"
-                          disabled
-                >
+                <Required />
+                <v-select v-model="form.botTrain" variant="outlined" disabled>
                   <template #prepend-inner>
                     <div class="disabled-background"></div>
                   </template>
@@ -86,24 +102,22 @@
             <v-row>
               <v-col v-if="action === 'isCreate'" cols="6">
                 <span>Máy chủ lưu trữ 2</span>
-                <Required/>
-                <v-select v-model="form.server2"
-                          :rules="[checkRuleServer]"
-                          variant="outlined"
-                          :items="dataServerFake"
-                          item-title="value"
-                          item-value="key"
-                          placeholder="Máy chủ lưu trữ"
-                          clearable
+                <Required />
+                <v-select
+                  v-model="form.server2"
+                  :rules="[checkRuleServer]"
+                  variant="outlined"
+                  :items="dataServerFake"
+                  item-title="value"
+                  item-value="key"
+                  placeholder="Máy chủ lưu trữ"
+                  clearable
                 ></v-select>
               </v-col>
               <v-col v-else cols="6">
                 <span>Máy chủ lưu trữ</span>
-                <Required/>
-                <v-select v-model="form.server"
-                          variant="outlined"
-                          disabled
-                >
+                <Required />
+                <v-select v-model="form.server" variant="outlined" disabled>
                   <template #prepend-inner>
                     <div class="disabled-background"></div>
                   </template>
@@ -111,10 +125,11 @@
               </v-col>
               <v-col cols="6">
                 <span>Thư mục lưu trữ</span>
-                <Required/>
-                <v-text-field v-model="form.botSave"
-                              variant="outlined"
-                              disabled
+                <Required />
+                <v-text-field
+                  v-model="form.botSave"
+                  variant="outlined"
+                  disabled
                 >
                   <template #prepend-inner>
                     <div class="disabled-background"></div>
@@ -125,11 +140,8 @@
             <v-row>
               <v-col v-if="action === 'isView'" cols="6">
                 <span>Thông tin bot</span>
-                <Required/>
-                <v-text-field v-model="form.model"
-                              variant="outlined"
-                              disabled
-                >
+                <Required />
+                <v-text-field v-model="form.model" variant="outlined" disabled>
                   <template #prepend-inner>
                     <div class="disabled-background"></div>
                   </template>
@@ -137,15 +149,18 @@
               </v-col>
               <v-col cols="6">
                 <span>Mô tả</span>
-                <v-textarea v-model.trim="form.description"
-                            variant="outlined"
-                            placeholder="Mô tả"
-                            :disabled="action === 'isView'"
-                            clearable
-                            :rows="2.5"
+                <v-textarea
+                  v-model.trim="form.description"
+                  variant="outlined"
+                  placeholder="Mô tả"
+                  :disabled="action === 'isView'"
+                  clearable
+                  :rows="2.5"
                 >
                   <template #prepend-inner>
-                    <div :class="{ 'disabled-background': action === 'isView'}"></div>
+                    <div
+                      :class="{ 'disabled-background': action === 'isView' }"
+                    ></div>
                   </template>
                 </v-textarea>
               </v-col>
@@ -154,16 +169,14 @@
         </v-container>
       </v-card-text>
       <div class="flex justify-end p-[20px]">
-        <v-btn v-if="action === 'isCreate'"
-               color="#2666de"
-               @click="submitForm"
-        >
+        <v-btn v-if="action === 'isCreate'" color="#2666de" @click="submitForm">
           Thêm mới
         </v-btn>
-        <v-btn v-if="action === 'isEdit'"
-               color="#28c76f"
-               @click="submitForm"
-               style="color: white"
+        <v-btn
+          v-if="action === 'isEdit'"
+          color="#28c76f"
+          @click="submitForm"
+          style="color: white"
         >
           Cập nhật
         </v-btn>
@@ -173,12 +186,12 @@
 </template>
 
 <script>
-import Required from "./Required.vue";
-import {validate} from "../../../validate.js";
+import Required from './Required.vue'
+import { validate } from '../../../validate.js'
 
 export default {
   name: 'ModalCreate',
-  components: {Required},
+  components: { Required },
   props: {
     visible: {
       type: Boolean,
@@ -191,7 +204,7 @@ export default {
     dataFrom: {
       type: Array,
       default: [],
-    }
+    },
   },
   data() {
     return {
@@ -208,47 +221,47 @@ export default {
         mode: '',
         description: '',
       },
-      itemsBot : [
+      itemsBot: [
         {
           key: 1,
-          value: 'Bot khách hàng'
+          value: 'Bot khách hàng',
         },
         {
           key: 2,
-          value: 'Bot đào tạo'
+          value: 'Bot đào tạo',
         },
       ],
       dataServerFake: [
         {
           key: 'api',
-          value: 'api'
+          value: 'api',
         },
         {
           key: 'api_server',
-          value: 'api_server'
-        }
+          value: 'api_server',
+        },
       ],
-    };
-  },
-  watch: {
-    visible(val){
-      if(val && (this.action === 'isView' || 'isEdit')) {
-        this.form = this.dataFrom
-      }
-      this.visibleDialog =val
     }
   },
+  watch: {
+    visible(val) {
+      if (val && (this.action === 'isView' || 'isEdit')) {
+        this.form = this.dataFrom
+      }
+      this.visibleDialog = val
+    },
+  },
   methods: {
-    validateBot(data){
+    validateBot(data) {
       return validate(data)
     },
     checkRuleServer(value) {
-      console.log("=>(ModalCreate.vue:246) value", value);
+      console.log('=>(ModalCreate.vue:246) value', value)
     },
-    submitForm(){
-      this.$refs.form.validate().then(valid => {
-        if(valid){
-          if(this.action === 'isCreate'){
+    submitForm() {
+      this.$refs.form.validate().then((valid) => {
+        if (valid) {
+          if (this.action === 'isCreate') {
             this.saveItem()
           } else {
             this.editItem()
@@ -259,12 +272,12 @@ export default {
       })
     },
     saveItem() {
-      this.$emit('create',this.form)
+      this.$emit('create', this.form)
     },
     editItem() {
-      this.$emit('edit',this.form)
+      this.$emit('edit', this.form)
     },
-    closeModal () {
+    closeModal() {
       this.form = {
         botName: '',
         botCode: '',
@@ -278,9 +291,9 @@ export default {
         description: '',
       }
       this.$emit('cancel')
-    }
+    },
   },
-};
+}
 </script>
 <style lang="css" scoped>
 .disabled-background {

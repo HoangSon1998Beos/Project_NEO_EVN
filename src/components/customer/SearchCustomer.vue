@@ -8,36 +8,40 @@
             <v-row>
               <v-col cols="6">
                 <span>Họ tên</span>
-                <v-text-field v-model="form.name"
-                              label="Nhập họ tên"
-                              variant="outlined"
-                              class="mt-2"
+                <v-text-field
+                  v-model="form.name"
+                  label="Nhập họ tên"
+                  variant="outlined"
+                  class="mt-2"
                 ></v-text-field>
               </v-col>
               <v-col cols="6">
                 <span>Mã khách hàng</span>
-                <v-text-field v-model="form.code"
-                              label="Nhập mã khách hàng"
-                              variant="outlined"
-                              class="mt-2"
+                <v-text-field
+                  v-model="form.code"
+                  label="Nhập mã khách hàng"
+                  variant="outlined"
+                  class="mt-2"
                 ></v-text-field>
               </v-col>
               <v-col cols="6">
                 <span>Số điện thoại</span>
-                <v-text-field v-model="form.phone"
-                              label="Nhập số điện thoại"
-                              :rules="[validatePhone]"
-                              variant="outlined"
-                              class="mt-2"
+                <v-text-field
+                  v-model="form.phone"
+                  label="Nhập số điện thoại"
+                  :rules="[validatePhone]"
+                  variant="outlined"
+                  class="mt-2"
                 ></v-text-field>
               </v-col>
               <v-col cols="6">
                 <span>Email</span>
-                <v-text-field v-model="form.email"
-                              label="Nhập email"
-                              :rules="[validateEmail]"
-                              variant="outlined"
-                              class="mt-2"
+                <v-text-field
+                  v-model="form.email"
+                  label="Nhập email"
+                  :rules="[validateEmail]"
+                  variant="outlined"
+                  class="mt-2"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -53,67 +57,58 @@
   </v-app>
 </template>
 
-
 <script>
-import {validateEmail, validatePhoneNumber} from "../../../validate.js";
+import { validateEmail, validatePhoneNumber } from '../../../validate.js'
 
 export default {
-  name: "SearchCustomer",
+  name: 'SearchCustomer',
   data() {
     return {
       form: {
         name: '',
         code: '',
         phone: '',
-        email: ''
-      }
+        email: '',
+      },
     }
   },
   props: {
     items: {
       type: Array,
-      value: []
+      value: [],
     },
     headers: {
       type: Array,
-      value: []
-    }
+      value: [],
+    },
   },
   methods: {
     exportData() {
       this.$emit('exportData')
     },
     validateEmail(value) {
-      if(value){
+      if (value) {
         return validateEmail(value)
       }
     },
     validatePhone(value) {
-      if(value) {
+      if (value) {
         return validatePhoneNumber(value)
       }
     },
-    submitForm() {
-
-    },
-    resetForm() {
-
-    },
-    validateForm(){
+    submitForm() {},
+    resetForm() {},
+    validateForm() {
       this.form = {
         name: '',
         code: '',
         phone: '',
-        email: ''
+        email: '',
       }
     },
-    clearForm() {
-
-    },
-  }
+    clearForm() {},
+  },
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

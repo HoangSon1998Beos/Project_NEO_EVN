@@ -2,7 +2,7 @@
   <v-dialog v-model="visibleDialog" max-width="400px" persistent>
     <v-card class="text-center py-4">
       <div class="self-center">
-        <warning/>
+        <warning />
       </div>
       <v-card-text>
         <div>
@@ -13,20 +13,18 @@
         <v-btn width="20%" color="#ed1c24" @click="ok">
           {{ buttonOkText }}
         </v-btn>
-        <v-btn width="20%" color="#82868b" @click="cancel">
-          Hủy
-        </v-btn>
+        <v-btn width="20%" color="#82868b" @click="cancel"> Hủy </v-btn>
       </div>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import Warning from "../../assets/bot/warning.vue";
+import Warning from '../../assets/bot/warning.vue'
 
 export default {
   name: 'ModalDelete',
-  components: {Warning},
+  components: { Warning },
   props: {
     visible: {
       type: Boolean,
@@ -45,7 +43,7 @@ export default {
   watch: {
     visible(val) {
       this.visibleDialog = val
-    }
+    },
   },
   methods: {
     ok() {
@@ -54,10 +52,8 @@ export default {
     cancel() {
       this.$emit('cancel')
     },
-  }
+  },
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

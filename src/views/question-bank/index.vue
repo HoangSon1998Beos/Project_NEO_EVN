@@ -375,7 +375,7 @@
       >
         <template v-slot:[`item.createdDate`]="{ item }">
           <div>
-            {{ moment(item.createdDate).format("DD-MM-YYYY") }}
+            {{ moment(item.createdDate).format('DD-MM-YYYY') }}
           </div>
         </template>
         <template v-slot:[`item.stt`]="{ item, index }">
@@ -385,7 +385,7 @@
         </template>
         <template v-slot:[`item.updatedDate`]="{ item }">
           <div>
-            {{ moment(item.updatedDate).format("DD-MM-YYYY") }}
+            {{ moment(item.updatedDate).format('DD-MM-YYYY') }}
           </div>
         </template>
         <template v-slot:[`item.intentName`]="{ item }">
@@ -464,20 +464,20 @@
       :button-ok-text="X"
     >
       <template #description>
-        {{ isDelete ? "abc" : isStart ? "start" : "stop" }}
+        {{ isDelete ? 'abc' : isStart ? 'start' : 'stop' }}
       </template>
     </ModalDelete>
   </div>
 </template>
 
 <script>
-import ModalDelete from "../../components/bot/ModalDelete.vue";
-import moment from "moment";
-import { TYPE_INTENT } from "../../utils/constants.js";
-import Pagination from "../../components/Pagination.vue";
-import Api from "../../api/api.js";
-import { exportFile } from "../../utils/export.js";
-import { convertDateTime } from "../../../validate";
+import ModalDelete from '../../components/bot/ModalDelete.vue'
+import moment from 'moment'
+import { TYPE_INTENT } from '../../utils/constants.js'
+import Pagination from '../../components/Pagination.vue'
+import Api from '../../api/api.js'
+import { exportFile } from '../../utils/export.js'
+import { convertDateTime } from '../../../validate'
 export default {
   components: {
     ModalDelete,
@@ -492,45 +492,45 @@ export default {
       isDelete: false,
       selected: [],
       headers: [
-        { title: "STT", align: "start", key: "stt", value: "stt" },
+        { title: 'STT', align: 'start', key: 'stt', value: 'stt' },
         {
-          title: "THAO TÁC",
-          align: "center",
-          key: "action",
-          value: "action",
+          title: 'THAO TÁC',
+          align: 'center',
+          key: 'action',
+          value: 'action',
           sortable: false,
         },
-        { title: "TÊN Ý ĐỊNH", key: "intentName", value: "intentName" },
-        { title: "LOẠI Ý ĐỊNH", key: "intentType", value: "intentType" },
-        { title: "NGÀY TẠO", key: "createdDate", value: "createdDate" },
-        { title: "NGƯỜI TẠO", key: "createdBy", value: "createdBy" },
-        { title: "NGÀY CẬP NHẬT", key: "updatedDate", value: "updatedDate" },
-        { title: "NGƯỜI CẬP NHẬT", key: "updatedBy", value: "updatedBy" },
+        { title: 'TÊN Ý ĐỊNH', key: 'intentName', value: 'intentName' },
+        { title: 'LOẠI Ý ĐỊNH', key: 'intentType', value: 'intentType' },
+        { title: 'NGÀY TẠO', key: 'createdDate', value: 'createdDate' },
+        { title: 'NGƯỜI TẠO', key: 'createdBy', value: 'createdBy' },
+        { title: 'NGÀY CẬP NHẬT', key: 'updatedDate', value: 'updatedDate' },
+        { title: 'NGƯỜI CẬP NHẬT', key: 'updatedBy', value: 'updatedBy' },
       ],
       headerExport: [
-        "STT",
-        "TÊN Ý ĐỊNH",
-        "CÂU HỎI Ý ĐỊNH",
-        "LOẠI Ý ĐỊNH",
-        "NGÀY TẠO",
-        "NGƯỜI TẠO",
-        "NGÀY CẬP NHẬT",
-        "NGƯỜI CẬP NHẬT",
+        'STT',
+        'TÊN Ý ĐỊNH',
+        'CÂU HỎI Ý ĐỊNH',
+        'LOẠI Ý ĐỊNH',
+        'NGÀY TẠO',
+        'NGƯỜI TẠO',
+        'NGÀY CẬP NHẬT',
+        'NGƯỜI CẬP NHẬT',
       ],
       desserts: [],
 
       dataBreadC: [
         {
-          title: "Trang chủ",
+          title: 'Trang chủ',
           disabled: false,
-          href: "home",
+          href: 'home',
         },
         {
-          title: "Đào tạo chatbot",
+          title: 'Đào tạo chatbot',
           disabled: true,
         },
         {
-          title: "Ngân hàng câu hỏi- ý định",
+          title: 'Ngân hàng câu hỏi- ý định',
           disabled: true,
         },
       ],
@@ -539,9 +539,9 @@ export default {
       showPickerEnd: false,
       selectedDateEnd: null,
       date: null,
-      token: localStorage.getItem("token"),
+      token: localStorage.getItem('token'),
 
-      questionInput: "",
+      questionInput: '',
       intent: [],
       entity: [],
       typeIntent: [0, 3],
@@ -562,143 +562,143 @@ export default {
 
       dataForm: [],
       objs: [],
-      fileName: "DS",
-      sheetName: "Sheet 1",
+      fileName: 'DS',
+      sheetName: 'Sheet 1',
       getItems: 0,
-    };
+    }
   },
 
   methods: {
     indexRow(index) {
-      return index + (this.pagination.page - 1) * this.pagination.pageSize + 1;
+      return index + (this.pagination.page - 1) * this.pagination.pageSize + 1
     },
     truncateText(text) {
-      return text.length > 30 ? text.substring(0, 30) + "..." : text;
+      return text.length > 30 ? text.substring(0, 30) + '...' : text
     },
     viewQuestion(item) {
-      console.log("=>(index.vue:295) item", item);
-      this.dataForm = item;
-      this.visibleModalDetal = true;
+      console.log('=>(index.vue:295) item', item)
+      this.dataForm = item
+      this.visibleModalDetal = true
     },
     updateQuestion(item) {
-      console.log("=>(index.vue:295) item", item);
-      this.dataForm = item;
-      this.visibleModalUpdate = true;
+      console.log('=>(index.vue:295) item', item)
+      this.dataForm = item
+      this.visibleModalUpdate = true
     },
     deleteBot(item) {
-      this.isDelete = true;
-      this.visibleModal = true;
+      this.isDelete = true
+      this.visibleModal = true
     },
     cancelModal() {
-      this.visibleModal = false;
+      this.visibleModal = false
       setTimeout(() => {
-        this.isDelete = false;
-      }, 200);
+        this.isDelete = false
+      }, 200)
     },
     closeDateMenu() {
-      this.showPickerEnd = false;
+      this.showPickerEnd = false
     },
     getTextType(item) {
-      return TYPE_INTENT.find((x) => x.key === item.intentType).value;
+      return TYPE_INTENT.find((x) => x.key === item.intentType).value
     },
     updatePage(page) {
-      this.pagination.page = page;
-      this.GetListIntent();
+      this.pagination.page = page
+      this.GetListIntent()
     },
     updatePerPage(item) {
-      this.pagination.pageSize = item;
-      this.pagination.page = 1;
+      this.pagination.pageSize = item
+      this.pagination.page = 1
       this.$nextTick(() => {
-        this.GetListIntent();
-      });
+        this.GetListIntent()
+      })
     },
 
     async GetListIntent() {
-      console.log(this.selectedEntity, "abs");
+      console.log(this.selectedEntity, 'abs')
       const config = {
         params: {
-          fromDate: this.formattedDateStart ? this.formattedDateStart : "",
-          toDate: this.formattedDateEnd ? this.formattedDateEnd : "",
+          fromDate: this.formattedDateStart ? this.formattedDateStart : '',
+          toDate: this.formattedDateEnd ? this.formattedDateEnd : '',
           intentName: this.selectedIntent
-            ? this.selectedIntent.map((item) => item.intentName).join(",")
-            : "",
+            ? this.selectedIntent.map((item) => item.intentName).join(',')
+            : '',
           createdBy: this.selectedCreator
-            ? this.selectedCreator.map((creator) => creator.username).join(",")
-            : "",
+            ? this.selectedCreator.map((creator) => creator.username).join(',')
+            : '',
           entityName: this.selectedEntity
-            ? this.selectedEntity.map((entity) => entity.entityName).join(",")
-            : "",
-          questionSearch: this.questionInput ? this.questionInput : "",
+            ? this.selectedEntity.map((entity) => entity.entityName).join(',')
+            : '',
+          questionSearch: this.questionInput ? this.questionInput : '',
           intentType:
-            this.selectedTypeIntent !== "" ? this.selectedTypeIntent : "",
+            this.selectedTypeIntent !== '' ? this.selectedTypeIntent : '',
           currentPage: this.pagination.page - 1,
           perPage: this.pagination.pageSize,
         },
-      };
+      }
       await Api.questionBank
         .indexWidthPath(`Question-Bank-Intent/searchBotIntentDTOList`, config)
         .then((response) => {
-          this.desserts = response.data.content;
-          this.totalItems = this.desserts.totalElements;
-          console.log(this.desserts);
+          this.desserts = response.data.content
+          this.totalItems = this.desserts.totalElements
+          console.log(this.desserts)
         })
         .catch((error) => {
-          console.error("There was an error!", error);
-        });
+          console.error('There was an error!', error)
+        })
     },
 
     getIntent() {
       Api.questionBank
         .indexWidthPath(`bot-intent/get-all-not-spam`)
         .then((response) => {
-          this.intent = response.data.content;
+          this.intent = response.data.content
         })
         .catch((error) => {
-          console.error("There was an error!", error);
-        });
+          console.error('There was an error!', error)
+        })
     },
     getEntity() {
       Api.questionBank
-        .indexWidthPath("Question-Bank-Intent/getListEntityName")
+        .indexWidthPath('Question-Bank-Intent/getListEntityName')
         .then((response) => {
-          this.entity = response.data.content;
+          this.entity = response.data.content
           // console.log(this.entity);
         })
         .catch((error) => {
-          console.error("There was an error!", error);
-        });
+          console.error('There was an error!', error)
+        })
     },
     getCreator() {
       Api.questionBank
-        .indexWidthPath("user-info/get-all-user")
+        .indexWidthPath('user-info/get-all-user')
         .then((response) => {
-          this.creator = response.data.content;
+          this.creator = response.data.content
         })
         .catch((error) => {
-          console.error("There was an error!", error);
-        });
+          console.error('There was an error!', error)
+        })
     },
     getSynonym() {
       Api.questionBank
-        .indexWidthPath("synonym/get-all")
+        .indexWidthPath('synonym/get-all')
         .then((response) => {
-          this.synonym = response.data.content;
+          this.synonym = response.data.content
           // console.log(this.synonym);
         })
         .catch((error) => {
-          console.error("There was an error!", error);
-        });
+          console.error('There was an error!', error)
+        })
     },
     getServiceGroup() {
       Api.questionBank
-        .indexWidthPath("Question-Bank-Intent/get-list-bot-intent-group")
+        .indexWidthPath('Question-Bank-Intent/get-list-bot-intent-group')
         .then((response) => {
-          this.serviceGroup = response.data.content;
+          this.serviceGroup = response.data.content
           // console.log(this.serviceGroup);
         })
         .catch((error) => {
-          console.error("There was an error!", error);
-        });
+          console.error('There was an error!', error)
+        })
     },
     generateRow(d, i) {
       return [
@@ -710,59 +710,59 @@ export default {
         d.createdBy,
         convertDateTime(d.updatedDate),
         d.updatedBy,
-      ];
+      ]
     },
     exportExcel() {
-      let listID = [];
+      let listID = []
 
       if (this.getItems.length > 0) {
-        listID = this.getItems.map((e) => e.id);
+        listID = this.getItems.map((e) => e.id)
       }
-      console.log(listID, "list");
+      console.log(listID, 'list')
       const config = {
         params: {
-          fromDate: this.formattedDateStart ? this.formattedDateStart : "",
-          toDate: this.formattedDateEnd ? this.formattedDateEnd : "",
+          fromDate: this.formattedDateStart ? this.formattedDateStart : '',
+          toDate: this.formattedDateEnd ? this.formattedDateEnd : '',
           intentName: this.selectedIntent
-            ? this.selectedIntent.map((item) => item.intentName).join(",")
-            : "",
+            ? this.selectedIntent.map((item) => item.intentName).join(',')
+            : '',
           createdBy: this.selectedCreator
-            ? this.selectedCreator.map((creator) => creator.username).join(",")
-            : "",
-          entityName: this.selectedEntity ? this.selectedEntity : "",
+            ? this.selectedCreator.map((creator) => creator.username).join(',')
+            : '',
+          entityName: this.selectedEntity ? this.selectedEntity : '',
           intentType:
-            this.selectedTypeIntent !== "" ? this.selectedTypeIntent : "",
-          listID: listID !== "" ? listID.join(",") : "",
+            this.selectedTypeIntent !== '' ? this.selectedTypeIntent : '',
+          listID: listID !== '' ? listID.join(',') : '',
         },
-      };
+      }
       Api.questionBank
         .indexWidthPath(`Question-Bank-Intent/search-export`, config)
         .then((response) => {
-          console.log("thanhcong");
-          console.log("this", response.data.content);
-          this.objs = response.data.content;
+          console.log('thanhcong')
+          console.log('this', response.data.content)
+          this.objs = response.data.content
 
           exportFile(
             this.objs,
             this.generateRow,
             this.headerExport,
             this.fileName,
-            this.sheetName
-          );
-        });
+            this.sheetName,
+          )
+        })
     },
   },
   watch: {
     selected(val) {
       this.getItems = this.desserts.content.filter((item) =>
-        val.includes(item["id"])
-      );
-      console.log("this.getItems", this.getItems);
+        val.includes(item['id']),
+      )
+      console.log('this.getItems', this.getItems)
     },
   },
   filters: {
     formatDate(date) {
-      return moment(date).format("DD-MM-YYYY");
+      return moment(date).format('DD-MM-YYYY')
     },
   },
 
@@ -770,30 +770,30 @@ export default {
     formattedDateEnd() {
       return this.selectedDateEnd
         ? this.$options.filters.formatDate(this.selectedDateEnd)
-        : "";
+        : ''
     },
     formattedDateStart() {
       return this.selectedDateStart
         ? this.$options.filters.formatDate(this.selectedDateStart)
-        : "";
+        : ''
     },
     moment() {
-      return moment;
+      return moment
     },
     totalPage() {
-      return Math.ceil(this.totalItems / this.pagination.pageSize);
+      return Math.ceil(this.totalItems / this.pagination.pageSize)
     },
   },
   created() {
-    console.log("this0", this.getItems);
-    this.GetListIntent();
-    this.getIntent();
-    this.getEntity();
-    this.getCreator();
-    this.getSynonym();
-    this.getServiceGroup();
+    console.log('this0', this.getItems)
+    this.GetListIntent()
+    this.getIntent()
+    this.getEntity()
+    this.getCreator()
+    this.getSynonym()
+    this.getServiceGroup()
   },
-};
+}
 </script>
 <style>
 .v-container {

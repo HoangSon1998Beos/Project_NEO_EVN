@@ -99,50 +99,50 @@
     </div>
   </v-container>
 </template>
-  <script>
+<script>
 export default {
   data: () => ({
     qtht: [
-      { title: "Quản lý người dùng", to: "/person" },
-      { title: "Quản lý Menu" },
-      { title: "Quản lý khách hàng", to: "/list-customer" },
-      { title: "Quản lý các phiên bản sao lưu" },
+      { title: 'Quản lý người dùng', to: '/person' },
+      { title: 'Quản lý Menu' },
+      { title: 'Quản lý khách hàng', to: '/list-customer' },
+      { title: 'Quản lý các phiên bản sao lưu' },
     ],
     dtcb: [
-      { title: "Quản lý Bot", path: "/bot" },
-      { title: "Ngân hàng câu hỏi và ý định", path: "/question-bank" },
-      { title: "Quản lý ngữ cảnh" },
-      { title: "Cấu hình chống spam" },
-      { title: "Quản lý Minigame" },
+      { title: 'Quản lý Bot', path: '/bot' },
+      { title: 'Ngân hàng câu hỏi và ý định', path: '/question-bank' },
+      { title: 'Quản lý ngữ cảnh' },
+      { title: 'Cấu hình chống spam' },
+      { title: 'Quản lý Minigame' },
     ],
     cskh: [
-      { title: "Quản lý người dùng" },
-      { title: "Quản lý Menu" },
-      { title: "Quản lý khách hàng" },
-      { title: "Quản lý các phiên bản sao lưu" },
+      { title: 'Quản lý người dùng' },
+      { title: 'Quản lý Menu' },
+      { title: 'Quản lý khách hàng' },
+      { title: 'Quản lý các phiên bản sao lưu' },
     ],
     bc: [
-      { title: "Quản lý người dùng" },
-      { title: "Quản lý Menu" },
-      { title: "Quản lý khách hàng" },
-      { title: "Quản lý các phiên bản sao lưu" },
+      { title: 'Quản lý người dùng' },
+      { title: 'Quản lý Menu' },
+      { title: 'Quản lý khách hàng' },
+      { title: 'Quản lý các phiên bản sao lưu' },
     ],
     gsht: [
-      { title: "Quản lý người dùng" },
-      { title: "Quản lý Menu" },
-      { title: "Quản lý khách hàng" },
-      { title: "Quản lý các phiên bản sao lưu" },
+      { title: 'Quản lý người dùng' },
+      { title: 'Quản lý Menu' },
+      { title: 'Quản lý khách hàng' },
+      { title: 'Quản lý các phiên bản sao lưu' },
     ],
   }),
   methods: {
     handleItemClick(index) {
-      const path = this.dtcb[index].path;
-      this.$router.push(path);
+      const path = this.dtcb[index].path
+      this.$router.push(path)
     },
   },
-};
+}
 </script>
-  <style scoped>
+<style scoped>
 .container-bar {
   background-color: #1976d2;
 }

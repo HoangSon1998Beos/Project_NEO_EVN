@@ -5,18 +5,18 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import router from "./router";
+import router from './router'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import '@mdi/font/css/materialdesignicons.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faFacebook } from '@fortawesome/free-brands-svg-icons';
-import '@fortawesome/fontawesome-free/css/all.css';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faFacebook } from '@fortawesome/free-brands-svg-icons'
+import '@fortawesome/fontawesome-free/css/all.css'
 import './utils/permission'
 
-library.add(faFacebook);
+library.add(faFacebook)
 
 const vuetify = createVuetify({
   components,

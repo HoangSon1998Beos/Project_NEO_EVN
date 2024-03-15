@@ -1,33 +1,31 @@
 <template>
   <div class="pagination-custom">
-    <span style="margin-right: 20px">
-    Xem
-    </span>
+    <span style="margin-right: 20px"> Xem </span>
     <v-select
-        v-model="getPerPage"
-        :items="items"
-        item-title="value"
-        item-value="key"
-        class="select-pagination"
-        variant="outlined"
+      v-model="getPerPage"
+      :items="items"
+      item-title="value"
+      item-value="key"
+      class="select-pagination"
+      variant="outlined"
     />
     <span class="ml-5"> bản ghi/trang</span>
     <span class="ml-16">Tổng số {{ getTotalRecord }} bản ghi</span>
   </div>
   <v-pagination
-      v-if="getTotalPages > 1"
-      style="margin-top: -80px"
-      class="ml-16"
-      rounded="circle"
-      v-model="getCurrentPage"
-      :length="getTotalPages"
-      @update:model-value="changePage"
-      show-first-last-page
+    v-if="getTotalPages > 1"
+    style="margin-top: -80px"
+    class="ml-16"
+    rounded="circle"
+    v-model="getCurrentPage"
+    :length="getTotalPages"
+    @update:model-value="changePage"
+    show-first-last-page
   ></v-pagination>
 </template>
 
 <script>
-import appUtils from "../views/person-management/utils.js";
+import appUtils from '../views/person-management/utils.js'
 
 const mapComputed = (propName) => {
   return {
@@ -37,13 +35,13 @@ const mapComputed = (propName) => {
     },
     // setter
     set: function (newValue) {
-      this.$emit('update:' + propName, newValue);
-    }
+      this.$emit('update:' + propName, newValue)
+    },
   }
 }
 export default {
   mapComputed,
-  name: "Pagination-api",
+  name: 'Pagination-api',
   props: {
     perPage: {
       type: Number,
@@ -52,7 +50,6 @@ export default {
     totalPages: {
       type: Number,
       default: 0,
-
     },
     currentPage: {
       type: Number,
@@ -75,40 +72,39 @@ export default {
       items: [
         {
           key: 10,
-          value: 10
+          value: 10,
         },
         {
           key: 20,
-          value: 20
+          value: 20,
         },
         {
           key: 30,
-          value: 30
+          value: 30,
         },
         {
           key: 40,
-          value: 40
+          value: 40,
         },
         {
           key: 50,
-          value: 50
+          value: 50,
         },
-      ]
-    };
+      ],
+    }
   },
   watch: {
     perPage(val) {
-      this.getCurrentPage = 1;
+      this.getCurrentPage = 1
       this.$emit('changePage', true)
     },
-
   },
   methods: {
     changePage(page) {
-      this.$emit('changePage', false);
+      this.$emit('changePage', false)
     },
   },
-};
+}
 </script>
 <style lang="css" scoped>
 .pagination-custom {

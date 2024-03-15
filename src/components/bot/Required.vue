@@ -1,12 +1,11 @@
 <script>
 export default {
-  name: "Required"
+  name: 'Required',
 }
 </script>
 
 <template>
-<span class="text-red ml-1">*</span>
+  <span class="text-red ml-1">*</span>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

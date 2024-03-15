@@ -2,63 +2,63 @@
   <div class="bg-white p-[16px]">
     <span>Danh sách khách hàng</span>
     <v-data-table
-        :headers="headers"
-        :items="data"
-        show-select
-        :sort-asc-icon="'mdi-arrow-down'"
-        :sort-desc-icon="'mdi-arrow-up'"
-        v-model="dataCheckBox"
-        item-key="cusCode"
+      :headers="headers"
+      :items="data"
+      show-select
+      :sort-asc-icon="'mdi-arrow-down'"
+      :sort-desc-icon="'mdi-arrow-up'"
+      v-model="dataCheckBox"
+      item-key="cusCode"
     >
       <template v-slot:item.index="{ item, index }">
         <div>
           {{ indexRow(index) }}
         </div>
       </template>
-      <template v-slot:item.action = "{ item }" >
+      <template v-slot:item.action="{ item }">
         <v-tooltip text="Cập nhật">
           <template v-slot:activator="{ props }">
-                  <span
-                      v-bind="props"
-                      class="material-icons cursor-pointer"
-                      @click="updateCustomer(item)"
-                      style="color: #ff9f43"
-                  >
-                    edit
-                  </span>
+            <span
+              v-bind="props"
+              class="material-icons cursor-pointer"
+              @click="updateCustomer(item)"
+              style="color: #ff9f43"
+            >
+              edit
+            </span>
           </template>
         </v-tooltip>
         <v-tooltip text="Xoá">
           <template v-slot:activator="{ props }">
-                  <span
-                      v-bind="props"
-                      class="material-icons cursor-pointer"
-                      style="color: #ea5455"
-                  >
-                    delete
-                  </span>
+            <span
+              v-bind="props"
+              class="material-icons cursor-pointer"
+              style="color: #ea5455"
+            >
+              delete
+            </span>
           </template>
         </v-tooltip>
         <v-tooltip text="Xem thông tin">
           <template v-slot:activator="{ props }">
-                  <span
-                      v-bind="props"
-                      class="material-icons cursor-pointer"
-                      style="color: #28c76f"
-                  >
-                    visibility
-                  </span>
+            <span
+              v-bind="props"
+              class="material-icons cursor-pointer"
+              style="color: #28c76f"
+            >
+              visibility
+            </span>
           </template>
         </v-tooltip>
       </template>
       <template #bottom>
         <PaginationApi
-            ref="pagina"
-            @changePage="search"
-            v-model:total-pages="totalPages"
-            v-model:current-page="currentPage"
-            v-model:per-page="perPage"
-            v-model:total-record="totalRecord"
+          ref="pagina"
+          @changePage="search"
+          v-model:total-pages="totalPages"
+          v-model:current-page="currentPage"
+          v-model:per-page="perPage"
+          v-model:total-record="totalRecord"
         />
       </template>
     </v-data-table>
@@ -66,12 +66,12 @@
 </template>
 
 <script>
-import PaginationApi from "../../components/Pagination-api.vue";
+import PaginationApi from '../../components/Pagination-api.vue'
 
-import Pagination from "../Pagination.vue";
-import Api from "../../api/api.js";
-import {nextTick} from "vue";
-import appUtils from "../../views/person-management/utils.js";
+import Pagination from '../Pagination.vue'
+import Api from '../../api/api.js'
+import { nextTick } from 'vue'
+import appUtils from '../../views/person-management/utils.js'
 const mapComputed = (propName) => {
   return {
     // getter
@@ -80,14 +80,13 @@ const mapComputed = (propName) => {
     },
     // setter
     set: function (newValue) {
-      this.$emit('update:' + propName, newValue);
-    }
+      this.$emit('update:' + propName, newValue)
+    },
   }
 }
 export default {
-
-  name: "DataCustomer",
-  components: {Pagination},
+  name: 'DataCustomer',
+  components: { Pagination },
 
   data() {
     return {
@@ -97,64 +96,69 @@ export default {
       totalPages: 0,
       dataCheckBox: [],
       headers: [
-        { title: "STT", align: "start", key: "index",value: 'index', },
-        { title: "Thao tác", align: "center", key: "action", sortable: false },
-        { title: "Mã khách hàng", align: "start", key: "cusCode",value: "cusCode" },
-        { title: "Họ và tên", align: "start", key: "cusName" },
-        { title: "Số điện thoại", align: "start", key: "cusPhoneNumber" },
-        { title: "Email", align: "start", key: "cusEmail" },
-        { title: "Địa chỉ sử dụng dịch vụ", align: "start", key: "cusAddress" },
+        { title: 'STT', align: 'start', key: 'index', value: 'index' },
+        { title: 'Thao tác', align: 'center', key: 'action', sortable: false },
+        {
+          title: 'Mã khách hàng',
+          align: 'start',
+          key: 'cusCode',
+          value: 'cusCode',
+        },
+        { title: 'Họ và tên', align: 'start', key: 'cusName' },
+        { title: 'Số điện thoại', align: 'start', key: 'cusPhoneNumber' },
+        { title: 'Email', align: 'start', key: 'cusEmail' },
+        { title: 'Địa chỉ sử dụng dịch vụ', align: 'start', key: 'cusAddress' },
       ],
       config: {},
       data: [],
-      a:[],
-      customerObject:{
-        createdDate: "",
+      a: [],
+      customerObject: {
+        createdDate: '',
         id: '',
         cusCode: '',
         cusName: '',
         cusAddress: '',
         cusPhoneNumber: '',
-        cusEmail: '' ,
+        cusEmail: '',
         createdBy: '',
-      }
+      },
     }
   },
-  props :{
-    items:{
+  props: {
+    items: {
       type: Array,
-      value: []
+      value: [],
     },
     header: {
       type: Array,
-      value: {}
-    }
+      value: {},
+    },
   },
   computed: {
     getHeader: appUtils.mapComputed('header'),
-    getItems: appUtils.mapComputed('items')
+    getItems: appUtils.mapComputed('items'),
   },
   created() {
-    this.init();
+    this.init()
   },
   watch: {
     dataCheckBox(val) {
-      console.log('this.data',this.data)
+      console.log('this.data', this.data)
       // const filterArray = filterArray.a;
-      this.getItems = this.data.filter(item => val.includes(item['id']));
-      console.log('this.getItems',this.getItems)
-    }
+      this.getItems = this.data.filter((item) => val.includes(item['id']))
+      console.log('this.getItems', this.getItems)
+    },
   },
   methods: {
     indexRow(index) {
-      return index + (this.currentPage - 1) * this.perPage + 1;
+      return index + (this.currentPage - 1) * this.perPage + 1
     },
-    handleClick(value){
-      console.log('value',value)
+    handleClick(value) {
+      console.log('value', value)
     },
     async init() {
-      await this.search();
-      this.getHeader = this.headers;
+      await this.search()
+      this.getHeader = this.headers
     },
     async search() {
       this.config = {
@@ -166,24 +170,24 @@ export default {
           currentPage: 0,
           perPage: 10,
         },
-      };
+      }
       try {
-        const dataResponse = await Api.person.indexWidthPath(`customer`,this.config);
-        console.log('dataResponse',dataResponse)
-        this.data = dataResponse.data.content.items;
+        const dataResponse = await Api.person.indexWidthPath(
+          `customer`,
+          this.config,
+        )
+        console.log('dataResponse', dataResponse)
+        this.data = dataResponse.data.content.items
         // this.getItems = this.data;
-      }catch (e){
+      } catch (e) {
         console.log(e)
       }
     },
     updateCustomer(item) {
-      console.log("=>(DataCustomer.vue:117) item", item);
+      console.log('=>(DataCustomer.vue:117) item', item)
     },
-
-  }
+  },
 }
 </script>
 
-<style scoped lang="css">
-
-</style>
+<style scoped lang="css"></style>

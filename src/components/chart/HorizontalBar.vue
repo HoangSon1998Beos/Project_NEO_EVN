@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import { Bar } from "vue-chartjs";
-import Api from "../../api/api.js";
+import { Bar } from 'vue-chartjs'
+import Api from '../../api/api.js'
 import {
   Chart as ChartJS,
   Title,
@@ -13,22 +13,15 @@ import {
   BarElement,
   CategoryScale,
   LinearScale,
-} from "chart.js";
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-);
+} from 'chart.js'
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 export default {
-  name: "BarChart",
+  name: 'BarChart',
   components: { Bar },
   data() {
     return {
       StoryMaxMonth: [],
-      token: localStorage.getItem("token"),
+      token: localStorage.getItem('token'),
       chartData: {
         labels: [],
         datasets: [
@@ -40,7 +33,7 @@ export default {
       // chartData: [],
       chartOptions: {
         responsive: true,
-        indexAxis: "y",
+        indexAxis: 'y',
         maintainAspectRatio: false,
         plugins: {
           legend: {
@@ -62,36 +55,36 @@ export default {
           ],
         },
       },
-    };
+    }
   },
   methods: {
     GetBarChart() {
       Api.dashbroard
-        .indexWidthPath("getListStoryMaxMonth")
+        .indexWidthPath('getListStoryMaxMonth')
         .then((response) => {
-          this.StoryMaxMonth = response.data.content;
-          console.log(this.StoryMaxMonth);
+          this.StoryMaxMonth = response.data.content
+          console.log(this.StoryMaxMonth)
           this.chartData = {
             labels: this.StoryMaxMonth.map((item) => item.storyName),
             datasets: [
               {
-                label: "",
+                label: '',
                 data: this.StoryMaxMonth.map((item) => item.amount),
-                backgroundColor: ["#00cfe6"],
+                backgroundColor: ['#00cfe6'],
               },
             ],
-          };
-          console.log(this.chartData);
+          }
+          console.log(this.chartData)
         })
         .catch((error) => {
-          console.error("There was an error!", error);
-        });
+          console.error('There was an error!', error)
+        })
     },
   },
   created() {
-    this.GetBarChart();
+    this.GetBarChart()
   },
-};
+}
 </script>
 <style>
 #my-chart {

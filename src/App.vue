@@ -1,10 +1,10 @@
 <script setup>
-import { useRoute } from "vue-router";
-import Header from "./components/layout/Header.vue";
-import Menu from "./components/layout/Menu.vue";
-import Footer from "./components/layout/Footer.vue";
+import { useRoute } from 'vue-router'
+import Header from './components/layout/Header.vue'
+import Menu from './components/layout/Menu.vue'
+import Footer from './components/layout/Footer.vue'
 
-const route = useRoute();
+const route = useRoute()
 </script>
 
 <template>

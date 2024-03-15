@@ -36,22 +36,22 @@
 export default {
   data() {
     return {
-      logOut: [{ title: "Đăng Xuất" }],
-    };
+      logOut: [{ title: 'Đăng Xuất' }],
+    }
   },
   methods: {
     handleLogOut() {
-      const currentRoute = { path: this.$router.currentRoute.value.path };
-      localStorage.setItem("currentRoute", JSON.stringify(currentRoute));
-      localStorage.removeItem("token");
+      const currentRoute = { path: this.$router.currentRoute.value.path }
+      localStorage.setItem('currentRoute', JSON.stringify(currentRoute))
+      localStorage.removeItem('token')
 
-      this.$router.push("/login");
+      this.$router.push('/login')
       setTimeout(() => {
-        localStorage.removeItem("currentRoute");
-      }, 5000);
+        localStorage.removeItem('currentRoute')
+      }, 5000)
     },
   },
-};
+}
 </script>
 
 <style scoped>
