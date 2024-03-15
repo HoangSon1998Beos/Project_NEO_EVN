@@ -11,7 +11,7 @@
       <v-container>
         <div class="mb-6 title">Tiêu chí tìm kiếm</div>
         <v-row>
-          <v-col cols="6" style="text-align: left">
+          <v-col :lg="6" :sm="12">
             <label>Ý định</label>
             <v-combobox
               v-model="selectedIntent"
@@ -35,7 +35,7 @@
               chips
             ></v-combobox>
             <label>Ngày tạo</label>
-            <v-row style="justify-content: space-between">
+            <v-row class="justify-between">
               <v-col cols="5">
                 <v-menu
                   v-model="showPickerStart"
@@ -86,7 +86,7 @@
               outlined
             ></v-combobox>
           </v-col>
-          <v-col cols="6" style="text-align: left">
+          <v-col :lg="6" :sm="12">
             <label>Người tạo</label>
             <v-combobox
               v-model="selectedCreator"
@@ -498,6 +498,7 @@ export default {
           align: "center",
           key: "action",
           value: "action",
+          width: 150,
           sortable: false,
         },
         { title: "TÊN Ý ĐỊNH", key: "intentName", value: "intentName" },
@@ -701,11 +702,17 @@ export default {
         });
     },
     generateRow(d, i) {
+      const intentTypeText =
+        d.intentType === 0
+          ? "Loại thông thường"
+          : d.intentType === 3
+          ? "Loại ẩn"
+          : "";
       return [
         i + 1,
         d.intentName,
         d.listQuestions,
-        d.intentType,
+        intentTypeText,
         convertDateTime(d.createdDate),
         d.createdBy,
         convertDateTime(d.updatedDate),
