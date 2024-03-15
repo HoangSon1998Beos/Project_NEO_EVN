@@ -124,8 +124,12 @@ export default {
       },
     }
   },
-  props: {
-    items: {
+  props :{
+    idArray: {
+      type: Array,
+      value: []
+    },
+    items:{
       type: Array,
       value: [],
     },
@@ -135,6 +139,7 @@ export default {
     },
   },
   computed: {
+    getIdArray: appUtils.mapComputed('idArray'),
     getHeader: appUtils.mapComputed('header'),
     getItems: appUtils.mapComputed('items'),
   },
@@ -142,12 +147,15 @@ export default {
     this.init()
   },
   watch: {
-    dataCheckBox(val) {
+    async dataCheckBox(val) {
+      this.getIdArray = val;
+      console.log('val', val)
       console.log('this.data', this.data)
+      await this.getInfoUser(val);
       // const filterArray = filterArray.a;
-      this.getItems = this.data.filter((item) => val.includes(item['id']))
+      this.getItems = this.data.filter(item => val.includes(item['id']));
       console.log('this.getItems', this.getItems)
-    },
+    }
   },
   methods: {
     indexRow(index) {
@@ -159,6 +167,19 @@ export default {
     async init() {
       await this.search()
       this.getHeader = this.headers
+    },
+    async getInfoUser(idArray) {
+      const id = idArray
+      console.log('idArray',idArray)
+      this.config = {
+        params: {
+          ids: idArray.toString(),
+        }
+      }
+
+      console.log('idArray',idArray)
+      const dataResponse = await Api.person.indexWidthPath(`customer/export`, this.config);
+      console.log('dataResponse', dataResponse)
     },
     async search() {
       this.config = {
