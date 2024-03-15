@@ -66,8 +66,6 @@
 </template>
 
 <script>
-import PaginationApi from "../../components/Pagination-api.vue";
-
 import Pagination from "../Pagination.vue";
 import Api from "../../api/api.js";
 import {nextTick} from "vue";
@@ -121,6 +119,10 @@ export default {
     }
   },
   props :{
+    idArray: {
+      type: Array,
+      value: []
+    },
     items:{
       type: Array,
       value: []
@@ -131,6 +133,7 @@ export default {
     }
   },
   computed: {
+    getIdArray: appUtils.mapComputed('idArray'),
     getHeader: appUtils.mapComputed('header'),
     getItems: appUtils.mapComputed('items')
   },
@@ -138,11 +141,14 @@ export default {
     this.init();
   },
   watch: {
-    dataCheckBox(val) {
-      console.log('this.data',this.data)
+    async dataCheckBox(val) {
+      this.getIdArray = val;
+      console.log('val', val)
+      console.log('this.data', this.data)
+      await this.getInfoUser(val);
       // const filterArray = filterArray.a;
       this.getItems = this.data.filter(item => val.includes(item['id']));
-      console.log('this.getItems',this.getItems)
+      console.log('this.getItems', this.getItems)
     }
   },
   methods: {
@@ -155,6 +161,19 @@ export default {
     async init() {
       await this.search();
       this.getHeader = this.headers;
+    },
+    async getInfoUser(idArray) {
+      const id = idArray
+      console.log('idArray',idArray)
+      this.config = {
+        params: {
+          ids: idArray.toString(),
+        }
+      }
+
+      console.log('idArray',idArray)
+      const dataResponse = await Api.person.indexWidthPath(`customer/export`, this.config);
+      console.log('dataResponse', dataResponse)
     },
     async search() {
       this.config = {
